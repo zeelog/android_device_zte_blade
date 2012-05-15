@@ -852,7 +852,7 @@ void *opencamerafd(void *data) {
  * data will be placed in a buffer from DstSet, and this buffer will be given
  * to surface flinger to display.
  */
-#define NUM_MORE_BUFS 2
+#define NUM_MORE_BUFS 1
 
 QualcommCameraHardware::QualcommCameraHardware()
     : mParameters(),
@@ -914,7 +914,7 @@ QualcommCameraHardware::QualcommCameraHardware()
 
     switch(mCurrentTarget){
         case TARGET_MSM7627:
-            jpegPadding = 8;
+            jpegPadding = 0;
             break;
         case TARGET_QSD8250:
         case TARGET_MSM7630:
@@ -1057,6 +1057,7 @@ void QualcommCameraHardware::initDefaultParameters()
                     CameraParameters::WHITE_BALANCE_AUTO);
     mParameters.set(CameraParameters::KEY_FOCUS_MODE,
                     CameraParameters::FOCUS_MODE_AUTO);
+
     mParameters.set(CameraParameters::KEY_SUPPORTED_PREVIEW_FORMATS,
                     "yuv420sp");
 
@@ -2230,7 +2231,7 @@ bool QualcommCameraHardware::initPreview()
                 (uint32_t)mPreviewHeap->mHeap->base() + mPreviewHeap->mAlignedBufferSize * cnt;
             frames[cnt].y_off = 0;
             frames[cnt].cbcr_off = previewWidth * previewHeight;
-            frames[cnt].path = OUTPUT_TYPE_P; // MSM_FRAME_ENC;
+            frames[cnt].path = MSM_FRAME_ENC;
         }
 
         mFrameThreadWaitLock.lock();
@@ -2238,12 +2239,12 @@ bool QualcommCameraHardware::initPreview()
         pthread_attr_init(&attr);
         pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_DETACHED);
 
-        frame_parms.frame = frames[kPreviewBufferCount - 1];
+        frame_parms.frame = frames[kPreviewBufferCount - 2];
 
         if( mCurrentTarget == TARGET_MSM7630 || mCurrentTarget == TARGET_QSD8250 )
             frame_parms.video_frame =  recordframes[kPreviewBufferCount - 1];
         else
-            frame_parms.video_frame =  frames[kPreviewBufferCount - 1];
+            frame_parms.video_frame =  frames[kPreviewBufferCount - 2];
 
         LOGV ("initpreview before cam_frame thread carete , video frame  buffer=%lu fd=%d y_off=%d cbcr_off=%d \n",
           (unsigned long)frame_parms.video_frame.buffer, frame_parms.video_frame.fd, frame_parms.video_frame.y_off,
@@ -3388,7 +3389,7 @@ bool QualcommCameraHardware::initRecord()
             (uint32_t)mRecordHeap->mHeap->base() + mRecordHeap->mAlignedBufferSize * cnt;
         recordframes[cnt].y_off = 0;
         recordframes[cnt].cbcr_off = mDimension.video_width  * mDimension.video_height;
-        recordframes[cnt].path = OUTPUT_TYPE_V;
+        recordframes[cnt].path = CAMIF_TO_AXI_VIA_OUTPUT_2;
 
         LOGV ("initRecord :  record heap , video buffers  buffer=%lu fd=%d y_off=%d cbcr_off=%d \n",
           (unsigned long)recordframes[cnt].buffer, recordframes[cnt].fd, recordframes[cnt].y_off,
