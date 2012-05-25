@@ -1,12 +1,15 @@
+# Correct bootanimation size for the screen
+TARGET_BOOTANIMATION_NAME := vertical-480x800
+
 $(call inherit-product, device/zte/blade/blade.mk)
 
 # Inherit some common CM stuff.
-$(call inherit-product, vendor/cm/config/common_full_phone.mk)
+$(call inherit-product, vendor/cm/config/common_mini_phone.mk)
 
 # Inherit some common CM stuff.
 $(call inherit-product, vendor/cm/config/gsm.mk)
 
-PRODUCT_BUILD_PROP_OVERRIDES += PRODUCT_NAME=blade BUILD_ID=IMM76D BUILD_FINGERPRINT=google/soju/crespo:4.0.4/IMM76D/299849:user/release-keys PRIVATE_BUILD_DESC="soju-user 4.0.4 IMM76D 299849 release-keys" BUILD_NUMBER=299849
+PRODUCT_BUILD_PROP_OVERRIDES += PRODUCT_NAME=blade BUILD_ID=IML74K BUILD_FINGERPRINT=ZTE/N880E_ICS/atlas40:4.0.3/IML74K/eng.zhangchun.20120426.194244:user/release-keys PRIVATE_BUILD_DESC="N880E_ICS-user 4.0.3 IML74K eng.zhangchun.20120426.194244 release-keys" BUILD_NUMBER=eng.zhangchun.20120426.194244
 
 PRODUCT_NAME := cm_blade
 PRODUCT_DEVICE := blade
