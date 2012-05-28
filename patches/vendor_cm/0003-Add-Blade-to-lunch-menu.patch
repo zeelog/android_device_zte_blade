@@ -1,0 +1,23 @@
+From 3f103e5162dbdc217352b5ffd945d1a3b087834a Mon Sep 17 00:00:00 2001
+From: Konsta <konsta09@gmail.com>
+Date: Mon, 21 May 2012 22:54:30 +0300
+Subject: [PATCH 3/5] Add Blade to lunch menu
+
+Change-Id: I9b714a7481401759bc9aae9da51ec127087d5abf
+---
+ vendorsetup.sh |    1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/vendorsetup.sh b/vendorsetup.sh
+index 76ccd23..c3626a3 100644
+--- a/vendorsetup.sh
++++ b/vendorsetup.sh
+@@ -1,4 +1,5 @@
+ add_lunch_combo cm_anzu-userdebug
++add_lunch_combo cm_blade-userdebug
+ add_lunch_combo cm_captivatemtd-userdebug
+ add_lunch_combo cm_coconut-userdebug
+ add_lunch_combo cm_crespo-userdebug
+-- 
+1.7.9.5
+

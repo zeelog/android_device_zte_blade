@@ -1,0 +1,47 @@
+From 7d39d391c5c18b69ad94eb54fd33704a32136a5a Mon Sep 17 00:00:00 2001
+From: Konsta <konsta09@gmail.com>
+Date: Mon, 28 May 2012 11:46:56 +0300
+Subject: [PATCH] center lockscreen clock
+
+Change-Id: Ic525b2cbcd0df4642f2285aa90e2cb81b559ff56
+---
+ core/res/res/layout/keyguard_screen_tab_unlock.xml |    9 +++------
+ 1 file changed, 3 insertions(+), 6 deletions(-)
+
+diff --git a/core/res/res/layout/keyguard_screen_tab_unlock.xml b/core/res/res/layout/keyguard_screen_tab_unlock.xml
+index 31804b0..c2042a9 100644
+--- a/core/res/res/layout/keyguard_screen_tab_unlock.xml
++++ b/core/res/res/layout/keyguard_screen_tab_unlock.xml
+@@ -31,8 +31,7 @@
+     <com.android.internal.widget.DigitalClock android:id="@+id/time"
+         android:layout_marginTop="@dimen/keyguard_lockscreen_status_line_clockfont_top_margin"
+         android:layout_marginBottom="12dip"
+-        android:layout_marginRight="@dimen/keyguard_lockscreen_status_line_font_right_margin"
+-        android:layout_gravity="right">
++        android:layout_gravity="center_horizontal">
+ 
+         <!-- Because we can't have multi-tone fonts, we render two TextViews, one on
+         top of the other. Hence the redundant layout... -->
+@@ -64,8 +63,7 @@
+ 
+     <LinearLayout
+         android:orientation="horizontal"
+-        android:layout_gravity="right"
+-        android:layout_marginRight="@dimen/keyguard_lockscreen_status_line_font_right_margin">
++        android:layout_gravity="center">
+ 
+         <TextView
+             android:id="@+id/date"
+@@ -93,8 +91,7 @@
+ 
+     <TextView
+         android:id="@+id/status1"
+-        android:layout_gravity="right"
+-        android:layout_marginRight="@dimen/keyguard_lockscreen_status_line_font_right_margin"
++        android:layout_gravity="center_horizontal"
+         android:singleLine="true"
+         android:ellipsize="marquee"
+         android:textAppearance="?android:attr/textAppearanceMedium"
+-- 
+1.7.9.5
+
