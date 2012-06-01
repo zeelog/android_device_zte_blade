@@ -914,8 +914,6 @@ QualcommCameraHardware::QualcommCameraHardware()
 
     switch(mCurrentTarget){
         case TARGET_MSM7627:
-            jpegPadding = 0;
-            break;
         case TARGET_QSD8250:
         case TARGET_MSM7630:
             jpegPadding = 0;
@@ -1057,7 +1055,6 @@ void QualcommCameraHardware::initDefaultParameters()
                     CameraParameters::WHITE_BALANCE_AUTO);
     mParameters.set(CameraParameters::KEY_FOCUS_MODE,
                     CameraParameters::FOCUS_MODE_AUTO);
-
     mParameters.set(CameraParameters::KEY_SUPPORTED_PREVIEW_FORMATS,
                     "yuv420sp");
 
@@ -3389,7 +3386,7 @@ bool QualcommCameraHardware::initRecord()
             (uint32_t)mRecordHeap->mHeap->base() + mRecordHeap->mAlignedBufferSize * cnt;
         recordframes[cnt].y_off = 0;
         recordframes[cnt].cbcr_off = mDimension.video_width  * mDimension.video_height;
-        recordframes[cnt].path = CAMIF_TO_AXI_VIA_OUTPUT_2;
+        recordframes[cnt].path = OUTPUT_TYPE_V;
 
         LOGV ("initRecord :  record heap , video buffers  buffer=%lu fd=%d y_off=%d cbcr_off=%d \n",
           (unsigned long)recordframes[cnt].buffer, recordframes[cnt].fd, recordframes[cnt].y_off,
