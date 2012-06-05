@@ -1,0 +1,566 @@
+From e00bc28265b904072481d2c3435ebe19495b2ce3 Mon Sep 17 00:00:00 2001
+From: Konsta <konsta09@gmail.com>
+Date: Mon, 4 Jun 2012 22:35:58 +0300
+Subject: [PATCH] Sense 4.0 style multitasking (thanks to evilisto)
+
+http://forum.xda-developers.com/showthread.php?t=1589963
+
+Change-Id: I43c7d148ad2c38ad0c71140f9d0cd890d39df0dd
+---
+ core/res/res/values/dimens.xml                     |    4 +-
+ .../res/drawable/status_bar_recents_background.xml |    9 ++-
+ .../res/layout-land/status_bar_recent_item.xml     |   59 +++++++-------
+ .../res/layout-land/status_bar_recent_panel.xml    |   52 +++++++-----
+ .../res/layout-port/status_bar_recent_item.xml     |   85 +++++++++-----------
+ .../res/layout-port/status_bar_recent_panel.xml    |   50 ++++++++----
+ .../res/layout/status_bar_no_recent_apps.xml       |    1 +
+ packages/SystemUI/res/values/colors.xml            |    4 +-
+ packages/SystemUI/res/values/config.xml            |    2 +-
+ packages/SystemUI/res/values/dimens.xml            |    4 +-
+ packages/SystemUI/res/values/strings.xml           |    3 +
+ .../android/systemui/recent/RecentsPanelView.java  |   39 ++++++++-
+ 12 files changed, 188 insertions(+), 124 deletions(-)
+
+diff --git a/core/res/res/values/dimens.xml b/core/res/res/values/dimens.xml
+index 82ef68a..8eb7a83 100644
+--- a/core/res/res/values/dimens.xml
++++ b/core/res/res/values/dimens.xml
+@@ -19,9 +19,9 @@
+ -->
+ <resources>
+     <!-- The width that is used when creating thumbnails of applications. -->
+-    <dimen name="thumbnail_width">120dp</dimen>
++    <dimen name="thumbnail_width">168dp</dimen>
+     <!-- The height that is used when creating thumbnails of applications. -->
+-    <dimen name="thumbnail_height">120dp</dimen>
++    <dimen name="thumbnail_height">267dp</dimen>
+     <!-- The standard size (both width and height) of an application icon that
+          will be displayed in the app launcher and elsewhere. -->
+     <dimen name="app_icon_size">48dip</dimen>
+diff --git a/packages/SystemUI/res/drawable/status_bar_recents_background.xml b/packages/SystemUI/res/drawable/status_bar_recents_background.xml
+index 7831db0..ba0e9ad 100644
+--- a/packages/SystemUI/res/drawable/status_bar_recents_background.xml
++++ b/packages/SystemUI/res/drawable/status_bar_recents_background.xml
+@@ -16,10 +16,11 @@
+  * limitations under the License.
+  */
+ -->
+-<shape xmlns:android="http://schemas.android.com/apk/res/android">
++<shape android:shape="rectangle" xmlns:android="http://schemas.android.com/apk/res/android">
+     <gradient name="status_bar_recents_background"
+-        android:startColor="#e6000000"
+-        android:endColor="#c0000000"
+-        android:angle="@integer/status_bar_recents_bg_gradient_degrees"
++        android:type="radial"
++        android:startColor="#ff4a4a4a"
++        android:endColor="#ff080808"
++        android:gradientRadius="400"
+         />
+ </shape>
+diff --git a/packages/SystemUI/res/layout-land/status_bar_recent_item.xml b/packages/SystemUI/res/layout-land/status_bar_recent_item.xml
+index 2d76455..be40a69 100644
+--- a/packages/SystemUI/res/layout-land/status_bar_recent_item.xml
++++ b/packages/SystemUI/res/layout-land/status_bar_recent_item.xml
+@@ -22,55 +22,53 @@
+     xmlns:android="http://schemas.android.com/apk/res/android"
+     android:layout_height="match_parent"
+     android:layout_width="wrap_content"
+-    android:paddingLeft="@dimen/status_bar_recents_item_padding"
+-    android:paddingRight="@dimen/status_bar_recents_item_padding">
++    android:paddingRight="@dimen/status_bar_recents_item_padding"
++    android:paddingLeft="@dimen/status_bar_recents_item_padding">
+ 
+     <RelativeLayout android:id="@+id/recent_item"
+         android:layout_gravity="center_vertical"
+         android:layout_height="wrap_content"
+         android:layout_width="wrap_content"
+-        android:paddingTop="@*android:dimen/status_bar_height">
++        android:paddingTop="@*android:dimen/status_bar_height"
++        android:layout_centerInParent="true">
+ 
+         <FrameLayout android:id="@+id/app_thumbnail"
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content"
+-            android:layout_alignParentLeft="true"
+-            android:layout_alignParentTop="true"
+-            android:layout_marginTop="@dimen/status_bar_recents_thumbnail_top_margin"
+-            android:layout_marginLeft="@dimen/status_bar_recents_thumbnail_left_margin"
+-            android:background="@drawable/recents_thumbnail_bg"
+-            android:foreground="@drawable/recents_thumbnail_fg"
++            android:layout_centerInParent="true"
++            android:background="#00000000"
++            android:foreground="#00000000"
+             android:visibility="invisible">
+             <ImageView android:id="@+id/app_thumbnail_image"
+-                android:layout_width="@dimen/status_bar_recents_thumbnail_width"
+-                android:layout_height="@dimen/status_bar_recents_thumbnail_height"
++                android:layout_width="120.0dip"
++                android:layout_height="320.0dip"
++                android:scaleType="centerInside"
+             />
+         </FrameLayout>
+ 
+         <ImageView android:id="@+id/app_icon"
+-            android:layout_width="wrap_content"
++            android:layout_width="match_parent"
+             android:layout_height="wrap_content"
+-            android:layout_marginTop="@dimen/status_bar_recents_app_icon_top_margin"
+-            android:layout_marginLeft="@dimen/status_bar_recents_app_icon_left_margin"
+-            android:layout_alignParentLeft="true"
+-            android:layout_alignParentTop="true"
+-            android:maxWidth="@dimen/status_bar_recents_app_icon_max_width"
+-            android:maxHeight="@dimen/status_bar_recents_app_icon_max_height"
++            android:gravity="center_horizontal"
++            android:layout_marginTop="232.0dip"
++            android:maxWidth="35dp"
++            android:maxHeight="35dp"
+             android:scaleType="centerInside"
+             android:adjustViewBounds="true"
+         />
+ 
+         <TextView android:id="@+id/app_label"
+-            android:layout_width="@dimen/status_bar_recents_app_label_width"
++            android:layout_width="match_parent"
+             android:layout_height="wrap_content"
+-            android:textSize="@dimen/status_bar_recents_app_label_text_size"
+-            android:fadingEdge="horizontal"
+-            android:fadingEdgeLength="@dimen/status_bar_recents_fading_edge_length"
++            android:gravity="center_horizontal"
++            android:textSize="12dip"
++            android:fadingEdge="none"
++            android:fadingEdgeLength="0.0dip"
+             android:scrollHorizontally="true"
+-            android:layout_alignLeft="@id/app_thumbnail"
+-            android:layout_below="@id/app_thumbnail"
+-            android:layout_marginTop="@dimen/status_bar_recents_text_description_padding"
+-            android:layout_marginLeft="@dimen/status_bar_recents_app_label_left_margin"
++            android:layout_below="@id/app_icon"
++            android:layout_alignParentBottom="true"
++            android:paddingTop="0.0dip"
++            android:layout_marginTop="0.0dip"
+             android:singleLine="true"
+             android:ellipsize="marquee"
+             android:textColor="@color/status_bar_recents_app_label_color"
+@@ -80,12 +78,13 @@
+             android:layout_width="@dimen/status_bar_recents_app_label_width"
+             android:layout_height="wrap_content"
+             android:textSize="@dimen/status_bar_recents_app_description_text_size"
+-            android:fadingEdge="horizontal"
+-            android:fadingEdgeLength="@dimen/status_bar_recents_fading_edge_length"
++            android:fadingEdge="none"
++            android:fadingEdgeLength="0dip"
+             android:scrollHorizontally="true"
+-            android:layout_alignLeft="@id/app_thumbnail"
++            android:layout_alignParentBottom="true"
++            android:layout_marginLeft="@dimen/status_bar_recents_app_label_left_margin"
+             android:layout_below="@id/app_label"
+-            android:layout_marginTop="@dimen/status_bar_recents_text_description_padding"
++            android:layout_marginTop="3.0dip"
+             android:singleLine="true"
+             android:ellipsize="marquee"
+         />
+diff --git a/packages/SystemUI/res/layout-land/status_bar_recent_panel.xml b/packages/SystemUI/res/layout-land/status_bar_recent_panel.xml
+index 180f022..ef5e542 100644
+--- a/packages/SystemUI/res/layout-land/status_bar_recent_panel.xml
++++ b/packages/SystemUI/res/layout-land/status_bar_recent_panel.xml
+@@ -29,27 +29,33 @@
+         android:background="@drawable/status_bar_recents_background"
+         android:layout_width="match_parent"
+         android:layout_height="match_parent"
+-        android:layout_alignParentBottom="true"
+-        android:clipToPadding="false"
+-        android:clipChildren="false">
++        android:layout_centerVertical="true">
+ 
+-        <com.android.systemui.recent.RecentsHorizontalScrollView android:id="@+id/recents_container"
+-            android:layout_width="wrap_content"
+-            android:layout_height="match_parent"
+-            android:layout_marginRight="@dimen/status_bar_recents_right_glow_margin"
+-            android:divider="@null"
+-            android:stackFromBottom="true"
+-            android:fadingEdge="horizontal"
+-            android:scrollbars="none"
+-            android:fadingEdgeLength="@dimen/status_bar_recents_fading_edge_length"
+-            android:layout_gravity="bottom|left"
+-            android:orientation="horizontal"
+-            android:clipToPadding="false"
+-            android:clipChildren="false">
++        <ImageView
++ 	    android:gravity="center"
++	    android:layout_width="match_parent"
++ 	    android:layout_height="match_parent"
++	    android:layout_marginTop="0.0dip"
++  	    android:src="@drawable/status_bar_recents_background"
++        />
++
++        <com.android.systemui.recent.RecentsHorizontalScrollView
++	    android:id="@+id/recents_container"
++	    android:layout_gravity="bottom|left|center"
++	    android:scrollbars="none"
++	    android:fadingEdge="none"
++	    android:fadingEdgeLength="0.0dip"
++	    android:clipChildren="false"
++	    android:clipToPadding="false"
++    	    android:layout_width="match_parent"
++	    android:layout_height="wrap_content"
++	    android:layout_marginRight="0.0dip"
++	    android:stackFromBottom="true"
++	    android:divider="@null">
+ 
+             <LinearLayout android:id="@+id/recents_linear_layout"
+-                android:layout_width="wrap_content"
+-                android:layout_height="match_parent"
++                android:layout_width="match_parent"
++                android:layout_height="wrap_content"
+                 android:orientation="horizontal"
+                 android:clipToPadding="false"
+                 android:clipChildren="false">
+@@ -57,6 +63,16 @@
+ 
+         </com.android.systemui.recent.RecentsHorizontalScrollView>
+ 
++	<TextView
++	    android:textSize="18.0dip"
++	    android:textColor="#ffe5e5e5"
++	    android:gravity="center_horizontal"
++	    android:layout_marginTop="10.0dip"
++	    android:layout_width="match_parent"
++	    android:layout_height="wrap_content"
++	    android:text="@string/recent_apps_title"
++	/>
++
+     </FrameLayout>
+ 
+     <include layout="@layout/status_bar_no_recent_apps"
+diff --git a/packages/SystemUI/res/layout-port/status_bar_recent_item.xml b/packages/SystemUI/res/layout-port/status_bar_recent_item.xml
+index b653fcd..2ae8e54 100644
+--- a/packages/SystemUI/res/layout-port/status_bar_recent_item.xml
++++ b/packages/SystemUI/res/layout-port/status_bar_recent_item.xml
+@@ -20,69 +20,62 @@
+ 
+ <FrameLayout
+     xmlns:android="http://schemas.android.com/apk/res/android"
+-    android:layout_height="wrap_content"
+-    android:layout_width="match_parent"
+-    android:paddingTop="@dimen/status_bar_recents_item_padding"
+-    android:paddingBottom="@dimen/status_bar_recents_item_padding">
++    android:layout_height="match_parent"
++    android:layout_width="wrap_content"
++    android:paddingRight="@dimen/status_bar_recents_item_padding"
++    android:paddingLeft="@dimen/status_bar_recents_item_padding">
+ 
+     <RelativeLayout android:id="@+id/recent_item"
+-        android:layout_gravity="center_horizontal"
++        android:layout_gravity="center_vertical"
+         android:layout_height="wrap_content"
+-        android:layout_width="wrap_content">
++        android:layout_width="wrap_content"
++        android:paddingTop="@*android:dimen/status_bar_height"
++        android:layout_centerInParent="true">
+ 
+-        <TextView android:id="@+id/app_label"
+-            android:layout_width="@dimen/status_bar_recents_app_label_width"
+-            android:layout_height="wrap_content"
+-            android:textSize="@dimen/status_bar_recents_app_label_text_size"
+-            android:fadingEdge="horizontal"
+-            android:fadingEdgeLength="@dimen/status_bar_recents_fading_edge_length"
+-            android:scrollHorizontally="true"
+-            android:layout_alignParentLeft="true"
+-            android:layout_alignTop="@id/app_icon"
+-            android:paddingTop="2dp"
+-            android:layout_marginLeft="@dimen/status_bar_recents_app_label_left_margin"
+-            android:singleLine="true"
+-            android:ellipsize="marquee"
+-            android:textColor="@color/status_bar_recents_app_label_color"
+-        />
+         <FrameLayout android:id="@+id/app_thumbnail"
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content"
+-            android:layout_alignParentTop="true"
+-            android:layout_toRightOf="@id/app_label"
+-            android:layout_marginLeft="@dimen/status_bar_recents_thumbnail_left_margin"
+-            android:background="@drawable/recents_thumbnail_bg"
+-            android:foreground="@drawable/recents_thumbnail_fg"
++            android:layout_centerInParent="true"
++            android:background="#00000000"
++            android:foreground="#00000000"
+             android:visibility="invisible">
+             <ImageView android:id="@+id/app_thumbnail_image"
+-                android:layout_width="@dimen/status_bar_recents_thumbnail_width"
+-                android:layout_height="@dimen/status_bar_recents_thumbnail_height"
++                android:paddingTop="60dip"
++                android:layout_marginTop="30.0dip"
++                android:layout_width="212.0dip"
++                android:layout_height="455.0dip"
++                android:scaleType="centerInside"
+             />
+         </FrameLayout>
+-        <View android:id="@+id/recents_callout_line"
+-            android:layout_width="@dimen/status_bar_recents_app_label_width"
+-            android:layout_height="1dip"
+-            android:layout_alignParentLeft="true"
+-            android:layout_marginLeft="@dimen/status_bar_recents_app_label_left_margin"
+-            android:layout_toLeftOf="@id/app_thumbnail"
+-            android:layout_below="@id/app_label"
+-            android:layout_marginRight="3dip"
+-            android:layout_marginTop="3dip"
+-            android:background="@drawable/recents_callout_line"
+-        />
+ 
+         <ImageView android:id="@+id/app_icon"
+-            android:layout_width="wrap_content"
++            android:layout_width="match_parent"
+             android:layout_height="wrap_content"
+-            android:layout_toRightOf="@id/app_label"
+-            android:layout_marginLeft="@dimen/status_bar_recents_app_icon_left_margin"
+-            android:layout_marginTop="@dimen/status_bar_recents_app_icon_top_margin"
++            android:gravity="center_horizontal"
++            android:layout_marginTop="405.0dip"
+             android:maxWidth="@dimen/status_bar_recents_app_icon_max_width"
+             android:maxHeight="@dimen/status_bar_recents_app_icon_max_height"
+             android:scaleType="centerInside"
+             android:adjustViewBounds="true"
+         />
+ 
++        <TextView android:id="@+id/app_label"
++            android:layout_width="match_parent"
++            android:layout_height="wrap_content"
++            android:gravity="center_horizontal"
++            android:textSize="@dimen/status_bar_recents_app_label_text_size"
++            android:fadingEdge="none"
++            android:fadingEdgeLength="0.0dip"
++            android:scrollHorizontally="true"
++            android:layout_below="@id/app_icon"
++            android:layout_alignParentBottom="true"
++            android:paddingTop="0.0dip"
++            android:layout_marginTop="3.0dip"
++            android:singleLine="true"
++            android:ellipsize="marquee"
++            android:textColor="@color/status_bar_recents_app_label_color"
++        />
++
+         <TextView android:id="@+id/app_description"
+             android:layout_width="@dimen/status_bar_recents_app_label_width"
+             android:layout_height="wrap_content"
+@@ -90,10 +83,10 @@
+             android:fadingEdge="horizontal"
+             android:fadingEdgeLength="@dimen/status_bar_recents_fading_edge_length"
+             android:scrollHorizontally="true"
+-            android:layout_alignParentLeft="true"
++            android:layout_alignParentBottom="true"
+             android:layout_marginLeft="@dimen/status_bar_recents_app_label_left_margin"
+-            android:layout_below="@id/recents_callout_line"
+-            android:layout_marginTop="3dip"
++            android:layout_below="@id/app_label"
++            android:layout_marginTop="40.0dip"
+             android:singleLine="true"
+             android:ellipsize="marquee"
+         />
+diff --git a/packages/SystemUI/res/layout-port/status_bar_recent_panel.xml b/packages/SystemUI/res/layout-port/status_bar_recent_panel.xml
+index e6a077a..fc72c7e 100644
+--- a/packages/SystemUI/res/layout-port/status_bar_recent_panel.xml
++++ b/packages/SystemUI/res/layout-port/status_bar_recent_panel.xml
+@@ -29,31 +29,49 @@
+         android:background="@drawable/status_bar_recents_background"
+         android:layout_width="match_parent"
+         android:layout_height="match_parent"
+-        android:layout_alignParentBottom="true">
++        android:layout_centerVertical="true">
+ 
+-        <com.android.systemui.recent.RecentsVerticalScrollView
+-            android:id="@+id/recents_container"
+-            android:layout_width="match_parent"
+-            android:layout_height="wrap_content"
+-            android:layout_marginRight="0dp"
+-            android:divider="@null"
+-            android:stackFromBottom="true"
+-            android:fadingEdge="vertical"
+-            android:scrollbars="none"
+-            android:fadingEdgeLength="@*android:dimen/status_bar_height"
+-            android:layout_gravity="bottom|left"
+-            android:clipToPadding="false"
+-            android:clipChildren="false">
++        <ImageView
++	    android:gravity="center"
++	    android:layout_width="match_parent"
++	    android:layout_height="match_parent"
++	    android:layout_marginTop="0.0dip"
++	    android:src="@drawable/status_bar_recents_background"
++	/>
++
++        <com.android.systemui.recent.RecentsHorizontalScrollView
++	    android:id="@+id/recents_container"
++	    android:layout_gravity="bottom|left|center"
++	    android:scrollbars="none"
++	    android:fadingEdge="none"
++	    android:fadingEdgeLength="0.0dip"
++	    android:clipChildren="false"
++	    android:clipToPadding="false"
++    	    android:layout_width="match_parent"
++	    android:layout_height="wrap_content"
++	    android:layout_marginRight="0.0dip"
++	    android:stackFromBottom="true"
++	    android:divider="@null">
+ 
+             <LinearLayout android:id="@+id/recents_linear_layout"
+                 android:layout_width="match_parent"
+                 android:layout_height="wrap_content"
+-                android:orientation="vertical"
++                android:orientation="horizontal"
+                 android:clipToPadding="false"
+                 android:clipChildren="false">
+             </LinearLayout>
+ 
+-        </com.android.systemui.recent.RecentsVerticalScrollView>
++        </com.android.systemui.recent.RecentsHorizontalScrollView>
++
++	<TextView
++	    android:textSize="20.0dip"
++	    android:textColor="#ffe5e5e5"
++	    android:gravity="center_horizontal"
++	    android:layout_marginTop="45.0dip"
++	    android:layout_width="match_parent"
++	    android:layout_height="wrap_content"
++	    android:text="@string/recent_apps_title"
++	/>
+ 
+     </FrameLayout>
+ 
+diff --git a/packages/SystemUI/res/layout/status_bar_no_recent_apps.xml b/packages/SystemUI/res/layout/status_bar_no_recent_apps.xml
+index 1675773..f480be9 100644
+--- a/packages/SystemUI/res/layout/status_bar_no_recent_apps.xml
++++ b/packages/SystemUI/res/layout/status_bar_no_recent_apps.xml
+@@ -32,5 +32,6 @@
+         android:text="@string/status_bar_no_recent_apps"
+         android:gravity="center_horizontal"
+         android:layout_gravity="center"
++        android:visibility="gone"
+     />
+ </FrameLayout>
+diff --git a/packages/SystemUI/res/values/colors.xml b/packages/SystemUI/res/values/colors.xml
+index 99d3c6e..3a4cb89 100644
+--- a/packages/SystemUI/res/values/colors.xml
++++ b/packages/SystemUI/res/values/colors.xml
+@@ -22,8 +22,8 @@
+     <drawable name="notification_item_background_color_pressed">#ff257390</drawable>
+     <drawable name="ticker_background_color">#ff1d1d1d</drawable>
+     <drawable name="status_bar_background">#ff000000</drawable>
+-    <drawable name="status_bar_recents_background_solid">#b3000000</drawable>
+-    <drawable name="status_bar_recents_app_thumbnail_background">#88000000</drawable>
++    <drawable name="status_bar_recents_background_solid">#00000000</drawable>
++    <drawable name="status_bar_recents_app_thumbnail_background">#00000000</drawable>
+     <color name="status_bar_recents_app_label_color">#ffffffff</color>
+     <drawable name="status_bar_notification_row_background_color">#ff090909</drawable>
+     <drawable name="notification_header_bg">#FF000000</drawable>
+diff --git a/packages/SystemUI/res/values/config.xml b/packages/SystemUI/res/values/config.xml
+index 8792fdf..97dfcf7 100644
+--- a/packages/SystemUI/res/values/config.xml
++++ b/packages/SystemUI/res/values/config.xml
+@@ -27,7 +27,7 @@
+ 
+     <!-- Whether recents thumbnails should stretch in both x and y to fill their
+      ImageView -->
+-    <bool name="config_recents_thumbnail_image_fits_to_xy">false</bool>
++    <bool name="config_recents_thumbnail_image_fits_to_xy">true</bool>
+ 
+     <!-- Control whether status bar should distinguish HSPA data icon form UMTS
+     data icon on devices -->
+diff --git a/packages/SystemUI/res/values/dimens.xml b/packages/SystemUI/res/values/dimens.xml
+index 8fba86a..4c76cf8 100644
+--- a/packages/SystemUI/res/values/dimens.xml
++++ b/packages/SystemUI/res/values/dimens.xml
+@@ -21,9 +21,9 @@
+ 
+     <!-- Recent Applications parameters -->
+     <!-- Upper width limit for application icon -->
+-    <dimen name="status_bar_recents_app_icon_max_width">48dp</dimen>
++    <dimen name="status_bar_recents_app_icon_max_width">42dp</dimen>
+     <!-- Upper height limit for application icon -->
+-    <dimen name="status_bar_recents_app_icon_max_height">48dp</dimen>
++    <dimen name="status_bar_recents_app_icon_max_height">42dp</dimen>
+ 
+     <!-- Size of application thumbnail -->
+     <dimen name="status_bar_recents_thumbnail_width">164dp</dimen>
+diff --git a/packages/SystemUI/res/values/strings.xml b/packages/SystemUI/res/values/strings.xml
+index 4f8cc6b..8c336b9 100644
+--- a/packages/SystemUI/res/values/strings.xml
++++ b/packages/SystemUI/res/values/strings.xml
+@@ -378,6 +378,9 @@
+     <!-- Content description of the clear button in the notification panel for accessibility (not shown on the screen). [CHAR LIMIT=NONE] -->
+     <string name="accessibility_clear_all">Clear all notifications.</string>
+ 
++    <!-- for Sense 4.0 style multitasking mod -->
++    <string name="recent_apps_title">Recent apps</string>
++
+     <!-- Dialog title for navigation bar button selection -->
+     <string name="navbar_dialog_title">Choose action to assign</string>
+     <string name="navbar_home_button">Home button</string>
+diff --git a/packages/SystemUI/src/com/android/systemui/recent/RecentsPanelView.java b/packages/SystemUI/src/com/android/systemui/recent/RecentsPanelView.java
+index 8bfd711..a0c26e4 100644
+--- a/packages/SystemUI/src/com/android/systemui/recent/RecentsPanelView.java
++++ b/packages/SystemUI/src/com/android/systemui/recent/RecentsPanelView.java
+@@ -24,9 +24,17 @@ import android.content.Intent;
+ import android.content.res.Configuration;
+ import android.content.res.Resources;
+ import android.graphics.Bitmap;
++import android.graphics.drawable.BitmapDrawable;
+ import android.graphics.Matrix;
+ import android.graphics.Shader.TileMode;
+-import android.graphics.drawable.BitmapDrawable;
++import android.graphics.Color;
++import android.graphics.Canvas;
++import android.graphics.LinearGradient;
++import android.graphics.Paint;
++import android.graphics.PorterDuffXfermode;
++import android.graphics.Bitmap.Config;
++import android.graphics.PorterDuff.Mode;
++import android.graphics.Shader.TileMode;
+ import android.net.Uri;
+ import android.provider.Settings;
+ import android.util.AttributeSet;
+@@ -402,7 +410,32 @@ public class RecentsPanelView extends RelativeLayout implements OnItemClickListe
+             // Should remove the default image in the frame
+             // that this now covers, to improve scrolling speed.
+             // That can't be done until the anim is complete though.
+-            h.thumbnailViewImage.setImageBitmap(thumbnail);
++            final int reflectionGap = 4;
++            int width = thumbnail.getWidth();
++            int height = thumbnail.getHeight();
++	
++            Matrix matrix = new Matrix();
++            matrix.preScale(1, -1);
++	
++            Bitmap reflectionImage = Bitmap.createBitmap(thumbnail, 0, height * 2 / 3, width, height/3, matrix, false);	    
++            Bitmap bitmapWithReflection = Bitmap.createBitmap(width, (height + height/3), Config.ARGB_8888);
++	      
++            Canvas canvas = new Canvas(bitmapWithReflection);
++            canvas.drawBitmap(thumbnail, 0, 0, null);
++            Paint defaultPaint = new Paint();
++            canvas.drawRect(0, height, width, height + reflectionGap, defaultPaint);
++            canvas.drawBitmap(reflectionImage, 0, height + reflectionGap, null);
++	        
++            Paint paint = new Paint(); 
++            LinearGradient shader = new LinearGradient(0, thumbnail.getHeight(), 0, 
++              bitmapWithReflection.getHeight() + reflectionGap, 0x70ffffff, 0x00ffffff, 
++              TileMode.CLAMP); 
++            paint.setShader(shader); 
++            paint.setXfermode(new PorterDuffXfermode(Mode.DST_IN)); 
++            canvas.drawRect(0, height, width, 
++              bitmapWithReflection.getHeight() + reflectionGap, paint); 
++
++            h.thumbnailViewImage.setImageBitmap(bitmapWithReflection);
+ 
+             // scale the image to fill the full width of the ImageView. do this only if
+             // we haven't set a bitmap before, or if the bitmap size has changed
+@@ -410,7 +443,7 @@ public class RecentsPanelView extends RelativeLayout implements OnItemClickListe
+                 h.thumbnailViewImageBitmap.getWidth() != thumbnail.getWidth() ||
+                 h.thumbnailViewImageBitmap.getHeight() != thumbnail.getHeight()) {
+                 if (mFitThumbnailToXY) {
+-                    h.thumbnailViewImage.setScaleType(ScaleType.FIT_XY);
++                    h.thumbnailViewImage.setRotationY(25.0f);
+                 } else {
+                     Matrix scaleMatrix = new Matrix();
+                     float scale = mThumbnailWidth / (float) thumbnail.getWidth();
+-- 
+1.7.9.5
+
