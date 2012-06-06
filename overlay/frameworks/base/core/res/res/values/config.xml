@@ -141,4 +141,16 @@
 
     <!-- True will enable the electron beam screen-off animation. -->
     <bool name="config_screenOffAnimation">true</bool>
+
+    <!-- Hardware 'face' keys present on the device, stored as a bit field.
+         This integer should equal the sum of the corresponding value for each
+         of the following keys present:
+             1 - Home
+             2 - Back
+             4 - Menu
+             8 - Search
+            16 - App switch
+         For example, a device with Home, Back, Menu, and Search keys would set this
+         config to 15. -->
+    <integer name="config_deviceHardwareKeys">7</integer>
 </resources>

@@ -34,3 +34,5 @@ dalvik.vm.execution-mode=int:jit
 # Enable Suspend Mode Support
 ro.warmboot.capability=1
 
+# Uncomment to disable bootanimation
+# persist.sys.nobootanimation=1
