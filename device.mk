@@ -88,7 +88,6 @@ PRODUCT_COPY_FILES := \
         device/zte/blade/init.blade.rc:root/init.blade.rc \
         device/zte/blade/init.blade.usb.rc:root/init.blade.usb.rc \
         device/zte/blade/ueventd.blade.rc:root/ueventd.blade.rc \
-        device/zte/blade/initlogo.rle:root/initlogo.rle \
         device/zte/blade/vold.fstab:system/etc/vold.fstab \
         device/zte/blade/prebuilt/blade_keypad.kl:/system/usr/keylayout/blade_keypad.kl \
         device/zte/blade/AudioFilter.csv:system/etc/AudioFilter.csv \
