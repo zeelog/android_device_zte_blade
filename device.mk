@@ -84,6 +84,10 @@ DISABLE_DEXPREOPT := false
 
 PRODUCT_TAGS += dalvik.gc.type-precise
 
+# Enable repeatable keys in CWM
+PRODUCT_PROPERTY_OVERRIDES += \
+        ro.cwm.enable_key_repeat=true
+
 PRODUCT_COPY_FILES := \
         device/zte/blade/init.blade.rc:root/init.blade.rc \
         device/zte/blade/init.blade.usb.rc:root/init.blade.usb.rc \
