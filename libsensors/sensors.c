@@ -31,9 +31,9 @@
  * resolution by 4 bits.
  */
 
-static const struct sensor_t sTaosSensorList[] = {
-        { "AK8973 3-axis Accelerometer",
-                "Asahi Kasei",
+static const struct sensor_t sTaosLIS302SensorList[] = {
+        { "LIS302DL 3-axis Accelerometer",
+                "ST Microelectronics",
                 1, SENSORS_HANDLE_BASE+ID_A,
                 SENSOR_TYPE_ACCELEROMETER, 4.0f*9.81f, (4.0f*9.81f)/256.0f, 0.2f, 0, { } },
         { "AK8973 3-axis Magnetic field sensor",
@@ -56,11 +56,61 @@ static const struct sensor_t sTaosSensorList[] = {
                 SENSOR_TYPE_LIGHT, 27000.0f, 1.0f, 0.5f, 0, { } },
 };
 
-static const struct sensor_t sISLSensorList[] = {
-        { "AK8973 3-axis Accelerometer",
-                "Asahi Kasei",
+static const struct sensor_t sTaosADXL34xSensorList[] = {
+        { "LIS333DE/ADXL346 3-axis Accelerometer",
+                "Analog Devices",
                 1, SENSORS_HANDLE_BASE+ID_A,
                 SENSOR_TYPE_ACCELEROMETER, 4.0f*9.81f, (4.0f*9.81f)/256.0f, 0.2f, 0, { } },
+        { "AK8973 3-axis Magnetic field sensor",
+                "Asahi Kasei",
+                1, SENSORS_HANDLE_BASE+ID_M,
+                SENSOR_TYPE_MAGNETIC_FIELD, 2000.0f, 1.0f/16.0f, 6.8f, 0, { } },
+        { "AK8973 Orientation sensor",
+                "Asahi Kasei",
+                1, SENSORS_HANDLE_BASE+ID_O,
+                SENSOR_TYPE_ORIENTATION, 360.0f, 1.0f, 7.0f, 0, { } },
+        { "Taos Proximity sensor",
+                "Taos Inc.",
+                1, SENSORS_HANDLE_BASE+ID_P,
+                SENSOR_TYPE_PROXIMITY,
+                5.0f, 5.0f,
+                0.5f, 0, { } },
+        { "Taos Light sensor",
+                "Taos Inc.",
+                1, SENSORS_HANDLE_BASE+ID_L,
+                SENSOR_TYPE_LIGHT, 27000.0f, 1.0f, 0.5f, 0, { } },
+};
+
+static const struct sensor_t sISLLIS302SensorList[] = {
+        { "LIS302DL 3-axis Accelerometer",
+                "ST Microelectronics",
+                1, SENSORS_HANDLE_BASE+ID_A,
+                SENSOR_TYPE_ACCELEROMETER, 4.0f*9.81f, (4.0f*9.81f)/256.0f, 0.2f, 0, { } },
+        { "AK8973 3-axis Magnetic field sensor",
+                "Asahi Kasei",
+                1, SENSORS_HANDLE_BASE+ID_M,
+                SENSOR_TYPE_MAGNETIC_FIELD, 2000.0f, 1.0f/16.0f, 6.8f, 0, { } },
+        { "AK8973 Orientation sensor",
+                "Asahi Kasei",
+                1, SENSORS_HANDLE_BASE+ID_O,
+                SENSOR_TYPE_ORIENTATION, 360.0f, 1.0f, 7.0f, 0, { } },
+        { "ISL29026 Proximity sensor",
+                "Intersil",
+                1, SENSORS_HANDLE_BASE+ID_P,
+                SENSOR_TYPE_PROXIMITY,
+                5.0f, 5.0f,
+                0.5f, 0, { } },
+        { "ISL29026 Light sensor",
+                "Intersil",
+                1, SENSORS_HANDLE_BASE+ID_L,
+                SENSOR_TYPE_LIGHT, 27000.0f, 1.0f, 0.5f, 0, { } },
+};
+
+static const struct sensor_t sISLADXL34xSensorList[] = {
+		{ "LIS333DE/ADXL346 3-axis Accelerometer",
+				"Analog Devices",
+				1, SENSORS_HANDLE_BASE+ID_A,
+				SENSOR_TYPE_ACCELEROMETER, 4.0f*9.81f, (4.0f*9.81f)/256.0f, 0.2f, 0, { } },
         { "AK8973 3-axis Magnetic field sensor",
                 "Asahi Kasei",
                 1, SENSORS_HANDLE_BASE+ID_M,
@@ -87,11 +137,19 @@ static int open_sensors(const struct hw_module_t* module, const char* name,
 static int sensors__get_sensors_list(struct sensors_module_t* module,
         struct sensor_t const** list)
 {
-    if(fopen(TAOS_DEVICE_NAME,"rw"))
-        *list = sTaosSensorList;
-    else
-        *list = sISLSensorList;
-    return ARRAY_SIZE(sTaosSensorList);
+	// Select device list from entries on /dev
+    if (fopen(TAOS_DEVICE_NAME, "rw")) {
+    	if (fopen(LIS_DEVICE_NAME, "rw"))
+    		*list = sTaosLIS302SensorList;
+    	else
+    		*list = sTaosADXL34xSensorList;
+    } else {
+    	if (fopen(LIS_DEVICE_NAME, "rw"))
+    		*list = sISLLIS302SensorList;
+    	else
+    		*list = sISLADXL34xSensorList;
+    }
+    return ARRAY_SIZE(sTaosLIS302SensorList);
 }
 
 static struct hw_module_methods_t sensors_module_methods = {
