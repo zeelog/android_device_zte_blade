@@ -71,6 +71,9 @@ ENABLE_JSC_JIT := true
 JS_ENGINE := v8
 HTTP := chrome
 
+# Webkit
+ENABLE_WEBGL := true
+
 # QCOM
 BOARD_USES_QCOM_HARDWARE := true
 BOARD_USES_QCOM_LIBS := true
