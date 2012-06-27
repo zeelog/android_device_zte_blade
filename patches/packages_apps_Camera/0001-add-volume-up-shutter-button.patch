@@ -1,0 +1,214 @@
+From 2028b023dd34bf608a8e2d3ca05e366fd816bbde Mon Sep 17 00:00:00 2001
+From: Konsta <konsta09@gmail.com>
+Date: Wed, 20 Jun 2012 14:02:21 +0300
+Subject: [PATCH] add volume up shutter button
+
+Change-Id: Id64b57683ad0ca95f43c6c39353fc1aa37b2b8bf
+---
+ res/values/strings.xml                            |    4 ++++
+ res/xml/camera_preferences.xml                    |    6 ++++++
+ res/xml/video_preferences.xml                     |    6 ++++++
+ src/com/android/camera/ActivityBase.java          |   13 ++++++++++++-
+ src/com/android/camera/Camera.java                |   15 +++++++++++++++
+ src/com/android/camera/CameraSettings.java        |    1 +
+ src/com/android/camera/VideoCamera.java           |   13 +++++++++++++
+ src/com/android/camera/ui/OtherSettingsPopup.java |    1 +
+ 8 files changed, 58 insertions(+), 1 deletion(-)
+
+diff --git a/res/values/strings.xml b/res/values/strings.xml
+index de27402..dcf9aaf 100644
+--- a/res/values/strings.xml
++++ b/res/values/strings.xml
+@@ -138,6 +138,10 @@
+     <string name="pref_camera_power_shutter_title">Power shutter</string>
+     <string name="pref_camera_power_shutter_default">off</string>
+ 
++    <!-- More Settings screen, volume up button title -->
++    <string name="pref_camera_volup_shutter_title">Volume shutter</string>
++    <string name="pref_camera_volup_shutter_default">on</string>
++
+     <!-- More Settings screen, storage title -->
+     <string name="pref_camera_storage_title">Storage</string>
+ 
+diff --git a/res/xml/camera_preferences.xml b/res/xml/camera_preferences.xml
+index b8dcf06..cecbdf8 100644
+--- a/res/xml/camera_preferences.xml
++++ b/res/xml/camera_preferences.xml
+@@ -60,6 +60,12 @@
+             camera:entries="@array/pref_switch_entries"
+             camera:entryValues="@array/pref_switch_entryvalues" />
+     <ListPreference
++            camera:key="pref_volup_shutter"
++            camera:defaultValue="@string/pref_camera_volup_shutter_default"
++            camera:title="@string/pref_camera_volup_shutter_title"
++            camera:entries="@array/pref_switch_entries"
++            camera:entryValues="@array/pref_switch_entryvalues" />
++    <ListPreference
+             camera:key="pref_camera_storage_key"
+             camera:title="@string/pref_camera_storage_title" />
+     <ListPreference
+diff --git a/res/xml/video_preferences.xml b/res/xml/video_preferences.xml
+index 28b22da..c39eff0 100644
+--- a/res/xml/video_preferences.xml
++++ b/res/xml/video_preferences.xml
+@@ -77,6 +77,12 @@
+             camera:entries="@array/pref_switch_entries"
+             camera:entryValues="@array/pref_switch_entryvalues" />
+     <ListPreference
++            camera:key="pref_volup_shutter"
++            camera:defaultValue="@string/pref_camera_volup_shutter_default"
++            camera:title="@string/pref_camera_volup_shutter_title"
++            camera:entries="@array/pref_switch_entries"
++            camera:entryValues="@array/pref_switch_entryvalues" />
++    <ListPreference
+             camera:key="pref_camera_storage_key"
+             camera:title="@string/pref_camera_storage_title" />
+ </PreferenceGroup>
+diff --git a/src/com/android/camera/ActivityBase.java b/src/com/android/camera/ActivityBase.java
+index 4e155c9..c731d82 100644
+--- a/src/com/android/camera/ActivityBase.java
++++ b/src/com/android/camera/ActivityBase.java
+@@ -68,12 +68,23 @@ abstract public class ActivityBase extends Activity {
+         if (val.equals(CameraSettings.VALUE_ON)){
+             getWindow().addFlags(WindowManager.LayoutParams.PREVENT_POWER_KEY);
+             return true;
+-        }else{
++        } else {
+             getWindow().clearFlags(WindowManager.LayoutParams.PREVENT_POWER_KEY);
+             return false;
+         }
+     }
+ 
++    protected boolean volupShutter(ComboPreferences prefs) {
++        prefs.setLocalId(getApplicationContext(), 0);
++        String val = prefs.getString(CameraSettings.KEY_VOLUP_SHUTTER,
++                getResources().getString(R.string.pref_camera_volup_shutter_default));
++        if (val.equals(CameraSettings.VALUE_ON)){
++            return true;
++        } else {
++            return false;
++        }
++    }
++
+     @Override
+     protected void onResume() {
+         super.onResume();
+diff --git a/src/com/android/camera/Camera.java b/src/com/android/camera/Camera.java
+index 18e8e44..6b2c1e9 100644
+--- a/src/com/android/camera/Camera.java
++++ b/src/com/android/camera/Camera.java
+@@ -1172,6 +1172,7 @@ public class Camera extends ActivityBase implements FocusManager.Listener,
+         getPreferredCameraId();
+         mStorage = CameraSettings.readStorage(mPreferences);
+         powerShutter(mPreferences);
++        volupShutter(mPreferences);
+         String[] defaultFocusModes = getResources().getStringArray(
+                 R.array.pref_camera_focusmode_default_array);
+         mFocusManager = new FocusManager(mPreferences, defaultFocusModes);
+@@ -1312,6 +1313,7 @@ public class Camera extends ActivityBase implements FocusManager.Listener,
+         final String[] OTHER_SETTING_KEYS = {
+                 CameraSettings.KEY_RECORD_LOCATION,
+                 CameraSettings.KEY_POWER_SHUTTER,
++                CameraSettings.KEY_VOLUP_SHUTTER,
+                 CameraSettings.KEY_STORAGE,
+                 CameraSettings.KEY_PICTURE_SIZE,
+                 CameraSettings.KEY_FOCUS_MODE,
+@@ -1886,6 +1888,14 @@ public class Camera extends ActivityBase implements FocusManager.Listener,
+                     onShutterButtonFocus(true);
+                 }
+                 return true;
++            case KeyEvent.KEYCODE_VOLUME_UP:
++                if (mFirstTimeInitialized && event.getRepeatCount() == 0 && volupShutter(mPreferences)) {
++                    onShutterButtonFocus(true);
++                } else if (mFirstTimeInitialized && event.getRepeatCount() == 0) {
++                    // bail out and show volume dialog
++                    break;
++                }
++                return true;
+         }
+ 
+         return super.onKeyDown(keyCode, event);
+@@ -1904,6 +1914,11 @@ public class Camera extends ActivityBase implements FocusManager.Listener,
+                     onShutterButtonClick();
+                 }
+                 return true;
++            case KeyEvent.KEYCODE_VOLUME_UP:
++                if (volupShutter(mPreferences)) {
++                    onShutterButtonClick();
++                }
++                return true;
+         }
+         return super.onKeyUp(keyCode, event);
+     }
+diff --git a/src/com/android/camera/CameraSettings.java b/src/com/android/camera/CameraSettings.java
+index 1332434..374964c 100644
+--- a/src/com/android/camera/CameraSettings.java
++++ b/src/com/android/camera/CameraSettings.java
+@@ -60,6 +60,7 @@ public class CameraSettings {
+     public static final String KEY_CAMERA_FIRST_USE_HINT_SHOWN = "pref_camera_first_use_hint_shown_key";
+     public static final String KEY_VIDEO_FIRST_USE_HINT_SHOWN = "pref_video_first_use_hint_shown_key";
+     public static final String KEY_POWER_SHUTTER = "pref_power_shutter";
++    public static final String KEY_VOLUP_SHUTTER = "pref_volup_shutter";
+     public static final String KEY_STORAGE = "pref_camera_storage_key";
+ 
+     public static final String EXPOSURE_DEFAULT_VALUE = "0";
+diff --git a/src/com/android/camera/VideoCamera.java b/src/com/android/camera/VideoCamera.java
+index f70417d..4337d6d 100644
+--- a/src/com/android/camera/VideoCamera.java
++++ b/src/com/android/camera/VideoCamera.java
+@@ -365,6 +365,7 @@ public class VideoCamera extends ActivityBase
+         mCameraId = CameraSettings.readPreferredCameraId(mPreferences);
+         mStorage = CameraSettings.readStorage(mPreferences);
+         powerShutter(mPreferences);
++        volupShutter(mPreferences);
+         //Testing purpose. Launch a specific camera through the intent extras.
+         int intentCameraId = Util.getCameraFacingIntentExtras(this);
+         if (intentCameraId != -1) {
+@@ -528,6 +529,7 @@ public class VideoCamera extends ActivityBase
+         final String[] OTHER_SETTING_KEYS = {
+                     CameraSettings.KEY_RECORD_LOCATION,
+                     CameraSettings.KEY_POWER_SHUTTER,
++                    CameraSettings.KEY_VOLUP_SHUTTER,
+                     CameraSettings.KEY_STORAGE};
+ 
+         CameraPicker.setImageResourceId(R.drawable.ic_switch_video_facing_holo_light);
+@@ -1064,6 +1066,12 @@ public class VideoCamera extends ActivityBase
+             case KeyEvent.KEYCODE_MENU:
+                 if (mMediaRecorderRecording) return true;
+                 break;
++            case KeyEvent.KEYCODE_VOLUME_UP:
++                if (volupShutter(mPreferences)) {
++                    // do nothing, just don't display the volume dialog
++                    return true;
++                }
++                break;
+         }
+ 
+         return super.onKeyDown(keyCode, event);
+@@ -1080,6 +1088,11 @@ public class VideoCamera extends ActivityBase
+                     onShutterButtonClick();
+                 }
+                 return true;
++            case KeyEvent.KEYCODE_VOLUME_UP:
++                if (volupShutter(mPreferences)) {
++                    onShutterButtonClick();
++                }
++                return true;
+         }
+         return super.onKeyUp(keyCode, event);
+     }
+diff --git a/src/com/android/camera/ui/OtherSettingsPopup.java b/src/com/android/camera/ui/OtherSettingsPopup.java
+index ae6a7be..ad0615e 100644
+--- a/src/com/android/camera/ui/OtherSettingsPopup.java
++++ b/src/com/android/camera/ui/OtherSettingsPopup.java
+@@ -64,6 +64,7 @@ public class OtherSettingsPopup extends AbstractSettingPopup
+             // Currently, the RecordLocationPreference is the only setting
+             // which applies the on/off switch.
+             if (CameraSettings.KEY_POWER_SHUTTER.equals(pref.getKey()) ||
++                    CameraSettings.KEY_VOLUP_SHUTTER.equals(pref.getKey()) ||
+                     CameraSettings.KEY_RECORD_LOCATION.equals(pref.getKey())) {
+                 return R.layout.in_line_setting_switch;
+             }
+-- 
+1.7.9.5
+

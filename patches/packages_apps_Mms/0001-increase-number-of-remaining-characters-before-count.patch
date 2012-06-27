@@ -1,0 +1,29 @@
+From d1f9ad6654a650b70a848964909fd3fe57f8e9c6 Mon Sep 17 00:00:00 2001
+From: Konsta <konsta09@gmail.com>
+Date: Mon, 25 Jun 2012 15:35:29 +0300
+Subject: [PATCH] increase number of remaining characters before counter is
+ shown
+
+choose your words wisely, you cheap bastard :P
+
+Change-Id: I3464d14f9c27ee8491c7a83e896a79c6362b76c1
+---
+ src/com/android/mms/ui/ComposeMessageActivity.java |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/com/android/mms/ui/ComposeMessageActivity.java b/src/com/android/mms/ui/ComposeMessageActivity.java
+index 4c3ffde..e834762 100644
+--- a/src/com/android/mms/ui/ComposeMessageActivity.java
++++ b/src/com/android/mms/ui/ComposeMessageActivity.java
+@@ -262,7 +262,7 @@ public class ComposeMessageActivity extends Activity
+ 
+     private static final int DELETE_MESSAGE_TOKEN  = 9700;
+ 
+-    private static final int CHARS_REMAINING_BEFORE_COUNTER_SHOWN = 10;
++    private static final int CHARS_REMAINING_BEFORE_COUNTER_SHOWN = 30;
+ 
+     private static final long NO_DATE_FOR_DIALOG = -1L;
+ 
+-- 
+1.7.9.5
+

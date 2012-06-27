@@ -1,0 +1,158 @@
+From d1cd7e009d7c7557bf88f5d8c8e05cd6525e4424 Mon Sep 17 00:00:00 2001
+From: Konsta <konsta09@gmail.com>
+Date: Wed, 20 Jun 2012 15:42:09 +0300
+Subject: [PATCH] add option to exit to homescreen after call (ported from
+ AOKP)
+
+https://github.com/AOKP/packages_apps_Phone/commit/5baa129996562c8f536cc9e5bd0aa2d269d2c08d
+
+Change-Id: I7663a4480501c58d50cb3b8b47b2772048225748
+---
+ res/values/strings.xml                         |    4 ++++
+ res/xml/call_feature_setting.xml               |    5 +++++
+ src/com/android/phone/CallFeaturesSetting.java |    6 ++++++
+ src/com/android/phone/InCallScreen.java        |   21 ++++++++++++++++++---
+ 4 files changed, 33 insertions(+), 3 deletions(-)
+
+diff --git a/res/values/strings.xml b/res/values/strings.xml
+index c508579..1714e03 100644
+--- a/res/values/strings.xml
++++ b/res/values/strings.xml
+@@ -1677,4 +1677,8 @@
+     <string name="vibrate_call_waiting">Vibrate call waiting</string>
+     <string name="vibrate_call_waiting_sum">Vibrate on call waiting</string>
+     <!-- End Advanced Settings -->
++
++    <!-- Exit to home screen setting -->
++    <string name="exit_to_home_screen_title">Exit to home screen</string>
++    <string name="exit_to_home_screen_summary">Exit to home screen when call ends instead of call log</string>
+ </resources>
+diff --git a/res/xml/call_feature_setting.xml b/res/xml/call_feature_setting.xml
+index bed602a..24f8746 100644
+--- a/res/xml/call_feature_setting.xml
++++ b/res/xml/call_feature_setting.xml
+@@ -112,6 +112,11 @@
+         android:title="@string/vibrate_call_waiting"
+         android:persistent="true"
+         android:summary="@string/vibrate_call_waiting_sum"/>
++     <CheckBoxPreference
++        android:key="button_exit_to_home_screen_key"
++        android:title="@string/exit_to_home_screen_title"
++        android:persistent="true"
++        android:summary="@string/exit_to_home_screen_summary"/>
+   </PreferenceCategory>
+ 
+   <PreferenceCategory android:key="button_misc_category_key"
+diff --git a/src/com/android/phone/CallFeaturesSetting.java b/src/com/android/phone/CallFeaturesSetting.java
+index 3c552b0..5d867bf 100644
+--- a/src/com/android/phone/CallFeaturesSetting.java
++++ b/src/com/android/phone/CallFeaturesSetting.java
+@@ -155,6 +155,8 @@ public class CallFeaturesSetting extends PreferenceActivity
+     private static final String BUTTON_TTY_KEY    = "button_tty_mode_key";
+     private static final String BUTTON_HAC_KEY    = "button_hac_key";
+ 
++    private static final String BUTTON_EXIT_TO_HOMESCREEN_KEY = "button_exit_to_home_screen_key";
++
+     private static final String BUTTON_GSM_UMTS_OPTIONS = "button_gsm_more_expand_key";
+     private static final String BUTTON_CDMA_OPTIONS = "button_cdma_more_expand_key";
+ 
+@@ -230,6 +232,8 @@ public class CallFeaturesSetting extends PreferenceActivity
+     private ListPreference mVoicemailNotificationVibrateWhen;
+     private SipSharedPreferences mSipSharedPreferences;
+ 
++    private CheckBoxPreference mButtonExitToHomeScreen;
++
+     private class VoiceMailProvider {
+         public VoiceMailProvider(String name, Intent intent) {
+             this.name = name;
+@@ -1413,6 +1417,8 @@ public class CallFeaturesSetting extends PreferenceActivity
+             }
+         }
+ 
++        mButtonExitToHomeScreen = (CheckBoxPreference) findPreference(BUTTON_EXIT_TO_HOMESCREEN_KEY);
++
+         mButtonDTMF = (ListPreference) findPreference(BUTTON_DTMF_KEY);
+         mButtonAutoRetry = (CheckBoxPreference) findPreference(BUTTON_RETRY_KEY);
+         mButtonHAC = (CheckBoxPreference) findPreference(BUTTON_HAC_KEY);
+diff --git a/src/com/android/phone/InCallScreen.java b/src/com/android/phone/InCallScreen.java
+index 12929e2..b0abc5a 100755
+--- a/src/com/android/phone/InCallScreen.java
++++ b/src/com/android/phone/InCallScreen.java
+@@ -33,6 +33,7 @@ import android.content.Intent;
+ import android.content.IntentFilter;
+ import android.content.res.Configuration;
+ import android.content.res.Resources;
++import android.content.SharedPreferences;
+ import android.graphics.Typeface;
+ import android.media.AudioManager;
+ import android.os.AsyncResult;
+@@ -42,6 +43,7 @@ import android.os.Message;
+ import android.os.PowerManager;
+ import android.os.SystemClock;
+ import android.os.SystemProperties;
++import android.preference.PreferenceManager;
+ import android.telephony.ServiceState;
+ import android.text.TextUtils;
+ import android.text.method.DialerKeyListener;
+@@ -159,6 +161,8 @@ public class InCallScreen extends Activity
+     private static final int PHONE_INCOMING_RING = 123;
+     private static final int PHONE_NEW_RINGING_CONNECTION = 124;
+ 
++    private static final String BUTTON_EXIT_TO_HOMESCREEN_KEY = "button_exit_to_home_screen_key";
++
+     // When InCallScreenMode is UNDEFINED set the default action
+     // to ACTION_UNDEFINED so if we are resumed the activity will
+     // know its undefined. In particular checkIsOtaCall will return
+@@ -262,6 +266,7 @@ public class InCallScreen extends Activity
+         EARPIECE,   // Handset earpiece (or wired headset, if connected)
+     }
+ 
++    public boolean mExitToHomeScreen = false;
+ 
+     private Handler mHandler = new Handler() {
+         @Override
+@@ -470,6 +475,8 @@ public class InCallScreen extends Activity
+             return;
+         }
+ 
++        updateSettings();
++
+         mApp = PhoneApp.getInstance();
+         mApp.setInCallScreenInstance(this);
+ 
+@@ -564,6 +571,8 @@ public class InCallScreen extends Activity
+         if (DBG) log("onResume()...");
+         super.onResume();
+ 
++        updateSettings();
++
+         mIsForegroundActivity = true;
+         mIsForegroundActivityForProximity = true;
+ 
+@@ -2506,9 +2515,10 @@ public class InCallScreen extends Activity
+                         log("- Show Call Log (or Dialtacts) after disconnect. Current intent: "
+                                 + intent);
+                     }
+-                    try {
+-                        startActivity(intent);
+-                    } catch (ActivityNotFoundException e) {
++                    if (!mExitToHomeScreen)  // If User wants to exit to home screen, skip this part - else go to call log.
++                        try {
++                            startActivity(intent);
++                        } catch (ActivityNotFoundException e) {
+                         // Don't crash if there's somehow no "Call log" at
+                         // all on this device.
+                         // (This should never happen, though, since we already
+@@ -4492,4 +4502,9 @@ public class InCallScreen extends Activity
+     private void log(String msg) {
+         Log.d(LOG_TAG, msg);
+     }
++
++    protected void updateSettings() {
++        SharedPreferences callsettings = PreferenceManager.getDefaultSharedPreferences(this);
++        mExitToHomeScreen = callsettings.getBoolean(BUTTON_EXIT_TO_HOMESCREEN_KEY, false);
++    }
+ }
+-- 
+1.7.9.5
+
