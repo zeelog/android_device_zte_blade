@@ -1,0 +1,323 @@
+From ce48cb769e912b502a8faeb4fb2bc421355694fc Mon Sep 17 00:00:00 2001
+From: Konsta <konsta09@gmail.com>
+Date: Tue, 26 Jun 2012 12:28:25 +0300
+Subject: [PATCH 1/2] center clock (1/2)
+
+Change-Id: Id44e6757bfa5b413bb9b4b3b2bd86cf7c1e52fcf
+---
+ core/java/android/provider/Settings.java           |    6 +++
+ packages/SystemUI/res/layout/status_bar.xml        |   15 ++++++
+ .../systemui/statusbar/phone/PhoneStatusBar.java   |   26 +++++++---
+ .../systemui/statusbar/policy/CenterClock.java     |   49 +++++++++++++++++++
+ .../android/systemui/statusbar/policy/Clock.java   |   51 +++++++++++++-------
+ 5 files changed, 123 insertions(+), 24 deletions(-)
+ create mode 100644 packages/SystemUI/src/com/android/systemui/statusbar/policy/CenterClock.java
+
+diff --git a/core/java/android/provider/Settings.java b/core/java/android/provider/Settings.java
+index e96a33f..6cbd74d 100644
+--- a/core/java/android/provider/Settings.java
++++ b/core/java/android/provider/Settings.java
+@@ -2350,6 +2350,12 @@ public final class Settings {
+         public static final String STATUS_BAR_CLOCK = "status_bar_clock";
+ 
+         /**
++         * Whether to show centerclock in the status bar
++         * @hide
++         */
++        public static final String STATUS_BAR_CENTERCLOCK = "status_bar_centerclock";
++
++        /**
+          * Whether to show the signal text or signal bars.
+          * default: 0
+          * 0: show signal bars
+diff --git a/packages/SystemUI/res/layout/status_bar.xml b/packages/SystemUI/res/layout/status_bar.xml
+index 1325142..8602461 100644
+--- a/packages/SystemUI/res/layout/status_bar.xml
++++ b/packages/SystemUI/res/layout/status_bar.xml
+@@ -110,6 +110,21 @@
+             android:gravity="center_vertical|left"
+             />
+     </LinearLayout>
++
++    <LinearLayout
++        android:gravity="center"
++        android:orientation="horizontal"
++        android:layout_width="fill_parent"
++        android:layout_height="fill_parent">
++            <com.android.systemui.statusbar.policy.CenterClock
++                android:textAppearance="@style/TextAppearance.StatusBar.Clock"
++                android:gravity="center"
++                android:id="@+id/centerclock"
++                android:paddingLeft="6.0dip"
++                android:layout_width="wrap_content"
++                android:layout_height="fill_parent"
++                android:singleLine="true" />
++    </LinearLayout>
+         
+     <LinearLayout android:id="@+id/ticker"
+         android:layout_width="match_parent"
+diff --git a/packages/SystemUI/src/com/android/systemui/statusbar/phone/PhoneStatusBar.java b/packages/SystemUI/src/com/android/systemui/statusbar/phone/PhoneStatusBar.java
+index f3e12a0..5d77da4 100644
+--- a/packages/SystemUI/src/com/android/systemui/statusbar/phone/PhoneStatusBar.java
++++ b/packages/SystemUI/src/com/android/systemui/statusbar/phone/PhoneStatusBar.java
+@@ -91,6 +91,8 @@ import com.android.systemui.statusbar.NotificationData;
+ import com.android.systemui.statusbar.StatusBar;
+ import com.android.systemui.statusbar.StatusBarIconView;
+ import com.android.systemui.statusbar.SignalClusterView;
++import com.android.systemui.statusbar.policy.CenterClock;
++import com.android.systemui.statusbar.policy.Clock;
+ import com.android.systemui.statusbar.policy.DateView;
+ import com.android.systemui.statusbar.policy.BatteryController;
+ import com.android.systemui.statusbar.policy.LocationController;
+@@ -128,7 +130,6 @@ public class PhoneStatusBar extends StatusBar {
+ 
+     private static final float BRIGHTNESS_CONTROL_PADDING = 0.15f;
+ 
+-    private boolean mShowClock;
+     private boolean mBrightnessControl;
+     private boolean mAutoBrightness;
+ 
+@@ -259,6 +260,8 @@ public class PhoneStatusBar extends StatusBar {
+ 
+     DisplayMetrics mDisplayMetrics = new DisplayMetrics();
+ 
++    CenterClock mCenterClock;
++
+     class SettingsObserver extends ContentObserver {
+         SettingsObserver(Handler handler) {
+             super(handler);
+@@ -391,6 +394,8 @@ public class PhoneStatusBar extends StatusBar {
+             // no window manager? good luck with that
+         }
+ 
++        mCenterClock = (CenterClock) sb.findViewById(R.id.centerclock);
++
+         // figure out which pixel-format to use for the status bar.
+         mPixelFormat = PixelFormat.OPAQUE;
+         mStatusIcons = (LinearLayout)sb.findViewById(R.id.statusIcons);
+@@ -1174,13 +1179,14 @@ public class PhoneStatusBar extends StatusBar {
+     }
+ 
+     public void showClock(boolean show) {
+-        ContentResolver resolver = mContext.getContentResolver();
+-
+-        View clock = mStatusBarView.findViewById(R.id.clock);
+-        mShowClock = (Settings.System.getInt(resolver,
+-                Settings.System.STATUS_BAR_CLOCK, 1) == 1);
++        Clock clock = (Clock) mStatusBarView.findViewById(R.id.clock);
+         if (clock != null) {
+-            clock.setVisibility(show ? (mShowClock ? View.VISIBLE : View.GONE) : View.GONE);
++            clock.updateVisibilityFromStatusBar(show);
++        }
++        
++        CenterClock centerclock = (CenterClock) mStatusBarView.findViewById(R.id.centerclock);
++        if (centerclock != null) {
++            centerclock.updateVisibilityFromStatusBar(show);
+         }
+     }
+ 
+@@ -1921,24 +1927,30 @@ public class PhoneStatusBar extends StatusBar {
+         @Override
+         public void tickerStarting() {
+             mTicking = true;
++            mCenterClock.setVisibility(View.GONE);
+             mIcons.setVisibility(View.GONE);
+             mTickerView.setVisibility(View.VISIBLE);
+             mTickerView.startAnimation(loadAnim(com.android.internal.R.anim.push_up_in, null));
++            mCenterClock.startAnimation(loadAnim(com.android.internal.R.anim.push_up_out, null));
+             mIcons.startAnimation(loadAnim(com.android.internal.R.anim.push_up_out, null));
+         }
+ 
+         @Override
+         public void tickerDone() {
++            mCenterClock.setVisibility(View.VISIBLE);
+             mIcons.setVisibility(View.VISIBLE);
+             mTickerView.setVisibility(View.GONE);
++            mCenterClock.startAnimation(loadAnim(com.android.internal.R.anim.push_down_in, null));
+             mIcons.startAnimation(loadAnim(com.android.internal.R.anim.push_down_in, null));
+             mTickerView.startAnimation(loadAnim(com.android.internal.R.anim.push_down_out,
+                         mTickingDoneListener));
+         }
+ 
+         public void tickerHalting() {
++            mCenterClock.setVisibility(View.VISIBLE);
+             mIcons.setVisibility(View.VISIBLE);
+             mTickerView.setVisibility(View.GONE);
++            mCenterClock.startAnimation(loadAnim(com.android.internal.R.anim.fade_in, null));
+             mIcons.startAnimation(loadAnim(com.android.internal.R.anim.fade_in, null));
+             mTickerView.startAnimation(loadAnim(com.android.internal.R.anim.fade_out,
+                         mTickingDoneListener));
+diff --git a/packages/SystemUI/src/com/android/systemui/statusbar/policy/CenterClock.java b/packages/SystemUI/src/com/android/systemui/statusbar/policy/CenterClock.java
+new file mode 100644
+index 0000000..efcf6dc
+--- /dev/null
++++ b/packages/SystemUI/src/com/android/systemui/statusbar/policy/CenterClock.java
+@@ -0,0 +1,49 @@
++/*
++ * Copyright (C) 2006 The Android Open Source Project
++ *
++ * Licensed under the Apache License, Version 2.0 (the "License");
++ * you may not use this file except in compliance with the License.
++ * You may obtain a copy of the License at
++ *
++ *      http://www.apache.org/licenses/LICENSE-2.0
++ *
++ * Unless required by applicable law or agreed to in writing, software
++ * distributed under the License is distributed on an "AS IS" BASIS,
++ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++ * See the License for the specific language governing permissions and
++ * limitations under the License.
++ */
++
++package com.android.systemui.statusbar.policy;
++
++import android.content.Context;
++import android.os.Handler;
++import android.util.AttributeSet;
++import android.view.View;
++
++public class CenterClock extends Clock {
++
++    public CenterClock(Context context) {
++        this(context, null);
++    }
++
++    public CenterClock(Context context, AttributeSet attrs) {
++        this(context, attrs, 0);
++    }
++
++    public CenterClock(Context context, AttributeSet attrs, int defStyle) {
++        super(context, attrs, defStyle);
++    }
++
++    public void updateVisibilityFromStatusBar(boolean show) {
++        if (mShowCenterClock && mShowClock)
++            setVisibility(show ? View.VISIBLE : View.GONE);
++    }
++
++    protected void updateClockVisibility(){
++        if (mShowCenterClock && mShowClock)
++            setVisibility(View.VISIBLE);
++        else
++            setVisibility(View.GONE);
++    }
++}
+diff --git a/packages/SystemUI/src/com/android/systemui/statusbar/policy/Clock.java b/packages/SystemUI/src/com/android/systemui/statusbar/policy/Clock.java
+index 604a136..be25653 100644
+--- a/packages/SystemUI/src/com/android/systemui/statusbar/policy/Clock.java
++++ b/packages/SystemUI/src/com/android/systemui/statusbar/policy/Clock.java
+@@ -52,23 +52,24 @@ import com.android.internal.R;
+  * minutes.
+  */
+ public class Clock extends TextView {
+-    private boolean mAttached;
+-    private Calendar mCalendar;
+-    private String mClockFormatString;
+-    private SimpleDateFormat mClockFormat;
++    protected boolean mAttached;
++    protected Calendar mCalendar;
++    protected String mClockFormatString;
++    protected SimpleDateFormat mClockFormat;
+ 
+-    private static final int AM_PM_STYLE_NORMAL  = 0;
+-    private static final int AM_PM_STYLE_SMALL   = 1;
+-    private static final int AM_PM_STYLE_GONE    = 2;
++    public static final int AM_PM_STYLE_NORMAL  = 0;
++    public static final int AM_PM_STYLE_SMALL   = 1;
++    public static final int AM_PM_STYLE_GONE    = 2;
+ 
+-    private static int AM_PM_STYLE = AM_PM_STYLE_GONE;
++    protected static int AM_PM_STYLE = AM_PM_STYLE_GONE;
+ 
+-    private int mAmPmStyle;
+-    private boolean mShowClock;
++    protected int mAmPmStyle;
++    protected boolean mShowClock;
++    protected boolean mShowCenterClock;
+ 
+     Handler mHandler;
+ 
+-    class SettingsObserver extends ContentObserver {
++    protected class SettingsObserver extends ContentObserver {
+         SettingsObserver(Handler handler) {
+             super(handler);
+         }
+@@ -79,6 +80,8 @@ public class Clock extends TextView {
+                     Settings.System.STATUS_BAR_AM_PM), false, this);
+             resolver.registerContentObserver(Settings.System.getUriFor(
+                     Settings.System.STATUS_BAR_CLOCK), false, this);
++            resolver.registerContentObserver(Settings.System.getUriFor(
++                    Settings.System.STATUS_BAR_CENTERCLOCK), false, this);
+         }
+ 
+         @Override public void onChange(boolean selfChange) {
+@@ -126,6 +129,9 @@ public class Clock extends TextView {
+         // The time zone may have changed while the receiver wasn't registered, so update the Time
+         mCalendar = Calendar.getInstance(TimeZone.getDefault());
+ 
++        // Update settings
++        updateSettings();
++
+         // Make sure we update to the current time
+         updateClock();
+     }
+@@ -139,7 +145,7 @@ public class Clock extends TextView {
+         }
+     }
+ 
+-    private final BroadcastReceiver mIntentReceiver = new BroadcastReceiver() {
++    protected final BroadcastReceiver mIntentReceiver = new BroadcastReceiver() {
+         @Override
+         public void onReceive(Context context, Intent intent) {
+             String action = intent.getAction();
+@@ -154,12 +160,12 @@ public class Clock extends TextView {
+         }
+     };
+ 
+-    final void updateClock() {
++    protected final void updateClock() {
+         mCalendar.setTimeInMillis(System.currentTimeMillis());
+         setText(getSmallTime());
+     }
+ 
+-    private final CharSequence getSmallTime() {
++    protected final CharSequence getSmallTime() {
+         Context context = getContext();
+         boolean b24 = DateFormat.is24HourFormat(context);
+         int res;
+@@ -238,7 +244,7 @@ public class Clock extends TextView {
+ 
+     }
+ 
+-    private void updateSettings(){
++    protected void updateSettings(){
+         ContentResolver resolver = mContext.getContentResolver();
+ 
+         mAmPmStyle = (Settings.System.getInt(resolver,
+@@ -256,10 +262,21 @@ public class Clock extends TextView {
+         mShowClock = (Settings.System.getInt(resolver,
+                 Settings.System.STATUS_BAR_CLOCK, 1) == 1);
+ 
+-        if(mShowClock)
++        mShowCenterClock = (Settings.System.getInt(resolver,
++                Settings.System.STATUS_BAR_CENTERCLOCK, 0) == 1);
++
++        updateClockVisibility();
++    }
++
++    public void updateVisibilityFromStatusBar(boolean show) {
++        if (mShowClock && !mShowCenterClock)
++            setVisibility(show ? View.VISIBLE : View.GONE);
++    }
++
++    protected void updateClockVisibility(){
++        if (mShowClock && !mShowCenterClock)
+             setVisibility(View.VISIBLE);
+         else
+             setVisibility(View.GONE);
+     }
+ }
+-
+-- 
+1.7.9.5
+

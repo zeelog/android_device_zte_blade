@@ -1,0 +1,27 @@
+From 1c7ca7670940017c4a3161a53c6692edb1efb674 Mon Sep 17 00:00:00 2001
+From: Konsta <konsta09@gmail.com>
+Date: Fri, 29 Jun 2012 00:02:29 +0300
+Subject: [PATCH 2/2] set safe headset volume restore option to disabled by
+ default (1/2)
+
+Change-Id: I8dc5944f638b7c88ab2bc6dc626861de420277ea
+---
+ media/java/android/media/AudioService.java |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/media/java/android/media/AudioService.java b/media/java/android/media/AudioService.java
+index b557dd9..4d837f5 100644
+--- a/media/java/android/media/AudioService.java
++++ b/media/java/android/media/AudioService.java
+@@ -2575,7 +2575,7 @@ public class AudioService extends IAudioService.Stub {
+                     // Headset plugged in
+                     int volumeRestoreCap;
+                     if (Settings.System.getInt(mContentResolver,
+-                            Settings.System.SAFE_HEADSET_VOLUME_RESTORE, 1) == 0) {
++                            Settings.System.SAFE_HEADSET_VOLUME_RESTORE, 0) == 0) {
+                         // Don't cap
+                         volumeRestoreCap = 8;
+                     } else {
+-- 
+1.7.9.5
+

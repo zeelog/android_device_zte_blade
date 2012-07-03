@@ -1,0 +1,27 @@
+From 9606bf86b41cccf4d3d7d849ac22e7a7c598e7e0 Mon Sep 17 00:00:00 2001
+From: Konsta <konsta09@gmail.com>
+Date: Fri, 29 Jun 2012 00:03:47 +0300
+Subject: [PATCH 2/2] set safe headset volume restore option to disabled by
+ default (2/2)
+
+Change-Id: I3d6f2b29d2de7f55cbd10b3b8fc91c8750e7e112
+---
+ src/com/android/settings/SoundSettings.java |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/com/android/settings/SoundSettings.java b/src/com/android/settings/SoundSettings.java
+index ae951c2..67c8081 100644
+--- a/src/com/android/settings/SoundSettings.java
++++ b/src/com/android/settings/SoundSettings.java
+@@ -179,7 +179,7 @@ public class SoundSettings extends SettingsPreferenceFragment implements
+         mSafeHeadsetRestore = (CheckBoxPreference) findPreference(KEY_SAFE_HEADSET_RESTORE);
+         mSafeHeadsetRestore.setPersistent(false);
+         mSafeHeadsetRestore.setChecked(Settings.System.getInt(resolver,
+-                Settings.System.SAFE_HEADSET_VOLUME_RESTORE, 1) != 0);
++                Settings.System.SAFE_HEADSET_VOLUME_RESTORE, 0) != 0);
+ 
+         mVibrateOnRing = (CheckBoxPreference) findPreference(KEY_VIBRATE);
+         mVibrateOnRing.setOnPreferenceChangeListener(this);
+-- 
+1.7.9.5
+
