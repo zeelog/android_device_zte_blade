@@ -1,23 +1,23 @@
-From ce48cb769e912b502a8faeb4fb2bc421355694fc Mon Sep 17 00:00:00 2001
+From 09da47b11d2e8bf1f4b83d14011dcad0093cecc3 Mon Sep 17 00:00:00 2001
 From: Konsta <konsta09@gmail.com>
 Date: Tue, 26 Jun 2012 12:28:25 +0300
-Subject: [PATCH 1/2] center clock (1/2)
+Subject: [PATCH] center clock (1/2)
 
 Change-Id: Id44e6757bfa5b413bb9b4b3b2bd86cf7c1e52fcf
 ---
  core/java/android/provider/Settings.java           |    6 +++
  packages/SystemUI/res/layout/status_bar.xml        |   15 ++++++
- .../systemui/statusbar/phone/PhoneStatusBar.java   |   26 +++++++---
+ .../systemui/statusbar/phone/PhoneStatusBar.java   |   24 ++++++---
  .../systemui/statusbar/policy/CenterClock.java     |   49 +++++++++++++++++++
  .../android/systemui/statusbar/policy/Clock.java   |   51 +++++++++++++-------
- 5 files changed, 123 insertions(+), 24 deletions(-)
+ 5 files changed, 121 insertions(+), 24 deletions(-)
  create mode 100644 packages/SystemUI/src/com/android/systemui/statusbar/policy/CenterClock.java
 
 diff --git a/core/java/android/provider/Settings.java b/core/java/android/provider/Settings.java
-index e96a33f..6cbd74d 100644
+index 51dd867..b228c8c 100644
 --- a/core/java/android/provider/Settings.java
 +++ b/core/java/android/provider/Settings.java
-@@ -2350,6 +2350,12 @@ public final class Settings {
+@@ -2375,6 +2375,12 @@ public final class Settings {
          public static final String STATUS_BAR_CLOCK = "status_bar_clock";
  
          /**
@@ -57,7 +57,7 @@ index 1325142..8602461 100644
      <LinearLayout android:id="@+id/ticker"
          android:layout_width="match_parent"
 diff --git a/packages/SystemUI/src/com/android/systemui/statusbar/phone/PhoneStatusBar.java b/packages/SystemUI/src/com/android/systemui/statusbar/phone/PhoneStatusBar.java
-index f3e12a0..5d77da4 100644
+index 8afa10d..6bbda54 100644
 --- a/packages/SystemUI/src/com/android/systemui/statusbar/phone/PhoneStatusBar.java
 +++ b/packages/SystemUI/src/com/android/systemui/statusbar/phone/PhoneStatusBar.java
 @@ -91,6 +91,8 @@ import com.android.systemui.statusbar.NotificationData;
@@ -95,7 +95,7 @@ index f3e12a0..5d77da4 100644
          // figure out which pixel-format to use for the status bar.
          mPixelFormat = PixelFormat.OPAQUE;
          mStatusIcons = (LinearLayout)sb.findViewById(R.id.statusIcons);
-@@ -1174,13 +1179,14 @@ public class PhoneStatusBar extends StatusBar {
+@@ -1173,13 +1178,14 @@ public class PhoneStatusBar extends StatusBar {
      }
  
      public void showClock(boolean show) {
@@ -116,11 +116,11 @@ index f3e12a0..5d77da4 100644
          }
      }
  
-@@ -1921,24 +1927,30 @@ public class PhoneStatusBar extends StatusBar {
+@@ -1920,16 +1926,20 @@ public class PhoneStatusBar extends StatusBar {
          @Override
          public void tickerStarting() {
              mTicking = true;
-+            mCenterClock.setVisibility(View.GONE);
++            mCenterClock.updateVisibilityFromStatusBar(false);
              mIcons.setVisibility(View.GONE);
              mTickerView.setVisibility(View.VISIBLE);
              mTickerView.startAnimation(loadAnim(com.android.internal.R.anim.push_up_in, null));
@@ -130,22 +130,12 @@ index f3e12a0..5d77da4 100644
  
          @Override
          public void tickerDone() {
-+            mCenterClock.setVisibility(View.VISIBLE);
++            mCenterClock.updateVisibilityFromStatusBar(true);
              mIcons.setVisibility(View.VISIBLE);
              mTickerView.setVisibility(View.GONE);
 +            mCenterClock.startAnimation(loadAnim(com.android.internal.R.anim.push_down_in, null));
              mIcons.startAnimation(loadAnim(com.android.internal.R.anim.push_down_in, null));
              mTickerView.startAnimation(loadAnim(com.android.internal.R.anim.push_down_out,
-                         mTickingDoneListener));
-         }
- 
-         public void tickerHalting() {
-+            mCenterClock.setVisibility(View.VISIBLE);
-             mIcons.setVisibility(View.VISIBLE);
-             mTickerView.setVisibility(View.GONE);
-+            mCenterClock.startAnimation(loadAnim(com.android.internal.R.anim.fade_in, null));
-             mIcons.startAnimation(loadAnim(com.android.internal.R.anim.fade_in, null));
-             mTickerView.startAnimation(loadAnim(com.android.internal.R.anim.fade_out,
                          mTickingDoneListener));
 diff --git a/packages/SystemUI/src/com/android/systemui/statusbar/policy/CenterClock.java b/packages/SystemUI/src/com/android/systemui/statusbar/policy/CenterClock.java
 new file mode 100644
