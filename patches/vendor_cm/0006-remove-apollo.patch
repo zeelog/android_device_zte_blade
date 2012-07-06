@@ -1,0 +1,29 @@
+From 5d609501b0e870f83f99b20f91fd5bf83a37565e Mon Sep 17 00:00:00 2001
+From: Konsta <konsta09@gmail.com>
+Date: Fri, 6 Jul 2012 13:29:59 +0300
+Subject: [PATCH] remove apollo
+
+Change-Id: Ib8cb91179401600bbd7c379d381f42ab3e921b9e
+---
+ config/common.mk |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/config/common.mk b/config/common.mk
+index be2cbab..0ab0b1d 100644
+--- a/config/common.mk
++++ b/config/common.mk
+@@ -106,9 +106,9 @@ PRODUCT_PACKAGES += \
+     Trebuchet \
+     DSPManager \
+     libcyanogen-dsp \
+-    audio_effects.conf \
+-    Apollo
++    audio_effects.conf
+ 
++#    Apollo
+ #    CMWallpapers
+ 
+ # Extra tools in CM
+-- 
+1.7.9.5
+

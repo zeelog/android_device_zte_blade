@@ -1,0 +1,32 @@
+From 3da98dee34c5fb462874da237dc56d88dc9b5b7e Mon Sep 17 00:00:00 2001
+From: Konsta <konsta09@gmail.com>
+Date: Thu, 5 Jul 2012 00:51:19 +0300
+Subject: [PATCH] add battery bar (2/2)
+
+Change-Id: I3d582ba787721970ef2f973fac220ecc070b00b7
+---
+ res/values/arrays.xml |    2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/res/values/arrays.xml b/res/values/arrays.xml
+index e13ab74..78a268e 100644
+--- a/res/values/arrays.xml
++++ b/res/values/arrays.xml
+@@ -952,12 +952,14 @@
+     <string-array name="entries_status_bar_battery">
+         <item>Icon (default)</item>
+         <item>Percentage</item>
++        <item>Status bar</item>
+         <item>Hidden</item>
+     </string-array>
+ 
+     <string-array name="values_status_bar_battery" translatable="false">
+         <item>0</item>
+         <item>1</item>
++        <item>3</item>
+         <item>2</item>
+     </string-array>
+ 
+-- 
+1.7.9.5
+
