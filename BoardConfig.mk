@@ -38,11 +38,12 @@ TARGET_SPECIFIC_HEADER_PATH := device/zte/blade/include
 BOARD_CUSTOM_GRAPHICS := ../../../device/zte/blade/recovery/graphics.c
 BOARD_CUSTOM_RECOVERY_KEYMAPPING := ../../device/zte/blade/recovery/recovery_ui.c
 TARGET_RECOVERY_INITRC := device/zte/blade/recovery/recovery.rc
+TARGET_RECOVERY_FSTAB := device/zte/blade/recovery/recovery.fstab
 
 # Kernel
 TARGET_KERNEL_SOURCE := kernel/zte/zte-kernel-msm7x27
 TARGET_KERNEL_CONFIG := cyanogen_blade_defconfig
-TARGET_PREBUILT_RECOVERY_KERNEL := device/zte/blade/recovery_kernel
+TARGET_PREBUILT_RECOVERY_KERNEL := device/zte/blade/recovery/recovery_kernel
 BOARD_KERNEL_BASE := 0x02600000
 BOARD_KERNEL_CMDLINE := androidboot.hardware=blade console=null
 
@@ -81,7 +82,7 @@ COMMON_GLOBAL_CFLAGS += -DQCOM_HARDWARE
 
 # Graphics
 TARGET_USES_GENLOCK := true
-BOARD_EGL_CFG := device/zte/blade/egl.cfg
+BOARD_EGL_CFG := device/zte/blade/prebuilt/system/lib/egl/egl.cfg
 USE_OPENGL_RENDERER := true
 BOARD_ADRENO_DECIDE_TEXTURE_TARGET := true
 COMMON_GLOBAL_CFLAGS += -DREFRESH_RATE=60
