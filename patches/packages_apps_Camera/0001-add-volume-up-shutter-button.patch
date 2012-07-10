@@ -1,4 +1,4 @@
-From 2028b023dd34bf608a8e2d3ca05e366fd816bbde Mon Sep 17 00:00:00 2001
+From bca22e51b8798fda0b4d0eb5c4eefb52efc33290 Mon Sep 17 00:00:00 2001
 From: Konsta <konsta09@gmail.com>
 Date: Wed, 20 Jun 2012 14:02:21 +0300
 Subject: [PATCH] add volume up shutter button
@@ -16,7 +16,7 @@ Change-Id: Id64b57683ad0ca95f43c6c39353fc1aa37b2b8bf
  8 files changed, 58 insertions(+), 1 deletion(-)
 
 diff --git a/res/values/strings.xml b/res/values/strings.xml
-index de27402..dcf9aaf 100644
+index 7b2a51b..37b2bf8 100644
 --- a/res/values/strings.xml
 +++ b/res/values/strings.xml
 @@ -138,6 +138,10 @@
@@ -27,11 +27,11 @@ index de27402..dcf9aaf 100644
 +    <string name="pref_camera_volup_shutter_title">Volume shutter</string>
 +    <string name="pref_camera_volup_shutter_default">on</string>
 +
-     <!-- More Settings screen, storage title -->
-     <string name="pref_camera_storage_title">Storage</string>
- 
+     <!-- More Settings screen, focus sound title -->
+     <string name="pref_camera_focus_sound_title">Focus sound</string>
+     <string name="pref_camera_focus_sound_default">on</string>
 diff --git a/res/xml/camera_preferences.xml b/res/xml/camera_preferences.xml
-index b8dcf06..cecbdf8 100644
+index 55cbc03..3267f10 100644
 --- a/res/xml/camera_preferences.xml
 +++ b/res/xml/camera_preferences.xml
 @@ -60,6 +60,12 @@
@@ -44,9 +44,9 @@ index b8dcf06..cecbdf8 100644
 +            camera:entries="@array/pref_switch_entries"
 +            camera:entryValues="@array/pref_switch_entryvalues" />
 +    <ListPreference
-             camera:key="pref_camera_storage_key"
-             camera:title="@string/pref_camera_storage_title" />
-     <ListPreference
+             camera:key="pref_focus_sound"
+             camera:defaultValue="@string/pref_camera_focus_sound_default"
+             camera:title="@string/pref_camera_focus_sound_title"
 diff --git a/res/xml/video_preferences.xml b/res/xml/video_preferences.xml
 index 28b22da..c39eff0 100644
 --- a/res/xml/video_preferences.xml
@@ -65,7 +65,7 @@ index 28b22da..c39eff0 100644
              camera:title="@string/pref_camera_storage_title" />
  </PreferenceGroup>
 diff --git a/src/com/android/camera/ActivityBase.java b/src/com/android/camera/ActivityBase.java
-index 4e155c9..c731d82 100644
+index 219dbe0..c1b910a 100644
 --- a/src/com/android/camera/ActivityBase.java
 +++ b/src/com/android/camera/ActivityBase.java
 @@ -68,12 +68,23 @@ abstract public class ActivityBase extends Activity {
@@ -90,14 +90,14 @@ index 4e155c9..c731d82 100644
 +        }
 +    }
 +
-     @Override
-     protected void onResume() {
-         super.onResume();
+     protected boolean focusSound(ComboPreferences prefs) {
+         prefs.setLocalId(getApplicationContext(), 0);
+         String val = prefs.getString(CameraSettings.KEY_FOCUS_SOUND,
 diff --git a/src/com/android/camera/Camera.java b/src/com/android/camera/Camera.java
-index 18e8e44..6b2c1e9 100644
+index 9273258..d636934 100644
 --- a/src/com/android/camera/Camera.java
 +++ b/src/com/android/camera/Camera.java
-@@ -1172,6 +1172,7 @@ public class Camera extends ActivityBase implements FocusManager.Listener,
+@@ -1262,6 +1262,7 @@ public class Camera extends ActivityBase implements FocusManager.Listener,
          getPreferredCameraId();
          mStorage = CameraSettings.readStorage(mPreferences);
          powerShutter(mPreferences);
@@ -105,15 +105,15 @@ index 18e8e44..6b2c1e9 100644
          String[] defaultFocusModes = getResources().getStringArray(
                  R.array.pref_camera_focusmode_default_array);
          mFocusManager = new FocusManager(mPreferences, defaultFocusModes);
-@@ -1312,6 +1313,7 @@ public class Camera extends ActivityBase implements FocusManager.Listener,
+@@ -1402,6 +1403,7 @@ public class Camera extends ActivityBase implements FocusManager.Listener,
          final String[] OTHER_SETTING_KEYS = {
                  CameraSettings.KEY_RECORD_LOCATION,
                  CameraSettings.KEY_POWER_SHUTTER,
 +                CameraSettings.KEY_VOLUP_SHUTTER,
+                 CameraSettings.KEY_FOCUS_SOUND,
                  CameraSettings.KEY_STORAGE,
                  CameraSettings.KEY_PICTURE_SIZE,
-                 CameraSettings.KEY_FOCUS_MODE,
-@@ -1886,6 +1888,14 @@ public class Camera extends ActivityBase implements FocusManager.Listener,
+@@ -1944,6 +1946,14 @@ public class Camera extends ActivityBase implements FocusManager.Listener,
                      onShutterButtonFocus(true);
                  }
                  return true;
@@ -128,7 +128,7 @@ index 18e8e44..6b2c1e9 100644
          }
  
          return super.onKeyDown(keyCode, event);
-@@ -1904,6 +1914,11 @@ public class Camera extends ActivityBase implements FocusManager.Listener,
+@@ -1962,6 +1972,11 @@ public class Camera extends ActivityBase implements FocusManager.Listener,
                      onShutterButtonClick();
                  }
                  return true;
@@ -141,7 +141,7 @@ index 18e8e44..6b2c1e9 100644
          return super.onKeyUp(keyCode, event);
      }
 diff --git a/src/com/android/camera/CameraSettings.java b/src/com/android/camera/CameraSettings.java
-index 1332434..374964c 100644
+index 70aa7ed..7b60f0d 100644
 --- a/src/com/android/camera/CameraSettings.java
 +++ b/src/com/android/camera/CameraSettings.java
 @@ -60,6 +60,7 @@ public class CameraSettings {
@@ -150,10 +150,10 @@ index 1332434..374964c 100644
      public static final String KEY_POWER_SHUTTER = "pref_power_shutter";
 +    public static final String KEY_VOLUP_SHUTTER = "pref_volup_shutter";
      public static final String KEY_STORAGE = "pref_camera_storage_key";
- 
-     public static final String EXPOSURE_DEFAULT_VALUE = "0";
+     public static final String KEY_ZSL = "pref_camera_zsl_key";
+     public static final String KEY_ISO = "pref_camera_iso_key";
 diff --git a/src/com/android/camera/VideoCamera.java b/src/com/android/camera/VideoCamera.java
-index f70417d..4337d6d 100644
+index a18cf8f..513f25c 100644
 --- a/src/com/android/camera/VideoCamera.java
 +++ b/src/com/android/camera/VideoCamera.java
 @@ -365,6 +365,7 @@ public class VideoCamera extends ActivityBase
@@ -198,7 +198,7 @@ index f70417d..4337d6d 100644
          return super.onKeyUp(keyCode, event);
      }
 diff --git a/src/com/android/camera/ui/OtherSettingsPopup.java b/src/com/android/camera/ui/OtherSettingsPopup.java
-index ae6a7be..ad0615e 100644
+index a0de0a7..c19dfda 100644
 --- a/src/com/android/camera/ui/OtherSettingsPopup.java
 +++ b/src/com/android/camera/ui/OtherSettingsPopup.java
 @@ -64,6 +64,7 @@ public class OtherSettingsPopup extends AbstractSettingPopup
@@ -206,9 +206,9 @@ index ae6a7be..ad0615e 100644
              // which applies the on/off switch.
              if (CameraSettings.KEY_POWER_SHUTTER.equals(pref.getKey()) ||
 +                    CameraSettings.KEY_VOLUP_SHUTTER.equals(pref.getKey()) ||
-                     CameraSettings.KEY_RECORD_LOCATION.equals(pref.getKey())) {
+                     CameraSettings.KEY_RECORD_LOCATION.equals(pref.getKey()) ||
+                     CameraSettings.KEY_FOCUS_SOUND.equals(pref.getKey())) {
                  return R.layout.in_line_setting_switch;
-             }
 -- 
 1.7.9.5
 

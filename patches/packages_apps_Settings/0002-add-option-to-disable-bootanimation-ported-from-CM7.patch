@@ -1,7 +1,7 @@
-From 8933f4b736fdc6e2bc740016ac7ba3b4b15eb8bc Mon Sep 17 00:00:00 2001
+From 74a0576cbaed83b7e7dd2d334a2898dc6d98c524 Mon Sep 17 00:00:00 2001
 From: Konsta <konsta09@gmail.com>
 Date: Wed, 13 Jun 2012 10:58:33 +0300
-Subject: [PATCH] add option to disable bootanimation, ported from CM7
+Subject: [PATCH 04/16] add option to disable bootanimation, ported from CM7
 
 Change-Id: I58778d0c1c1f22684e0c555cd63adcc29fa26272
 https://github.com/CyanogenMod/android_packages_apps_CMParts/commit/5eeeec5f5d93a13334cb61f2559fa7c3c53e9d5c
@@ -12,10 +12,10 @@ https://github.com/CyanogenMod/android_packages_apps_CMParts/commit/5eeeec5f5d93
  3 files changed, 22 insertions(+)
 
 diff --git a/res/values/strings.xml b/res/values/strings.xml
-index 4b8a893..c44c928 100644
+index 3494972..dea790b 100644
 --- a/res/values/strings.xml
 +++ b/res/values/strings.xml
-@@ -4507,6 +4507,10 @@ found in the list of installed apps.</string>
+@@ -4513,6 +4513,10 @@ found in the list of installed apps.</string>
      <!-- Hostname setting -->
      <string name="device_hostname">Device hostname</string>
  

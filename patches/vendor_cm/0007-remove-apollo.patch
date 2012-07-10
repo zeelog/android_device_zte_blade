@@ -1,7 +1,7 @@
-From 5d609501b0e870f83f99b20f91fd5bf83a37565e Mon Sep 17 00:00:00 2001
+From 2738a92b16218e57d5a48d303491f6c35888dcfa Mon Sep 17 00:00:00 2001
 From: Konsta <konsta09@gmail.com>
 Date: Fri, 6 Jul 2012 13:29:59 +0300
-Subject: [PATCH] remove apollo
+Subject: [PATCH 8/8] remove apollo
 
 Change-Id: Ib8cb91179401600bbd7c379d381f42ab3e921b9e
 ---

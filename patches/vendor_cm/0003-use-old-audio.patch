@@ -1,7 +1,7 @@
-From 682e6e2fb3094cef3a56a85e1695c99bf9bcdede Mon Sep 17 00:00:00 2001
+From 271d7ec99250162f87c256f325353a7f3e47caa7 Mon Sep 17 00:00:00 2001
 From: Konsta <konsta09@gmail.com>
 Date: Thu, 24 May 2012 13:15:18 +0300
-Subject: [PATCH 5/5] use old audio
+Subject: [PATCH 3/8] use old audio
 
 Change-Id: I8b0c7bc5558a539e7cb42058ec46533e8d44c48b
 ---

@@ -1,7 +1,7 @@
-From 640c17a8c25486efc54aa39cf83a022269be66ee Mon Sep 17 00:00:00 2001
+From e44f6683f96d8c7bf87f73c28b30370d452f9772 Mon Sep 17 00:00:00 2001
 From: Konsta <konsta09@gmail.com>
 Date: Wed, 27 Jun 2012 18:31:54 +0300
-Subject: [PATCH] option to change status bar transparency (1/2)
+Subject: [PATCH 12/16] option to change status bar transparency (1/2)
 
 thanks to AOKP
 
@@ -14,13 +14,13 @@ Change-Id: Iee6dcf262f1a794080f5906e850f4676e5588c3a
  4 files changed, 59 insertions(+)
 
 diff --git a/res/values/arrays.xml b/res/values/arrays.xml
-index 94dff43..2edcff4 100644
+index a0fbecb..4ef94e4 100644
 --- a/res/values/arrays.xml
 +++ b/res/values/arrays.xml
 @@ -1298,5 +1298,22 @@
-         <item>5000</item>
-         <item>10000</item>
-     </integer-array>
+         <item>25|250</item>
+         <item>50|500</item>
+     </string-array>
 +
 +    <!--- Status bar transparency -->
 +    <string-array name="statusbar_transparency_entries">
@@ -41,10 +41,10 @@ index 94dff43..2edcff4 100644
  <!-- **** CYANOGENMOD EDITS END **** -->
  </resources>
 diff --git a/res/values/strings.xml b/res/values/strings.xml
-index 17f1f89..a957ac2 100644
+index 6c3ccba..21fc5ef 100644
 --- a/res/values/strings.xml
 +++ b/res/values/strings.xml
-@@ -4555,6 +4555,15 @@ found in the list of installed apps.</string>
+@@ -4558,6 +4558,15 @@ found in the list of installed apps.</string>
      <string name="power_dialog_show_sound_toggle_title">Sound options</string>
      <string name="power_dialog_show_sound_toggle_summary">Show sound options in power menu</string>
  

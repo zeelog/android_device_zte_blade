@@ -1,4 +1,4 @@
-From d1cd7e009d7c7557bf88f5d8c8e05cd6525e4424 Mon Sep 17 00:00:00 2001
+From 193148fb431558368c12a197c0f3120447d4673a Mon Sep 17 00:00:00 2001
 From: Konsta <konsta09@gmail.com>
 Date: Wed, 20 Jun 2012 15:42:09 +0300
 Subject: [PATCH] add option to exit to homescreen after call (ported from
@@ -8,27 +8,26 @@ https://github.com/AOKP/packages_apps_Phone/commit/5baa129996562c8f536cc9e5bd0aa
 
 Change-Id: I7663a4480501c58d50cb3b8b47b2772048225748
 ---
- res/values/strings.xml                         |    4 ++++
+ res/values/strings.xml                         |    3 +++
  res/xml/call_feature_setting.xml               |    5 +++++
  src/com/android/phone/CallFeaturesSetting.java |    6 ++++++
  src/com/android/phone/InCallScreen.java        |   21 ++++++++++++++++++---
- 4 files changed, 33 insertions(+), 3 deletions(-)
+ 4 files changed, 32 insertions(+), 3 deletions(-)
 
 diff --git a/res/values/strings.xml b/res/values/strings.xml
-index c508579..1714e03 100644
+index 580804f..3969a2a 100644
 --- a/res/values/strings.xml
 +++ b/res/values/strings.xml
-@@ -1677,4 +1677,8 @@
-     <string name="vibrate_call_waiting">Vibrate call waiting</string>
-     <string name="vibrate_call_waiting_sum">Vibrate on call waiting</string>
-     <!-- End Advanced Settings -->
-+
+@@ -1683,4 +1683,7 @@
+     <string name="noise_suppression_summary">Enable noise suppression for calls</string>
+     <!-- End Noise suppression -->
+ 
 +    <!-- Exit to home screen setting -->
 +    <string name="exit_to_home_screen_title">Exit to home screen</string>
 +    <string name="exit_to_home_screen_summary">Exit to home screen when call ends instead of call log</string>
  </resources>
 diff --git a/res/xml/call_feature_setting.xml b/res/xml/call_feature_setting.xml
-index bed602a..24f8746 100644
+index d280ec8..bb7e7ea 100644
 --- a/res/xml/call_feature_setting.xml
 +++ b/res/xml/call_feature_setting.xml
 @@ -112,6 +112,11 @@
@@ -44,19 +43,19 @@ index bed602a..24f8746 100644
  
    <PreferenceCategory android:key="button_misc_category_key"
 diff --git a/src/com/android/phone/CallFeaturesSetting.java b/src/com/android/phone/CallFeaturesSetting.java
-index 3c552b0..5d867bf 100644
+index 109b5da..841f9c2 100644
 --- a/src/com/android/phone/CallFeaturesSetting.java
 +++ b/src/com/android/phone/CallFeaturesSetting.java
-@@ -155,6 +155,8 @@ public class CallFeaturesSetting extends PreferenceActivity
-     private static final String BUTTON_TTY_KEY    = "button_tty_mode_key";
+@@ -156,6 +156,8 @@ public class CallFeaturesSetting extends PreferenceActivity
      private static final String BUTTON_HAC_KEY    = "button_hac_key";
+     private static final String BUTTON_NOISE_SUPPRESSION_KEY = "button_noise_suppression_key";
  
 +    private static final String BUTTON_EXIT_TO_HOMESCREEN_KEY = "button_exit_to_home_screen_key";
 +
      private static final String BUTTON_GSM_UMTS_OPTIONS = "button_gsm_more_expand_key";
      private static final String BUTTON_CDMA_OPTIONS = "button_cdma_more_expand_key";
  
-@@ -230,6 +232,8 @@ public class CallFeaturesSetting extends PreferenceActivity
+@@ -232,6 +234,8 @@ public class CallFeaturesSetting extends PreferenceActivity
      private ListPreference mVoicemailNotificationVibrateWhen;
      private SipSharedPreferences mSipSharedPreferences;
  
@@ -65,7 +64,7 @@ index 3c552b0..5d867bf 100644
      private class VoiceMailProvider {
          public VoiceMailProvider(String name, Intent intent) {
              this.name = name;
-@@ -1413,6 +1417,8 @@ public class CallFeaturesSetting extends PreferenceActivity
+@@ -1421,6 +1425,8 @@ public class CallFeaturesSetting extends PreferenceActivity
              }
          }
  

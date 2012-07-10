@@ -1,7 +1,7 @@
-From c5ab6f002078cdc18d36d24f5e5ffe727c6a2841 Mon Sep 17 00:00:00 2001
+From a38ab2e5d362f0c3028f4a1f3716980d5311f1e3 Mon Sep 17 00:00:00 2001
 From: Konsta <konsta09@gmail.com>
 Date: Fri, 15 Jun 2012 21:14:24 +0300
-Subject: [PATCH] add forum link to About phone settings
+Subject: [PATCH 06/16] add forum link to About phone settings
 
 Change-Id: I6b2a8235c0c6e5d935bff31ed9df9d87277052e9
 ---
@@ -11,10 +11,10 @@ Change-Id: I6b2a8235c0c6e5d935bff31ed9df9d87277052e9
  3 files changed, 22 insertions(+)
 
 diff --git a/res/values/strings.xml b/res/values/strings.xml
-index 908f1fd..7e2a6b9 100644
+index 8f69d2a..268302d 100644
 --- a/res/values/strings.xml
 +++ b/res/values/strings.xml
-@@ -4515,6 +4515,10 @@ found in the list of installed apps.</string>
+@@ -4521,6 +4521,10 @@ found in the list of installed apps.</string>
      <string name="status_bar_notif_count_title">Show notification count</string>
      <string name="status_bar_notif_count_summary">Display number of pending notifications on the status bar</string>
  

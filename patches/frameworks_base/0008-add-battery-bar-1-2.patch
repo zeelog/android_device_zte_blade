@@ -1,7 +1,7 @@
-From b1e74b68fa8f3143482052740138900bd036f52c Mon Sep 17 00:00:00 2001
+From 30bd00788904f31bfd43ffcf2bbca875d2bed540 Mon Sep 17 00:00:00 2001
 From: Konsta <konsta09@gmail.com>
 Date: Thu, 5 Jul 2012 00:13:41 +0300
-Subject: [PATCH] add battery bar (1/2)
+Subject: [PATCH 15/16] add battery bar (1/2)
 
 thanks to Spitemare
 https://github.com/Spitemare/android_frameworks_base/commit/2faad0bc7b7a14bab0a28363eda508c03cd790bd
@@ -18,10 +18,10 @@ Change-Id: Ic74d4b83a335194cc36978a8d71e8bf033d2ad74
  create mode 100644 packages/SystemUI/src/com/android/systemui/statusbar/phone/BatteryBar.java
 
 diff --git a/core/java/android/provider/Settings.java b/core/java/android/provider/Settings.java
-index d62ae47..362d5ee 100644
+index 2fd9358..54f18a6 100644
 --- a/core/java/android/provider/Settings.java
 +++ b/core/java/android/provider/Settings.java
-@@ -2359,6 +2359,7 @@ public final class Settings {
+@@ -2362,6 +2362,7 @@ public final class Settings {
           * 0: Display the stock battery information
           * 1: Display cm battery percentage implementation / dont show stock icon
           * 2: Hide the battery information
@@ -86,10 +86,10 @@ index 8602461..1440fd9 100644
 +        />
  </com.android.systemui.statusbar.phone.PhoneStatusBarView>
 diff --git a/packages/SystemUI/res/values/styles.xml b/packages/SystemUI/res/values/styles.xml
-index 444b028..6f26334 100644
+index d399e82..f1083fc 100644
 --- a/packages/SystemUI/res/values/styles.xml
 +++ b/packages/SystemUI/res/values/styles.xml
-@@ -102,5 +102,12 @@
+@@ -125,5 +125,12 @@
          <item name="android:windowActionBar">false</item>
          <item name="android:windowNoTitle">true</item>
      </style>
