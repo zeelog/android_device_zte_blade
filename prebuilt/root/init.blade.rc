@@ -41,7 +41,7 @@ on boot
     chmod 0660 /sys/devices/platform/msm_serial_hs.0/clock
 
 # Setup android gadget
-   write /sys/module/g_android/parameters/serial_number CM9-Blade
+   write /sys/module/g_android/parameters/serial_number CM10-Blade
    write /sys/module/g_android/parameters/product_id 0x1351
 
 #create  WIFI filesystem structure
