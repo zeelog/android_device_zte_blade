@@ -24,7 +24,7 @@ USE_CAMERA_STUB := true
 # CPU
 TARGET_CPU_ABI := armeabi-v6l
 TARGET_CPU_ABI2 := armeabi
-TARGET_ARCH_VARIANT := armv5te-vfp
+TARGET_ARCH_VARIANT := armv6-vfp
 
 # Target and board properties
 TARGET_NO_BOOTLOADER := true
