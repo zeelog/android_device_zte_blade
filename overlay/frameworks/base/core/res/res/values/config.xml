@@ -53,6 +53,9 @@
     <!-- Display low battery warning when battery level dips to this value -1 -->
     <integer name="config_lowBatteryWarningLevel">16</integer>
 
+    <!-- Is the notification LED intrusive? Used to decide if there should be a disable option -->
+    <bool name="config_intrusiveNotificationLed">true</bool>
+
     <!-- Array of light sensor LUX values to define our levels for auto backlight brightness support.
          The N entries of this array define N + 1 zones as follows:
 
@@ -106,6 +109,12 @@
         <item>0</item>
     </integer-array>
 
+    <!-- Package name providing network location support. -->
+    <string name="config_networkLocationProviderPackageName">com.google.android.location.NetworkLocationProvider</string>
+
+    <!-- Package name providing geocoder API support. -->
+    <string name="config_geocodeProviderPackageName">com.google.android.location.GeocodeProvider</string>
+
     <!-- Boolean indicating if current platform supports bluetooth SCO for off call
     use cases -->
     <bool name="config_bluetooth_sco_off_call">true</bool>
@@ -117,4 +126,9 @@
     <!-- Boolean indicating if current platform supports quick switch-on/off of
          Bluetooth Module -->
     <bool name="config_bluetooth_adapter_quick_switch">false</bool>
+
+    <!-- LUN file to be used by legacy USB manager.
+         The existence of this file will be used to determine in the
+         legacy USB manager should be started. -->
+    <string name="config_legacyUmsLunFile">/sys/devices/platform/msm_hsusb/gadget/lun0/file</string>
 </resources>
