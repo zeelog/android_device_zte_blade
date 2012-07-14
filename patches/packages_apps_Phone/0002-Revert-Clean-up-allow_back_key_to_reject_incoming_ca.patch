@@ -1,0 +1,74 @@
+From b33a8471acebbdb74cef15e3129b651122d01a64 Mon Sep 17 00:00:00 2001
+From: Konsta <konsta09@gmail.com>
+Date: Sun, 15 Jul 2012 00:00:25 +0300
+Subject: [PATCH] Revert "Clean up "allow_back_key_to_reject_incoming_call"
+ resource"
+
+This reverts commit 435662fc2982da833d7bd85aff342b41329d9c5b.
+---
+ res/values/config.xml                   |   11 +++++++++++
+ src/com/android/phone/InCallScreen.java |   25 ++++++++++++++++++-------
+ 2 files changed, 29 insertions(+), 7 deletions(-)
+
+diff --git a/res/values/config.xml b/res/values/config.xml
+index d4621d0..8137156 100644
+--- a/res/values/config.xml
++++ b/res/values/config.xml
+@@ -77,6 +77,17 @@
+          just let the radio/BP handle playing of the tones. -->
+     <bool name="allow_local_dtmf_tones">true</bool>
+ 
++    <!-- While an incoming call is ringing, this flag specifies whether
++         the BACK key should reject the current call (just like the
++         ENDCALL button does.)
++         This was originally the default behavior for all platforms, but
++         it's a bad idea on devices where the BACK key is a capacitive
++         button (since it's too easy to press the key accidentally as you
++         pull the phone out of your pocket.)  So devices that *don't* want
++         this behavior should set this flag to false via the resource
++         overlay.  -->
++    <bool name="allow_back_key_to_reject_incoming_call">true</bool>
++
+     <!-- If true, show an onscreen "Dial" button in the dialer.
+          In practice this is used on all platforms, even the ones with hard SEND/END
+          keys, but for maximum flexibility it's controlled by a flag here
+diff --git a/src/com/android/phone/InCallScreen.java b/src/com/android/phone/InCallScreen.java
+index b0abc5a..cffa41d 100755
+--- a/src/com/android/phone/InCallScreen.java
++++ b/src/com/android/phone/InCallScreen.java
+@@ -1294,14 +1294,25 @@ public class InCallScreen extends Activity
+         // current activity.)
+ 
+         if (mCM.hasActiveRingingCall()) {
+-            // The Back key, just like the Home key, is always disabled
+-            // while an incoming call is ringing.  (The user *must* either
+-            // answer or reject the call before leaving the incoming-call
+-            // screen.)
+-            if (DBG) log("BACK key while ringing: ignored");
++            // While an incoming call is ringing, BACK behaves just like
++            // ENDCALL: it stops the ringing and rejects the current call.
++            // (This is only enabled on some platforms, though.)
++            if (getResources().getBoolean(R.bool.allow_back_key_to_reject_incoming_call)) {
++                if (DBG) log("BACK key while ringing: reject the call");
++                hangupRingingCall();
+ 
+-            // And consume this event; *don't* call super.onBackPressed().
+-            return;
++                // Don't consume the key; instead let the BACK event *also*
++                // get handled normally by the framework (which presumably
++                // will cause us to exit out of this activity.)
++                super.onBackPressed();
++                return;
++            } else {
++                // The BACK key is disabled; don't reject the call, but
++                // *do* consume the keypress (otherwise we'll exit out of
++                // this activity.)
++                if (DBG) log("BACK key while ringing: ignored");
++                return;
++            }
+         }
+ 
+         // BACK is also used to exit out of any "special modes" of the
+-- 
+1.7.9.5
+
