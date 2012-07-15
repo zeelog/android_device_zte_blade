@@ -4412,7 +4412,7 @@ QualcommCameraHardware::PmemPool::PmemPool(const char *pmem_pool,
         return;
     }
 
-    sp<MemoryHeapPmem> pmemHeap = new MemoryHeapPmem(masterHeap, flags);
+/*    sp<MemoryHeapPmem> pmemHeap = new MemoryHeapPmem(masterHeap, flags);
     if (pmemHeap->getHeapID() >= 0) {
         pmemHeap->slap();
         masterHeap.clear();
@@ -4464,6 +4464,7 @@ QualcommCameraHardware::PmemPool::PmemPool(const char *pmem_pool,
     }
     else ALOGE("pmem pool %s error: could not create master heap!",
               pmem_pool);
+*/
 }
 
 QualcommCameraHardware::PmemPool::~PmemPool()
