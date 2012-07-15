@@ -1,0 +1,10 @@
+Work in progress ZTE Blade device configuration for CyanogenMod 10.
+
+If you want to use these sources to compile CM10 for ZTE Blade, copy following lines to your path-to/CM10_WORK_DIR/.repo/local_manifest.xml and repo sync.
+
+<?xml version="1.0" encoding="UTF-8"?>
+<manifest>
+  <project name="KonstaT/android_device_zte_blade" path="device/zte/blade" revision="jellybean" />
+  <project name="KonstaT/proprietary_vendor_zte" path="vendor/zte" revision="jellybean" />
+  <project name="KonstaT/zte-kernel-msm7x27" path="kernel/zte/zte-kernel-msm7x27" revision="jellybean" />
+</manifest>
