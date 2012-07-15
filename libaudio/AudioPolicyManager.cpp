@@ -42,8 +42,9 @@ extern "C" void destroyAudioPolicyManager(AudioPolicyInterface *interface)
 {
     delete interface;
 }
-/*
-uint32_t AudioPolicyManager::getDeviceForStrategy(routing_strategy strategy, bool fromCache)
+
+audio_devices_t AudioPolicyManager::getDeviceForStrategy(routing_strategy strategy,
+                                                             bool fromCache)
 {
     uint32_t device = 0;
 
@@ -142,7 +143,8 @@ uint32_t AudioPolicyManager::getDeviceForStrategy(routing_strategy strategy, boo
     case STRATEGY_MEDIA: {
         uint32_t device2 = mAvailableOutputDevices & AudioSystem::DEVICE_OUT_AUX_DIGITAL;
 #ifdef WITH_A2DP
-        if (mA2dpOutput != 0) {
+        if (mHasA2dp && (mForceUse[AudioSystem::FOR_MEDIA] != AudioSystem::FORCE_NO_BT_A2DP) &&
+                (getA2dpOutput() != 0) && !mA2dpSuspended) {
             if (strategy == STRATEGY_SONIFICATION && !a2dpUsedForSonification()) {
                 break;
             }
@@ -188,7 +190,7 @@ uint32_t AudioPolicyManager::getDeviceForStrategy(routing_strategy strategy, boo
     }
 
     ALOGV("getDeviceForStrategy() strategy %d, device %x", strategy, device);
-    return device;
+    return (audio_devices_t)device;
 }
-*/
+
 }; // namespace android_audio_legacy
