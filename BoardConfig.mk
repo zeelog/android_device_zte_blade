@@ -79,13 +79,14 @@ ENABLE_WEBGL := true
 BOARD_USES_QCOM_HARDWARE := true
 BOARD_USES_QCOM_LIBS := true
 COMMON_GLOBAL_CFLAGS += -DQCOM_HARDWARE
+BOARD_NEEDS_MEMORYHEAPPMEM := true
 
 # Graphics
 TARGET_USES_GENLOCK := true
-#BOARD_EGL_CFG := device/zte/blade/prebuilt/system/lib/egl/egl.cfg
-#USE_OPENGL_RENDERER := true
+BOARD_EGL_CFG := device/zte/blade/prebuilt/system/lib/egl/egl.cfg
+USE_OPENGL_RENDERER := true
 BOARD_ADRENO_DECIDE_TEXTURE_TARGET := true
-COMMON_GLOBAL_CFLAGS += -DREFRESH_RATE=60
+COMMON_GLOBAL_CFLAGS += -DREFRESH_RATE=56 -DQCOM_ICS_COMPAT
 TARGET_FORCE_CPU_UPLOAD := true
 
 # dev:    size   erasesize  name
