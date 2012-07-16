@@ -29,7 +29,8 @@ PRODUCT_AAPT_PREF_CONFIG := hdpi
 PRODUCT_PACKAGES := \
         gralloc.msm7x27 \
         copybit.msm7x27 \
-        hwcomposer.msm7x27
+        hwcomposer.msm7x27 \
+        libQcomUI
 
 # OMX
 PRODUCT_PACKAGES += \
