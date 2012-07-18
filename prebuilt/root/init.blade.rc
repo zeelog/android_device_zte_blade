@@ -94,6 +94,7 @@ on boot
 
 service qmuxd /system/bin/qmuxd 
     class main
+    user radio
 
 on property:init.svc.bluetoothd=running
     write /sys/devices/virtual/bluetooth/hci0/idle_timeout 7000
