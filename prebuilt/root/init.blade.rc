@@ -1,20 +1,20 @@
 import init.blade.usb.rc
 
 on early-init
-	export EXTERNAL_STORAGE /mnt/sdcard
-	mkdir /mnt/sdcard 0000 system system
-	# for backwards compatibility
-	symlink /mnt/sdcard /sdcard
-
-
+    mkdir /storage 0050 system sdcard_r
+    mkdir /storage/sdcard0 0000 system system
+    export EXTERNAL_STORAGE /storage/sdcard0
+    # for backwards compatibility
+    symlink /storage/sdcard0 /mnt/sdcard
+    symlink /storage/sdcard0 /sdcard
 
 service dhcp-service /system/bin/netcfg wlan0 dhcp
     class main
-        oneshot
+    oneshot
 
 on property:dev.bootcomplete=1
-        stop dhcp-service
-        start dhcp-service
+    stop dhcp-service
+    start dhcp-service
 
 on boot
 
@@ -41,8 +41,8 @@ on boot
     chmod 0660 /sys/devices/platform/msm_serial_hs.0/clock
 
 # Setup android gadget
-   write /sys/module/g_android/parameters/serial_number CM10-Blade
-   write /sys/module/g_android/parameters/product_id 0x1351
+    write /sys/module/g_android/parameters/serial_number CM10-Blade
+    write /sys/module/g_android/parameters/product_id 0x1351
 
 #create  WIFI filesystem structure
     mkdir /data/misc 01771 system misc
@@ -54,12 +54,12 @@ on boot
     chown dhcp dhcp /data/misc/dhcp
     mkdir /data/system 0775 system system
 
-   mkdir /data/local
-   chmod 0777 /data/local
-   chown radio shell /data/local
-   mkdir /data/local/tmp
-   chmod 0777 /data/local/tmp
-   chown radio shell /data/local/tmp
+    mkdir /data/local
+    chmod 0777 /data/local
+    chown radio shell /data/local
+    mkdir /data/local/tmp
+    chmod 0777 /data/local/tmp
+    chown radio shell /data/local/tmp
 
 # For qmuxd socket
     mkdir /data/radio 0770 radio radio
@@ -139,13 +139,13 @@ service start_usb0 /system/bin/logwrapper /system/bin/sh /etc/start_usb0.sh
     oneshot
 
 service iprenew_wlan0 /system/bin/dhcpcd -n
-	class main
-	disabled
-	oneshot
+    class main
+    disabled
+    oneshot
 
 #service wlan_tool /system/bin/wlan_tool
-#        disabled
-#        oneshot
+#    disabled
+#    oneshot
 
 service abtfilt /system/bin/abtfilt -c -d -z -n
     class main
