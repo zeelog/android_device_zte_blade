@@ -95,6 +95,7 @@ PRODUCT_COPY_FILES := \
         device/zte/blade/prebuilt/system/etc/AutoVolumeControl.txt:system/etc/AutoVolumeControl.txt \
         device/zte/blade/prebuilt/system/etc/media_profiles.xml:system/etc/media_profiles.xml \
         device/zte/blade/prebuilt/system/etc/media_codecs.xml:system/etc/media_codecs.xml \
+        device/zte/blade/prebuilt/system/etc/audio_policy.conf:system/etc/audio_policy.conf \
         device/zte/blade/prebuilt/system/etc/start_usb0.sh:system/etc/start_usb0.sh \
         device/zte/blade/prebuilt/system/etc/gps.conf:system/etc/gps.conf \
         device/zte/blade/prebuilt/system/lib/hw/gralloc.msm7x27.so:system/lib/hw/gralloc.msm7x27.so
