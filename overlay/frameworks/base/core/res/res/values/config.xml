@@ -56,6 +56,9 @@
     <!-- Is the notification LED intrusive? Used to decide if there should be a disable option -->
     <bool name="config_intrusiveNotificationLed">true</bool>
 
+    <!-- Is the battery LED intrusive? Used to decide if there should be a disable option -->
+    <bool name="config_intrusiveBatteryLed">true</bool>
+
     <!-- Array of light sensor LUX values to define our levels for auto backlight brightness support.
          The N entries of this array define N + 1 zones as follows:
 
@@ -131,4 +134,11 @@
          The existence of this file will be used to determine in the
          legacy USB manager should be started. -->
     <string name="config_legacyUmsLunFile">/sys/devices/platform/msm_hsusb/gadget/lun0/file</string>
+
+    <!-- Values greater or equal to 0 will enable electronbeam screen-on
+         animation with the specified delay (in milliseconds), -1 will disable the animation -->
+    <integer name="config_screenOnAnimation">250</integer>
+
+    <!-- True will enable the electron beam screen-off animation. -->
+    <bool name="config_screenOffAnimation">true</bool>
 </resources>
