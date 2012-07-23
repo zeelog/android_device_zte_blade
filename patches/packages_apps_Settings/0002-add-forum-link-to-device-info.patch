@@ -1,0 +1,78 @@
+From c374763b802fa2ca051a01c8e3aa50efa91aca67 Mon Sep 17 00:00:00 2001
+From: Konsta <konsta09@gmail.com>
+Date: Mon, 23 Jul 2012 13:01:50 +0300
+Subject: [PATCH 2/4] add forum link to device info
+
+Change-Id: I7963debc77ee01d34bd73a5a5626edfbb0d81836
+---
+ res/values/strings.xml                           |    5 +++++
+ res/xml/device_info_settings.xml                 |    5 +++++
+ src/com/android/settings/DeviceInfoSettings.java |   13 +++++++++++++
+ 3 files changed, 23 insertions(+)
+
+diff --git a/res/values/strings.xml b/res/values/strings.xml
+index 7c6f763..336ab67 100644
+--- a/res/values/strings.xml
++++ b/res/values/strings.xml
+@@ -4783,5 +4783,10 @@
+     <string name="konsta_navbar_dialog_msg">Please reboot to enable/disable the navigation bar</string>
+     <string name="konsta_navbar_dialog_negative">Reboot later</string>
+     <string name="konsta_navbar_dialog_positive">Hot reboot now</string>
++
++    <!-- Konsta forum link -->
++    <string name="konsta_web_title">CyanogenMod 10 - KonstaKANG</string>
++    <string name="konsta_web_summary">Visit MoDaCo thread</string>
++    <string name="konsta_web_url">http://www.modaco.com/topic/355903-devrom-cyanogenmod-10-android-411/</string>
+     <!-- **** CYANOGENMOD ADDITIONS END **** -->
+ </resources>
+diff --git a/res/xml/device_info_settings.xml b/res/xml/device_info_settings.xml
+index 922efc0..e5896ed 100644
+--- a/res/xml/device_info_settings.xml
++++ b/res/xml/device_info_settings.xml
+@@ -151,4 +151,9 @@
+                 android:title="@string/build_number"
+                 android:summary="@string/device_info_default"/>
+ 
++        <!-- Konsta forum link -->
++        <Preference android:key="konsta_web"
++                android:title="@string/konsta_web_title"
++                android:summary="@string/konsta_web_summary"/>
++
+ </PreferenceScreen>
+diff --git a/src/com/android/settings/DeviceInfoSettings.java b/src/com/android/settings/DeviceInfoSettings.java
+index 7186857..652d9cd 100644
+--- a/src/com/android/settings/DeviceInfoSettings.java
++++ b/src/com/android/settings/DeviceInfoSettings.java
+@@ -25,9 +25,11 @@ import android.os.Build;
+ import android.os.Bundle;
+ import android.os.SystemClock;
+ import android.os.SystemProperties;
++import android.net.Uri;
+ import android.preference.Preference;
+ import android.preference.PreferenceGroup;
+ import android.preference.PreferenceScreen;
++import android.preference.Preference.OnPreferenceClickListener;
+ import android.provider.Settings;
+ import android.util.Log;
+ 
+@@ -140,6 +142,17 @@ public class DeviceInfoSettings extends SettingsPreferenceFragment {
+         if (isUpdateSettingAvailable == false) {
+             getPreferenceScreen().removePreference(findPreference(KEY_UPDATE_SETTING));
+         }
++
++        findPreference("konsta_web").setOnPreferenceClickListener(
++            new OnPreferenceClickListener() {
++                public boolean onPreferenceClick(Preference preference) {
++                    Intent browserIntent = new Intent(
++                    "android.intent.action.VIEW", Uri
++                    .parse(getString(R.string.konsta_web_url)));
++                    startActivity(browserIntent);
++                    return true;
++                }
++            });
+     }
+ 
+     @Override
+-- 
+1.7.9.5
+

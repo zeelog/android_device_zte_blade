@@ -1,0 +1,130 @@
+From 20c84c2dee10751dd33bf85820a6187d77ccac8b Mon Sep 17 00:00:00 2001
+From: Konsta <konsta09@gmail.com>
+Date: Mon, 23 Jul 2012 12:53:13 +0300
+Subject: [PATCH 1/4] add option to display navigation bar (2/2)
+
+Change-Id: I1801d7d15cbf68d4883168bf7259c13f52a256a5
+---
+ res/values/strings.xml                             |    7 ++++
+ res/xml/system_settings.xml                        |    5 +++
+ .../settings/cyanogenmod/SystemSettings.java       |   38 ++++++++++++++++++++
+ 3 files changed, 50 insertions(+)
+
+diff --git a/res/values/strings.xml b/res/values/strings.xml
+index 2595c36..7c6f763 100644
+--- a/res/values/strings.xml
++++ b/res/values/strings.xml
+@@ -4776,5 +4776,12 @@
+     <string name="ime_switcher_notify">Selector notification</string>
+     <string name="ime_switcher_notify_summary">Display input method selector notification</string>
+ 
++    <!-- Navbar -->
++    <string name="konsta_navbar">Show navigation bar</string>
++    <string name="konsta_navbar_reboot">Requires reboot</string>
++    <string name="konsta_navbar_dialog_title">Reboot required</string>
++    <string name="konsta_navbar_dialog_msg">Please reboot to enable/disable the navigation bar</string>
++    <string name="konsta_navbar_dialog_negative">Reboot later</string>
++    <string name="konsta_navbar_dialog_positive">Hot reboot now</string>
+     <!-- **** CYANOGENMOD ADDITIONS END **** -->
+ </resources>
+diff --git a/res/xml/system_settings.xml b/res/xml/system_settings.xml
+index 7eb7434..77d2987 100644
+--- a/res/xml/system_settings.xml
++++ b/res/xml/system_settings.xml
+@@ -53,5 +53,10 @@
+         android:fragment="com.android.settings.cyanogenmod.NavBar"
+         android:title="@string/navigation_bar_title" />
+ -->
++    <CheckBoxPreference
++        android:key="konsta_navbar"
++        android:title="@string/konsta_navbar"
++        android:summary="@string/konsta_navbar_reboot"
++        android:defaultValue="false" />
+ 
+ </PreferenceScreen>
+diff --git a/src/com/android/settings/cyanogenmod/SystemSettings.java b/src/com/android/settings/cyanogenmod/SystemSettings.java
+index beefec1..caafb22 100644
+--- a/src/com/android/settings/cyanogenmod/SystemSettings.java
++++ b/src/com/android/settings/cyanogenmod/SystemSettings.java
+@@ -17,15 +17,21 @@
+ package com.android.settings.cyanogenmod;
+ 
+ import android.app.ActivityManagerNative;
++import android.app.AlertDialog;
+ import android.content.Context;
++import android.content.DialogInterface;
+ import android.content.res.Configuration;
+ import android.content.res.Resources;
+ import android.os.Bundle;
+ import android.os.RemoteException;
+ import android.os.ServiceManager;
++import android.os.IBinder;
++import android.os.IPowerManager;
++import android.preference.CheckBoxPreference;
+ import android.preference.ListPreference;
+ import android.preference.Preference;
+ import android.preference.PreferenceScreen;
++import android.provider.Settings;
+ import android.util.Log;
+ import android.view.IWindowManager;
+ 
+@@ -41,10 +47,12 @@ public class SystemSettings extends SettingsPreferenceFragment implements
+     private static final String KEY_NOTIFICATION_DRAWER = "notification_drawer";
+     private static final String KEY_NOTIFICATION_DRAWER_TABLET = "notification_drawer_tablet";
+     private static final String KEY_NAVIGATION_BAR = "navigation_bar";
++    private static final String KONSTA_NAVBAR = "konsta_navbar";
+ 
+     private ListPreference mFontSizePref;
+     private PreferenceScreen mPhoneDrawer;
+     private PreferenceScreen mTabletDrawer;
++    private CheckBoxPreference mKonstaNavbar;
+ 
+     private final Configuration mCurConfig = new Configuration();
+ 
+@@ -59,6 +67,10 @@ public class SystemSettings extends SettingsPreferenceFragment implements
+         mPhoneDrawer = (PreferenceScreen) findPreference(KEY_NOTIFICATION_DRAWER);
+         mTabletDrawer = (PreferenceScreen) findPreference(KEY_NOTIFICATION_DRAWER_TABLET);
+ 
++        mKonstaNavbar = (CheckBoxPreference) findPreference(KONSTA_NAVBAR);
++        mKonstaNavbar.setChecked(Settings.System.getInt(getActivity().getContentResolver(),
++                Settings.System.KONSTA_NAVBAR, 0) == 1);
++
+         if (Utils.isTablet(getActivity())) {
+             if (mPhoneDrawer != null) {
+                 getPreferenceScreen().removePreference(mPhoneDrawer);
+@@ -137,6 +149,32 @@ public class SystemSettings extends SettingsPreferenceFragment implements
+ 
+     @Override
+     public boolean onPreferenceTreeClick(PreferenceScreen preferenceScreen, Preference preference) {
++        if (preference == mKonstaNavbar) {
++            Settings.System.putInt(getContentResolver(), Settings.System.KONSTA_NAVBAR,
++                    mKonstaNavbar.isChecked() ? 1 : 0);
++
++            new AlertDialog.Builder(getActivity())
++                    .setTitle(getResources().getString(R.string.konsta_navbar_dialog_title))
++                    .setMessage(getResources().getString(R.string.konsta_navbar_dialog_msg))
++                    .setNegativeButton(getResources().getString(R.string.konsta_navbar_dialog_negative), null)
++                    .setCancelable(false)
++                    .setPositiveButton(getResources().getString(R.string.konsta_navbar_dialog_positive), new DialogInterface.OnClickListener() {
++                        @Override
++                        public void onClick(DialogInterface dialog, int which) {
++                            try {
++                                IBinder b = ServiceManager.getService(Context.POWER_SERVICE);
++                                IPowerManager pm = IPowerManager.Stub.asInterface(b);
++                                pm.crash("Navbar changed");
++                            } catch (android.os.RemoteException e) {
++                                //
++                            }
++                        }
++                    })
++                    .create()
++                    .show();
++
++            return true;
++        }
+         return super.onPreferenceTreeClick(preferenceScreen, preference);
+     }
+ 
+-- 
+1.7.9.5
+
