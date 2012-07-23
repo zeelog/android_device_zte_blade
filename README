@@ -1,4 +1,5 @@
 Work in progress ZTE Blade device configuration for CyanogenMod 10.
+http://www.modaco.com/topic/355903-devrom-cyanogenmod-10-android-411/
 
 If you want to use these sources to compile CM10 for ZTE Blade, copy following lines to your path-to/CM10_WORK_DIR/.repo/local_manifest.xml and repo sync.
 
