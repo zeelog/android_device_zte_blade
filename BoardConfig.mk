@@ -57,11 +57,6 @@ WIFI_DRIVER_MODULE_NAME     := ar6000
 # Bluetooth
 BOARD_HAVE_BLUETOOTH := true
 
-# GPS
-BOARD_GPS_LIBRARIES := libloc
-BOARD_USES_GPSSHIM := true
-BOARD_GPS_NEEDS_XTRA := true
-
 # USB mounting
 TARGET_USE_CUSTOM_LUN_FILE_PATH := /sys/devices/platform/msm_hsusb/gadget/lun0/file
 BOARD_UMS_LUNFILE := "/sys/devices/platform/msm_hsusb/gadget/lun0/file"
