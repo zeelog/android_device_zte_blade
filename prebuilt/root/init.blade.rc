@@ -1,7 +1,7 @@
 import init.blade.usb.rc
 
 on early-init
-    mkdir /storage 0050 system sdcard_r
+    mkdir /storage 0775 system sdcard_r
     mkdir /storage/sdcard0 0000 system system
     export EXTERNAL_STORAGE /storage/sdcard0
     # for backwards compatibility
