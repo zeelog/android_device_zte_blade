@@ -1,7 +1,7 @@
-From c374763b802fa2ca051a01c8e3aa50efa91aca67 Mon Sep 17 00:00:00 2001
+From a1a78400702c7d58bac974db40a280f5625b37c8 Mon Sep 17 00:00:00 2001
 From: Konsta <konsta09@gmail.com>
 Date: Mon, 23 Jul 2012 13:01:50 +0300
-Subject: [PATCH 2/4] add forum link to device info
+Subject: [PATCH 2/7] add forum link to device info
 
 Change-Id: I7963debc77ee01d34bd73a5a5626edfbb0d81836
 ---
@@ -11,10 +11,10 @@ Change-Id: I7963debc77ee01d34bd73a5a5626edfbb0d81836
  3 files changed, 23 insertions(+)
 
 diff --git a/res/values/strings.xml b/res/values/strings.xml
-index 7c6f763..336ab67 100644
+index b85349d..ecba81b 100644
 --- a/res/values/strings.xml
 +++ b/res/values/strings.xml
-@@ -4783,5 +4783,10 @@
+@@ -4790,5 +4790,10 @@
      <string name="konsta_navbar_dialog_msg">Please reboot to enable/disable the navigation bar</string>
      <string name="konsta_navbar_dialog_negative">Reboot later</string>
      <string name="konsta_navbar_dialog_positive">Hot reboot now</string>
@@ -26,10 +26,10 @@ index 7c6f763..336ab67 100644
      <!-- **** CYANOGENMOD ADDITIONS END **** -->
  </resources>
 diff --git a/res/xml/device_info_settings.xml b/res/xml/device_info_settings.xml
-index 922efc0..e5896ed 100644
+index 10c2983..af81800 100644
 --- a/res/xml/device_info_settings.xml
 +++ b/res/xml/device_info_settings.xml
-@@ -151,4 +151,9 @@
+@@ -159,4 +159,9 @@
                  android:title="@string/build_number"
                  android:summary="@string/device_info_default"/>
  

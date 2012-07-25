@@ -1,0 +1,47 @@
+From 9dd4430c39766cbf5a6b9e611ccf8b5be6eeffa7 Mon Sep 17 00:00:00 2001
+From: Konsta <konsta09@gmail.com>
+Date: Wed, 25 Jul 2012 14:31:41 +0300
+Subject: [PATCH] don't build fraunhofer aac for blade
+
+Change-Id: I09016f9c6582f116698e390d280d93afabbf57aa
+---
+ media/libstagefright/codecs/aacdec/Android.mk |    6 +++++-
+ media/libstagefright/codecs/aacenc/Android.mk |    6 +++++-
+ 2 files changed, 10 insertions(+), 2 deletions(-)
+
+diff --git a/media/libstagefright/codecs/aacdec/Android.mk b/media/libstagefright/codecs/aacdec/Android.mk
+index 91457c5..bb11cb7 100644
+--- a/media/libstagefright/codecs/aacdec/Android.mk
++++ b/media/libstagefright/codecs/aacdec/Android.mk
+@@ -1,6 +1,10 @@
+ LOCAL_PATH:= $(call my-dir)
+ 
+-AAC_LIBRARY = fraunhofer
++ifeq ($(TARGET_BOOTLOADER_BOARD_NAME),blade)
++    AAC_LIBRARY = ""
++else
++    AAC_LIBRARY = "fraunhofer"
++endif
+ 
+ ifeq ($(AAC_LIBRARY), fraunhofer)
+   include $(CLEAR_VARS)
+diff --git a/media/libstagefright/codecs/aacenc/Android.mk b/media/libstagefright/codecs/aacenc/Android.mk
+index 1c342c8..fa2ef94 100644
+--- a/media/libstagefright/codecs/aacenc/Android.mk
++++ b/media/libstagefright/codecs/aacenc/Android.mk
+@@ -2,7 +2,11 @@ LOCAL_PATH := $(call my-dir)
+ include $(CLEAR_VARS)
+ include frameworks/av/media/libstagefright/codecs/common/Config.mk
+ 
+-AAC_LIBRARY = fraunhofer
++ifeq ($(TARGET_BOOTLOADER_BOARD_NAME),blade)
++    AAC_LIBRARY = ""
++else
++    AAC_LIBRARY = "fraunhofer"
++endif
+ 
+ LOCAL_SRC_FILES := basic_op/basicop2.c basic_op/oper_32b.c
+ 
+-- 
+1.7.9.5
+

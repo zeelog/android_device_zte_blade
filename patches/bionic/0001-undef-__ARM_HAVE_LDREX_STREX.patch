@@ -1,0 +1,24 @@
+From 70413b901af0b283b90a61d38cf68362ca05309e Mon Sep 17 00:00:00 2001
+From: Konsta <konsta09@gmail.com>
+Date: Mon, 23 Jul 2012 14:34:53 +0300
+Subject: [PATCH] #undef __ARM_HAVE_LDREX_STREX
+
+---
+ libc/private/bionic_atomic_arm.h |    1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/libc/private/bionic_atomic_arm.h b/libc/private/bionic_atomic_arm.h
+index 275c1c9..5fc9553 100644
+--- a/libc/private/bionic_atomic_arm.h
++++ b/libc/private/bionic_atomic_arm.h
+@@ -135,6 +135,7 @@ __bionic_memory_barrier(void)
+  *
+  * LDREX/STREX are only available starting from ARMv6
+  */
++#undef __ARM_HAVE_LDREX_STREX
+ #ifdef __ARM_HAVE_LDREX_STREX
+ __ATOMIC_INLINE__ int
+ __bionic_cmpxchg(int32_t old_value, int32_t new_value, volatile int32_t* ptr)
+-- 
+1.7.9.5
+

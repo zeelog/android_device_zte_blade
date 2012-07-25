@@ -1,7 +1,7 @@
-From 945bf6b04962dca06bc392e9e1493693b7390a91 Mon Sep 17 00:00:00 2001
+From 162edf94d35191b34b3d3dd73bfd8f06940aa9d7 Mon Sep 17 00:00:00 2001
 From: Konsta <konsta09@gmail.com>
 Date: Mon, 23 Jul 2012 14:09:59 +0300
-Subject: [PATCH 3/4] add option to disable bootanimation
+Subject: [PATCH 3/7] add option to disable bootanimation
 
 Change-Id: Ie694fed4f8e5733d8d36a7bb406967c4ee65de64
 ---
@@ -11,10 +11,10 @@ Change-Id: Ie694fed4f8e5733d8d36a7bb406967c4ee65de64
  3 files changed, 22 insertions(+)
 
 diff --git a/res/values/strings.xml b/res/values/strings.xml
-index 336ab67..9e51c93 100644
+index ecba81b..fcf5185 100644
 --- a/res/values/strings.xml
 +++ b/res/values/strings.xml
-@@ -4788,5 +4788,9 @@
+@@ -4795,5 +4795,9 @@
      <string name="konsta_web_title">CyanogenMod 10 - KonstaKANG</string>
      <string name="konsta_web_summary">Visit MoDaCo thread</string>
      <string name="konsta_web_url">http://www.modaco.com/topic/355903-devrom-cyanogenmod-10-android-411/</string>
@@ -25,10 +25,10 @@ index 336ab67..9e51c93 100644
      <!-- **** CYANOGENMOD ADDITIONS END **** -->
  </resources>
 diff --git a/res/xml/performance_settings.xml b/res/xml/performance_settings.xml
-index f554f5b..581b02e 100644
+index 24ce692..cfacb24 100644
 --- a/res/xml/performance_settings.xml
 +++ b/res/xml/performance_settings.xml
-@@ -45,4 +45,9 @@
+@@ -44,4 +44,9 @@
          android:entries="@array/dithering_entries"
          android:entryValues="@array/dithering_values"/>
  
@@ -39,7 +39,7 @@ index f554f5b..581b02e 100644
 +
  </PreferenceScreen>
 diff --git a/src/com/android/settings/cyanogenmod/PerformanceSettings.java b/src/com/android/settings/cyanogenmod/PerformanceSettings.java
-index c620b39..322fea2 100644
+index f3f6a81..ad0ed60 100644
 --- a/src/com/android/settings/cyanogenmod/PerformanceSettings.java
 +++ b/src/com/android/settings/cyanogenmod/PerformanceSettings.java
 @@ -45,10 +45,16 @@ public class PerformanceSettings extends SettingsPreferenceFragment
