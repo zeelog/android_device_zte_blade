@@ -67,6 +67,7 @@ PRODUCT_PACKAGES += \
 # Other
 PRODUCT_PACKAGES += \
         make_ext4fs \
+        setup_fs \
         dexpreopt
 
 # for bugmailer
