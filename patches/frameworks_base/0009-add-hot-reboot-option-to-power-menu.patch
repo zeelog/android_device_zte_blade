@@ -1,0 +1,124 @@
+From 0fb147441d092a85efc7226af8ced55875011a7e Mon Sep 17 00:00:00 2001
+From: Konsta <konsta09@gmail.com>
+Date: Tue, 7 Aug 2012 23:49:08 +0300
+Subject: [PATCH 1/2] add hot reboot option to power menu
+
+Change-Id: Idd31aaaf51fe036049f400f8b19ffbab2268e4f9
+---
+ .../com/android/internal/app/ShutdownThread.java   |   37 +++++++++++++++-----
+ core/res/res/values/arrays.xml                     |    2 ++
+ core/res/res/values/strings.xml                    |    2 ++
+ 3 files changed, 33 insertions(+), 8 deletions(-)
+
+diff --git a/core/java/com/android/internal/app/ShutdownThread.java b/core/java/com/android/internal/app/ShutdownThread.java
+index e063409..953843f 100644
+--- a/core/java/com/android/internal/app/ShutdownThread.java
++++ b/core/java/com/android/internal/app/ShutdownThread.java
+@@ -30,6 +30,8 @@ import android.content.DialogInterface;
+ import android.content.Intent;
+ import android.content.IntentFilter;
+ import android.os.Handler;
++import android.os.IBinder;
++import android.os.IPowerManager;
+ import android.os.Power;
+ import android.os.PowerManager;
+ import android.os.RemoteException;
+@@ -68,6 +70,7 @@ public final class ShutdownThread extends Thread {
+     
+     private static boolean mReboot;
+     private static String mRebootReason;
++    private static boolean mRebootHot = false;
+ 
+     // Provides shutdown assurance in case the system_server is killed
+     public static final String SHUTDOWN_ACTION_PROPERTY = "sys.shutdown.requested";
+@@ -137,6 +140,9 @@ public final class ShutdownThread extends Thread {
+                         .setPositiveButton(com.android.internal.R.string.yes, new DialogInterface.OnClickListener() {
+                             public void onClick(DialogInterface dialog, int which) {
+                                 mReboot = true;
++                                if (mRebootReason != null && mRebootReason.equals("hot")) {
++                                    mRebootHot = true;
++                                }
+                                 beginShutdownSequence(context);
+                             }
+                         })
+@@ -298,14 +304,16 @@ public final class ShutdownThread extends Thread {
+             }
+         };
+ 
+-        /*
+-         * Write a system property in case the system_server reboots before we
+-         * get to the actual hardware restart. If that happens, we'll retry at
+-         * the beginning of the SystemServer startup.
+-         */
+-        {
+-            String reason = (mReboot ? "1" : "0") + (mRebootReason != null ? mRebootReason : "");
+-            SystemProperties.set(SHUTDOWN_ACTION_PROPERTY, reason);
++        if (!mRebootHot) {
++            /*
++             * Write a system property in case the system_server reboots before we
++             * get to the actual hardware restart. If that happens, we'll retry at
++             * the beginning of the SystemServer startup.
++             */
++            {
++                String reason = (mReboot ? "1" : "0") + (mRebootReason != null ? mRebootReason : "");
++                SystemProperties.set(SHUTDOWN_ACTION_PROPERTY, reason);
++            }
+         }
+ 
+         Log.i(TAG, "Sending shutdown broadcast...");
+@@ -492,6 +500,19 @@ public final class ShutdownThread extends Thread {
+     public static void rebootOrShutdown(boolean reboot, String reason) {
+         if (reboot) {
+             Log.i(TAG, "Rebooting, reason: " + reason);
++            // check if hot reboot requested
++            if (mRebootHot) {
++                // crash system server to restart Android framework
++                try {
++                    IBinder b = ServiceManager.getService(Context.POWER_SERVICE);
++                    IPowerManager pm = IPowerManager.Stub.asInterface(b);
++                    pm.crash("Crashed by Hot Reboot");
++                } catch (RemoteException e) {
++                    Log.e(TAG, "Hot reboot failed, will attempt normal reboot instead", e);
++                    reason = null;
++                }
++            }
++            // normal reboot
+             try {
+                 Power.reboot(reason);
+             } catch (Exception e) {
+diff --git a/core/res/res/values/arrays.xml b/core/res/res/values/arrays.xml
+index e63cc9d..0cf222f 100644
+--- a/core/res/res/values/arrays.xml
++++ b/core/res/res/values/arrays.xml
+@@ -514,6 +514,7 @@
+     <!-- Defines the shutdown options shown in the reboot dialog. -->
+     <array name="shutdown_reboot_options" translatable="false">
+         <item>@string/reboot_reboot</item>
++        <item>@string/reboot_hot</item>
+         <item>@string/reboot_recovery</item>
+         <item>@string/reboot_bootloader</item>
+     </array>
+@@ -522,6 +523,7 @@
+          The first item should be empty for regular reboot. -->
+     <string-array name="shutdown_reboot_actions" translatable="false">
+         <item></item>
++        <item>hot</item>
+         <item>recovery</item>
+         <item>bootloader</item>
+     </string-array>
+diff --git a/core/res/res/values/strings.xml b/core/res/res/values/strings.xml
+index 16d7d08..9d0ee84 100755
+--- a/core/res/res/values/strings.xml
++++ b/core/res/res/values/strings.xml
+@@ -314,6 +314,8 @@
+ 
+     <!-- Button to reboot the phone, within the Reboot Options dialog -->
+     <string name="reboot_reboot">Reboot</string>
++    <!-- Button to hot reboot the phone, within the Reboot Options dialog -->
++    <string name="reboot_hot">Hot reboot</string>
+     <!-- Button to reboot the phone into recovery, within the Reboot Options dialog -->
+     <string name="reboot_recovery">Recovery</string>
+     <!-- Button to reboot the phone into bootloader, within the Reboot Options dialog -->
+-- 
+1.7.9.5
+

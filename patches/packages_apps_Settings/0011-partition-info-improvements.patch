@@ -1,0 +1,201 @@
+From 962d982c9cdd1b483e6c52e885c4289f2b61ffd4 Mon Sep 17 00:00:00 2001
+From: Konsta <konsta09@gmail.com>
+Date: Tue, 7 Aug 2012 23:35:43 +0300
+Subject: [PATCH 1/2] partition info improvements
+
+Change-Id: I4ea38c549d0936f8e2cde13932bb3a5537df66a3
+---
+ res/values/strings.xml                      |    5 +-
+ res/xml/partition_info.xml                  |   39 +++++--------
+ src/com/android/settings/PartitionInfo.java |   82 +++++++++++++++------------
+ 3 files changed, 61 insertions(+), 65 deletions(-)
+
+diff --git a/res/values/strings.xml b/res/values/strings.xml
+index 9b776ac..2e1e45f 100644
+--- a/res/values/strings.xml
++++ b/res/values/strings.xml
+@@ -4547,14 +4547,13 @@ found in the list of installed apps.</string>
+     <string name="konsta_web_title">CyanogenMod 9 - KonstaKANG</string>
+     <string name="konsta_web_summary">Visit MoDaCo thread</string>
+ 
+-    <!-- Konsta partition info -->
++    <!-- Partition info -->
+     <string name="partition_info_title">Partition info</string>
+     <string name="partition_info_system">/system</string>
+     <string name="partition_info_data">/data</string>
+     <string name="partition_info_cache">/cache</string>
+     <string name="partition_info_sdcard">/sdcard (FAT)</string>
+-    <string name="partition_info_sdext">/sd-ext (EXT)</string>
+-    <string name="partition_info_used_of">/</string>
++    <string name="partition_info_sdext">EXT partition</string>
+ 
+     <!-- Power menu settings -->
+     <string name="power_menu_settings_title">Power menu</string>
+diff --git a/res/xml/partition_info.xml b/res/xml/partition_info.xml
+index e686f1c..9a79c33 100644
+--- a/res/xml/partition_info.xml
++++ b/res/xml/partition_info.xml
+@@ -16,35 +16,24 @@
+ 
+ <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+         android:title="@string/partition_info_title">
+-
+-    <!-- /System info -->
+-    <Preference android:key="system_part_info" 
++    <!-- /system info -->
++    <Preference android:key="system_part_info"
+         android:title="@string/partition_info_system"
+-        android:summary="@string/status_unavailable"
+-        />
+-       
+-    <!-- /Data info -->
+-    <Preference android:key="data_part_info" 
++        android:summary="@string/status_unavailable" />
++    <!-- /data info -->
++    <Preference android:key="data_part_info"
+         android:title="@string/partition_info_data"
+-        android:summary="@string/status_unavailable"
+-        />
+-
++        android:summary="@string/status_unavailable" />
+     <!-- /cache info -->
+-    <Preference android:key="cache_part_info" 
++    <Preference android:key="cache_part_info"
+         android:title="@string/partition_info_cache"
+-        android:summary="@string/status_unavailable"
+-        />
+-		        
+-    <!-- SDCard info (fat) -->
+-    <Preference android:key="sdcard_part_info_fat" 
++        android:summary="@string/status_unavailable" />
++    <!-- /sdcard info (fat) -->
++    <Preference android:key="sdcard_part_info_fat"
+         android:title="@string/partition_info_sdcard"
+-        android:summary="@string/status_unavailable"
+-        />
+-		
+-    <!-- SDCard info (ext) -->
+-    <Preference android:key="sdcard_part_info_ext" 
++        android:summary="@string/status_unavailable" />
++    <!-- /sd-ext info (ext) -->
++    <Preference android:key="sdcard_part_info_ext"
+         android:title="@string/partition_info_sdext"
+-        android:summary="@string/status_unavailable"
+-        />
+-
++        android:summary="@string/status_unavailable" />
+ </PreferenceScreen>
+diff --git a/src/com/android/settings/PartitionInfo.java b/src/com/android/settings/PartitionInfo.java
+index f721f6d..6020be2 100644
+--- a/src/com/android/settings/PartitionInfo.java
++++ b/src/com/android/settings/PartitionInfo.java
+@@ -55,7 +55,6 @@ public class PartitionInfo extends PreferenceActivity {
+     private Preference mCachePartSize;
+     private Preference mSDCardPartFATSize;
+     private Preference mSDCardPartEXTSize;
+-    private Preference mDeviceName;
+     
+     private boolean extfsIsMounted = false;
+     
+@@ -67,53 +66,62 @@ public class PartitionInfo extends PreferenceActivity {
+ 
+         PreferenceScreen prefSet = getPreferenceScreen();
+ 
+-    	mSystemPartSize        = (Preference) prefSet.findPreference(SYSTEM_PART_SIZE);
+-    	mDataPartSize          = (Preference) prefSet.findPreference(DATA_PART_SIZE);
+-    	mCachePartSize         = (Preference) prefSet.findPreference(CACHE_PART_SIZE);
+-    	mSDCardPartFATSize     = (Preference) prefSet.findPreference(SDCARDFAT_PART_SIZE);
+-    	mSDCardPartEXTSize     = (Preference) prefSet.findPreference(SDCARDEXT_PART_SIZE);
++        mSystemPartSize        = (Preference) prefSet.findPreference(SYSTEM_PART_SIZE);
++        mDataPartSize          = (Preference) prefSet.findPreference(DATA_PART_SIZE);
++        mCachePartSize         = (Preference) prefSet.findPreference(CACHE_PART_SIZE);
++        mSDCardPartFATSize     = (Preference) prefSet.findPreference(SDCARDFAT_PART_SIZE);
++        mSDCardPartEXTSize     = (Preference) prefSet.findPreference(SDCARDEXT_PART_SIZE);
+       
+-                    if (fileExists("/dev/block/mmcblk0p2") == true) {
+-			Log.i(TAG, "sd: ext partition mounted");
+-			extfsIsMounted = true;
+-		    } else {
+-			Log.i(TAG, "sd: ext partition not mounted");
+-		    }
++        if (fileExists("/dev/block/mmcblk0p2") == true) {
++            Log.i(TAG, "sd-ext: partition mounted");
++            extfsIsMounted = true;
++        } else {
++            Log.i(TAG, "sd-ext: partition not mounted");
++        }
+     	
+-    	try {
+-    	    mSystemPartSize.setSummary(ObtainFSPartSize    ("/system"));
+-    	    mDataPartSize.setSummary(ObtainFSPartSize      ("/data"));
+-    	    mCachePartSize.setSummary(ObtainFSPartSize     ("/cache"));
+-    	    mSDCardPartFATSize.setSummary(ObtainFSPartSize ("/sdcard"));
++        try {
++            mSystemPartSize.setSummary(ObtainFSPartSize    ("/system"));
++            mDataPartSize.setSummary(ObtainFSPartSize      ("/data"));
++            mCachePartSize.setSummary(ObtainFSPartSize     ("/cache"));
++            mSDCardPartFATSize.setSummary(ObtainFSPartSize ("/sdcard"));
+ 
+-    	    if (extfsIsMounted == true) {
+-                mSDCardPartEXTSize.setSummary(ObtainFSPartSize ("/sd-ext"));
++            if (extfsIsMounted == true) {
++                if (fileExists("/sd-ext") == true) {
++                    Log.i(TAG, "sd-ext: S2E detected");
++                    mSDCardPartEXTSize.setTitle("/sd-ext (EXT)");
++                    mSDCardPartEXTSize.setSummary(ObtainFSPartSize ("/sd-ext"));
++                } else if (fileExists("/system/sd") == true) {
++                    Log.i(TAG, "sd-ext: Darktremor detected");
++                    mSDCardPartEXTSize.setTitle("/system/sd (EXT)");
++                    mSDCardPartEXTSize.setSummary(ObtainFSPartSize ("/system/sd"));
++                } else if (fileExists("/data/sdext2") == true) {
++                    Log.i(TAG, "sd-ext: Link2SD detected");
++                    mSDCardPartEXTSize.setTitle("/data/sdext2 (EXT)");
++                    mSDCardPartEXTSize.setSummary(ObtainFSPartSize ("/data/sdext2"));
++                }
+             } else {
+                 mSDCardPartEXTSize.setEnabled(false);
+             }
+ 
+-    	} catch (IllegalArgumentException e) {
+-    	  e.printStackTrace();
+-    	}
+-        
++        } catch (IllegalArgumentException e) {
++            e.printStackTrace();
++        }
+     }
+ 
+     private String ObtainFSPartSize(String PartitionPath) {
+-    	String retstr;
+-    	File extraPath = new File(PartitionPath);
+-    	StatFs extraStat = new StatFs(extraPath.getPath());
+-    	long eBlockSize = extraStat.getBlockSize();
+-    	long eTotalBlocks = extraStat.getBlockCount();
+-    	retstr = Formatter.formatFileSize(this, (eTotalBlocks * eBlockSize) - (extraStat.getAvailableBlocks() * eBlockSize));
+-    	retstr += "  " + getResources().getString(R.string.partition_info_used_of) + "  ";
+-    	retstr += Formatter.formatFileSize(this, eTotalBlocks * eBlockSize);
+-    	return retstr;
++        String retstr;
++        File extraPath = new File(PartitionPath);
++        StatFs extraStat = new StatFs(extraPath.getPath());
++        long eBlockSize = extraStat.getBlockSize();
++        long eTotalBlocks = extraStat.getBlockCount();
++        retstr = Formatter.formatFileSize(this, (eTotalBlocks * eBlockSize) - (extraStat.getAvailableBlocks() * eBlockSize));
++        retstr += " / ";
++        retstr += Formatter.formatFileSize(this, eTotalBlocks * eBlockSize);
++        return retstr;
+     }
+-    
++
+     public boolean fileExists(String filename) {
+-    	File f = new File(filename);
+-    	return f.exists();
++        File f = new File(filename);
++        return f.exists();
+     }
+-    
+ }
+-
+-- 
+1.7.9.5
+
