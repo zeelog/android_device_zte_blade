@@ -1,0 +1,39 @@
+From 24bd4c86ac3c22e9df572163d0cb27b83be0c1a3 Mon Sep 17 00:00:00 2001
+From: Konsta <konsta09@gmail.com>
+Date: Fri, 27 Jul 2012 15:11:18 +0300
+Subject: [PATCH 7/7] re-organize system settings menu
+
+Change-Id: Idefc4bfb6a18b958308b8a83bfcbd22bf2dcf8bc
+---
+ res/xml/system_settings.xml |   10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
+
+diff --git a/res/xml/system_settings.xml b/res/xml/system_settings.xml
+index 27b3865..1e10e53 100644
+--- a/res/xml/system_settings.xml
++++ b/res/xml/system_settings.xml
+@@ -35,6 +35,11 @@
+         android:title="@string/notification_drawer_title" />
+ 
+     <PreferenceScreen
++        android:key="hardware_keys"
++        android:fragment="com.android.settings.cyanogenmod.HardwareKeys"
++        android:title="@string/hardware_keys_title" />
++
++    <PreferenceScreen
+         android:key="wallpaper"
+         android:title="@string/wallpaper_settings_title"
+         android:fragment="com.android.settings.WallpaperTypeSettings" />
+@@ -64,9 +69,4 @@
+         android:summary="@string/konsta_navbar_reboot"
+         android:defaultValue="false" />
+ 
+-    <PreferenceScreen
+-        android:key="hardware_keys"
+-        android:fragment="com.android.settings.cyanogenmod.HardwareKeys"
+-        android:title="@string/hardware_keys_title" />
+-
+ </PreferenceScreen>
+-- 
+1.7.9.5
+

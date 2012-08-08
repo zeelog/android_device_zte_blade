@@ -1,4 +1,4 @@
-From a506473b8b667cd0bd86a5e4db096f38353cd2ad Mon Sep 17 00:00:00 2001
+From ea240d0c1d1b3c268d73634aaaa62eda18a2fabb Mon Sep 17 00:00:00 2001
 From: Konsta <konsta09@gmail.com>
 Date: Tue, 24 Jul 2012 11:04:32 +0300
 Subject: [PATCH 5/7] add partition info
@@ -35,10 +35,10 @@ index 0606b38..8f36575 100644
                  android:label="@string/location_settings_title"
                  android:configChanges="orientation|keyboardHidden|screenSize"
 diff --git a/res/values/strings.xml b/res/values/strings.xml
-index 1247733..a52663d 100644
+index 71439d2..0e03163 100644
 --- a/res/values/strings.xml
 +++ b/res/values/strings.xml
-@@ -4799,5 +4799,13 @@
+@@ -4840,5 +4840,13 @@
      <!-- Performance : Disable bootanimation -->
      <string name="pref_disable_bootanimation_title">Disable boot animation</string>
      <string name="pref_disable_bootanimation_summary">Don\'t show the boot animation for faster boot</string>
@@ -98,10 +98,10 @@ index 0000000..9a79c33
 +        android:summary="@string/status_unavailable" />
 +</PreferenceScreen>
 diff --git a/res/xml/settings_headers.xml b/res/xml/settings_headers.xml
-index ba022ab..0934940 100644
+index 6efe3f3..76913c8 100644
 --- a/res/xml/settings_headers.xml
 +++ b/res/xml/settings_headers.xml
-@@ -116,6 +116,16 @@
+@@ -115,6 +115,16 @@
          android:icon="@drawable/ic_settings_storage"
          android:title="@string/storage_settings" />
  

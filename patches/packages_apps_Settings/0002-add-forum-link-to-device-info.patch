@@ -1,4 +1,4 @@
-From a1a78400702c7d58bac974db40a280f5625b37c8 Mon Sep 17 00:00:00 2001
+From 5f47280d132cdfe2ea7d1fe93f610c8e140339fb Mon Sep 17 00:00:00 2001
 From: Konsta <konsta09@gmail.com>
 Date: Mon, 23 Jul 2012 13:01:50 +0300
 Subject: [PATCH 2/7] add forum link to device info
@@ -11,10 +11,10 @@ Change-Id: I7963debc77ee01d34bd73a5a5626edfbb0d81836
  3 files changed, 23 insertions(+)
 
 diff --git a/res/values/strings.xml b/res/values/strings.xml
-index b85349d..ecba81b 100644
+index 5d04a6b..33f5c84 100644
 --- a/res/values/strings.xml
 +++ b/res/values/strings.xml
-@@ -4790,5 +4790,10 @@
+@@ -4831,5 +4831,10 @@
      <string name="konsta_navbar_dialog_msg">Please reboot to enable/disable the navigation bar</string>
      <string name="konsta_navbar_dialog_negative">Reboot later</string>
      <string name="konsta_navbar_dialog_positive">Hot reboot now</string>
@@ -26,7 +26,7 @@ index b85349d..ecba81b 100644
      <!-- **** CYANOGENMOD ADDITIONS END **** -->
  </resources>
 diff --git a/res/xml/device_info_settings.xml b/res/xml/device_info_settings.xml
-index 10c2983..af81800 100644
+index 5d55b19..7c6c1e5 100644
 --- a/res/xml/device_info_settings.xml
 +++ b/res/xml/device_info_settings.xml
 @@ -159,4 +159,9 @@

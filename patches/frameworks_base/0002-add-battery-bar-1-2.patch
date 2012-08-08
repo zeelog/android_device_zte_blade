@@ -1,7 +1,7 @@
-From 1bde50856477533efcfff9f0d9687c3ed5dc476f Mon Sep 17 00:00:00 2001
+From e6946e74017a861d2b5d2dde83511b28d416e98e Mon Sep 17 00:00:00 2001
 From: Konsta <konsta09@gmail.com>
 Date: Tue, 24 Jul 2012 16:01:58 +0300
-Subject: [PATCH 2/4] add battery bar (1/2)
+Subject: [PATCH 2/5] add battery bar (1/2)
 
 thanks to Spitemare
 https://github.com/Spitemare/android_frameworks_base/commit/2faad0bc7b7a14bab0a28363eda508c03cd790bd
@@ -18,10 +18,10 @@ Change-Id: I3fb94b5dc52ef75ea0249921e0efc18a050da3dc
  create mode 100644 packages/SystemUI/src/com/android/systemui/statusbar/phone/BatteryBar.java
 
 diff --git a/core/java/android/provider/Settings.java b/core/java/android/provider/Settings.java
-index a1d69e7..e52fbe6 100644
+index 51a7df9..22265e8 100644
 --- a/core/java/android/provider/Settings.java
 +++ b/core/java/android/provider/Settings.java
-@@ -2414,6 +2414,7 @@ public final class Settings {
+@@ -2422,6 +2422,7 @@ public final class Settings {
           * 0: Display the stock battery information
           * 1: Display cm battery percentage implementation / dont show stock icon
           * 2: Hide the battery information
@@ -71,10 +71,10 @@ index 0000000..9515882
 +
 +</layer-list>
 diff --git a/packages/SystemUI/res/layout/status_bar.xml b/packages/SystemUI/res/layout/status_bar.xml
-index e06795c..62b01bc 100644
+index cd37e65..2180e80 100644
 --- a/packages/SystemUI/res/layout/status_bar.xml
 +++ b/packages/SystemUI/res/layout/status_bar.xml
-@@ -166,4 +166,9 @@
+@@ -167,4 +167,9 @@
                  />
          </com.android.systemui.statusbar.phone.TickerView>
      </LinearLayout>

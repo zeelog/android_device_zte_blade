@@ -1,4 +1,4 @@
-From bfca6e455893ea0a6dffd586f2db99e9f3c0374d Mon Sep 17 00:00:00 2001
+From d53855c4535c9a2d8b1c03ae5e9df8a632f45d4c Mon Sep 17 00:00:00 2001
 From: Konsta <konsta09@gmail.com>
 Date: Thu, 5 Jul 2012 00:51:19 +0300
 Subject: [PATCH 6/7] add battery bar (2/2)
@@ -9,7 +9,7 @@ Change-Id: I3d582ba787721970ef2f973fac220ecc070b00b7
  1 file changed, 2 insertions(+)
 
 diff --git a/res/values/arrays.xml b/res/values/arrays.xml
-index 1c9b276..2d243de 100644
+index 90884ce..0fe90fc 100644
 --- a/res/values/arrays.xml
 +++ b/res/values/arrays.xml
 @@ -1006,12 +1006,14 @@
