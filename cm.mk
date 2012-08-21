@@ -1,5 +1,5 @@
 # Correct bootanimation size for the screen
-TARGET_BOOTANIMATION_NAME := vertical-480x800
+TARGET_BOOTANIMATION_NAME := vertical-480
 
 $(call inherit-product, device/zte/blade/blade.mk)
 
