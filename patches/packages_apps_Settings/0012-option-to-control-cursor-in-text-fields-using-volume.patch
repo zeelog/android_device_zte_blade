@@ -1,0 +1,123 @@
+From a53118042cd636c1a82cf8baa49d6f36f44acd1c Mon Sep 17 00:00:00 2001
+From: Konsta <konsta09@gmail.com>
+Date: Mon, 27 Aug 2012 12:17:58 +0300
+Subject: [PATCH 1/2] option to control cursor in text fields using volume
+ keys (2/2)
+
+Change-Id: Id0706badc7b99880bb7462d10cdb1126563e73cf
+---
+ res/values/arrays.xml                              |   13 +++++++++++++
+ res/values/strings.xml                             |    6 ++++++
+ res/xml/language_settings.xml                      |    7 +++++++
+ .../InputMethodAndLanguageSettings.java            |   16 ++++++++++++++++
+ 4 files changed, 42 insertions(+)
+
+diff --git a/res/values/arrays.xml b/res/values/arrays.xml
+index 9760a02..f46c696 100644
+--- a/res/values/arrays.xml
++++ b/res/values/arrays.xml
+@@ -1334,5 +1334,18 @@
+         <item>4</item>
+     </string-array>
+ 
++    <!--- Volume key cursor control -->
++    <string-array name="volume_key_cursor_control_entries">
++        <item>@string/volume_key_cursor_control_off</item>
++        <item>@string/volume_key_cursor_control_on</item>
++        <item>@string/volume_key_cursor_control_on_reverse</item>
++    </string-array>
++
++    <string-array name="volume_key_cursor_control_values">
++        <item>0</item>
++        <item>1</item>
++        <item>2</item>
++    </string-array>
++
+     <!-- **** CYANOGENMOD EDITS END **** -->
+ </resources>
+diff --git a/res/values/strings.xml b/res/values/strings.xml
+index 2e1e45f..aa0cac4 100644
+--- a/res/values/strings.xml
++++ b/res/values/strings.xml
+@@ -4505,6 +4505,12 @@ found in the list of installed apps.</string>
+     <string name="konsta_navbar_dialog_negative">Reboot later</string>
+     <string name="konsta_navbar_dialog_positive">Hot reboot now</string>
+ 
++    <!--- Volume key cursor control -->
++    <string name="volume_key_cursor_control_title">Volume key cursor control</string>
++    <string name="volume_key_cursor_control_off">Disabled</string>
++    <string name="volume_key_cursor_control_on">Volume up/down moves cursor to left/right</string>
++    <string name="volume_key_cursor_control_on_reverse">Volume up/down moves cursor to right/left</string>
++
+     <!-- Category for notification light options -->
+     <string name="notification_light_title">Notification light options</string>
+ 
+diff --git a/res/xml/language_settings.xml b/res/xml/language_settings.xml
+index d014c66..8e9d196 100644
+--- a/res/xml/language_settings.xml
++++ b/res/xml/language_settings.xml
+@@ -65,6 +65,13 @@
+             android:summary="@string/ime_switcher_notify_summary"
+             android:defaultValue="true"
+             android:persistent="false" />
++    <ListPreference
++            android:key="volume_key_cursor_control"
++            android:persistent="false"
++            android:dialogTitle="@string/volume_key_cursor_control_title"
++            android:title="@string/volume_key_cursor_control_title"
++            android:entries="@array/volume_key_cursor_control_entries"
++            android:entryValues="@array/volume_key_cursor_control_values" />
+ 
+     <PreferenceCategory android:key="voice_category"
+             android:title="@string/voice_category" >
+diff --git a/src/com/android/settings/inputmethod/InputMethodAndLanguageSettings.java b/src/com/android/settings/inputmethod/InputMethodAndLanguageSettings.java
+index 525ed3a..2a04cb3 100644
+--- a/src/com/android/settings/inputmethod/InputMethodAndLanguageSettings.java
++++ b/src/com/android/settings/inputmethod/InputMethodAndLanguageSettings.java
+@@ -57,6 +57,7 @@ public class InputMethodAndLanguageSettings extends SettingsPreferenceFragment
+     private static final String KEY_USER_DICTIONARY_SETTINGS = "key_user_dictionary_settings";
+     private static final String KEY_IME_SWITCHER = "status_bar_ime_switcher";
+     private static final String KEY_STYLUS_ICON_ENABLED = "stylus_icon_enabled";
++    private static final String VOLUME_KEY_CURSOR_CONTROL = "volume_key_cursor_control";
+     // false: on ICS or later
+     private static final boolean SHOW_INPUT_METHOD_SWITCHER_SETTINGS = false;
+ 
+@@ -83,6 +84,7 @@ public class InputMethodAndLanguageSettings extends SettingsPreferenceFragment
+     private Handler mHandler;
+     @SuppressWarnings("unused")
+     private SettingsObserver mSettingsObserver;
++    private ListPreference mVolumeKeyCursorControl;
+ 
+     @Override
+     public void onCreate(Bundle icicle) {
+@@ -136,6 +138,12 @@ public class InputMethodAndLanguageSettings extends SettingsPreferenceFragment
+             scp.setFragmentIntent(this, intent);
+         }
+ 
++        mVolumeKeyCursorControl = (ListPreference) findPreference(VOLUME_KEY_CURSOR_CONTROL);
++        mVolumeKeyCursorControl.setOnPreferenceChangeListener(this);
++        mVolumeKeyCursorControl.setValue(Integer.toString(Settings.System.getInt(getActivity()
++                .getContentResolver(), Settings.System.VOLUME_KEY_CURSOR_CONTROL, 0)));
++        mVolumeKeyCursorControl.setSummary(mVolumeKeyCursorControl.getEntry());
++
+         mHandler = new Handler();
+         mSettingsObserver = new SettingsObserver(mHandler, getActivity());
+     }
+@@ -292,6 +300,14 @@ public class InputMethodAndLanguageSettings extends SettingsPreferenceFragment
+                     saveInputMethodSelectorVisibility((String)value);
+                 }
+             }
++        } else if (preference == mVolumeKeyCursorControl) {
++            String volumeKeyCursorControl = (String) value;
++            int val = Integer.parseInt(volumeKeyCursorControl);
++            Settings.System.putInt(getActivity().getContentResolver(),
++                Settings.System.VOLUME_KEY_CURSOR_CONTROL, val);
++            int index = mVolumeKeyCursorControl.findIndexOfValue(volumeKeyCursorControl);
++            mVolumeKeyCursorControl.setSummary(mVolumeKeyCursorControl.getEntries()[index]);
++            return true;
+         }
+         return false;
+     }
+-- 
+1.7.9.5
+
