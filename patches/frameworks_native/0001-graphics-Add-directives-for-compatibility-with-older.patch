@@ -1,12 +1,12 @@
-From 453522cb7005a6aeaea301ed8056c1b68a094eb8 Mon Sep 17 00:00:00 2001
+From 02610bb2aec011c4d5429b16fedf79b6f3c3db22 Mon Sep 17 00:00:00 2001
 From: Emerson Pinter <dev@pinter.com.br>
 Date: Wed, 11 Jul 2012 23:47:20 -0300
 Subject: [PATCH] graphics: Add directives for compatibility with older EGL
  blobs (2/2)
 
 Port from CM9.
-Original author Ricardo Cerqueira (commit
-fc496c0607d0d2863ff9587019e890ab806ea49d)
+Original author Ricardo Cerqueira
+https://github.com/cyanogenmod/android_frameworks_base/commit/fc496c0607d0d2863ff9587019e890ab806ea49d
 
 Change-Id: If30f10f1d4b26547d1219e2ba05f6a831b8fbff8
 
