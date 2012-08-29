@@ -28,7 +28,6 @@ PRODUCT_AAPT_PREF_CONFIG := hdpi
 # Graphics
 PRODUCT_PACKAGES := \
         copybit.msm7x27 \
-        hwcomposer.msm7x27 \
         libQcomUI
 
 # OMX
