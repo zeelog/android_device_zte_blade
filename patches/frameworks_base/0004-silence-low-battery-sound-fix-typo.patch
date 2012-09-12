@@ -1,7 +1,7 @@
-From 95369df2028f6fa11478146fdd2fc599975509bc Mon Sep 17 00:00:00 2001
+From 8f1a5c9555aa06922a50f37d54379ec19c617f27 Mon Sep 17 00:00:00 2001
 From: Konsta <konsta09@gmail.com>
 Date: Tue, 7 Aug 2012 00:14:45 +0300
-Subject: [PATCH 5/5] silence low battery sound, fix typo
+Subject: [PATCH 06/10] silence low battery sound, fix typo
 
 Change-Id: I59c3b419e9a5e0e00960626f33c1cd5dbe075a06
 ---

@@ -1,0 +1,132 @@
+From 3734892c5f34b9084bb9a6084e120a8dab53c077 Mon Sep 17 00:00:00 2001
+From: Konsta <konsta09@gmail.com>
+Date: Thu, 30 Aug 2012 10:35:32 +0300
+Subject: [PATCH] fix panorama mode
+
+https://github.com/rapmv78/android_packages_apps_Camera/commit/97666c3c3a89c1cabe859b4ade349a877889e5e1
+
+Change-Id: I4edf9db5e5837e8462266d45eeb2c3efcdf3f57d
+---
+ .../src/mosaic_renderer/SurfaceTextureRenderer.cpp |    4 ++--
+ .../src/mosaic_renderer/WarpRenderer.cpp           |    2 ++
+ .../src/mosaic_renderer/YVURenderer.cpp            |    1 +
+ jni/feature_mos_jni.cpp                            |    4 ++--
+ jni/mosaic_renderer_jni.cpp                        |    3 +++
+ .../android/camera/panorama/PanoramaActivity.java  |    6 +++++-
+ 6 files changed, 15 insertions(+), 5 deletions(-)
+
+diff --git a/jni/feature_mos/src/mosaic_renderer/SurfaceTextureRenderer.cpp b/jni/feature_mos/src/mosaic_renderer/SurfaceTextureRenderer.cpp
+index 0fc592e..e72b1d8 100755
+--- a/jni/feature_mos/src/mosaic_renderer/SurfaceTextureRenderer.cpp
++++ b/jni/feature_mos/src/mosaic_renderer/SurfaceTextureRenderer.cpp
+@@ -153,6 +153,7 @@ bool SurfaceTextureRenderer::DrawTexture(GLfloat *affine)
+         // And, finally, execute the GL draw command.
+         glDrawElements(GL_TRIANGLE_STRIP, 4, GL_UNSIGNED_SHORT, g_iIndices2);
+ 
++        glFlush();
+         glBindFramebuffer(GL_FRAMEBUFFER, 0);
+         succeeded = true;
+     } while (false);
+@@ -178,10 +179,9 @@ const char* SurfaceTextureRenderer::VertexShaderSource() const
+ const char* SurfaceTextureRenderer::FragmentShaderSource() const
+ {
+     static const char gFragmentShader[] =
+-        "#extension GL_OES_EGL_image_external : require\n"
+         "precision mediump float;\n"
+         "varying vec2 vTextureNormCoord;\n"
+-        "uniform samplerExternalOES sTexture;\n"
++        "uniform sampler2D sTexture;\n"
+         "void main() {\n"
+         "  gl_FragColor = texture2D(sTexture, vTextureNormCoord);\n"
+         "}\n";
+diff --git a/jni/feature_mos/src/mosaic_renderer/WarpRenderer.cpp b/jni/feature_mos/src/mosaic_renderer/WarpRenderer.cpp
+index af6779a..bf37cd3 100755
+--- a/jni/feature_mos/src/mosaic_renderer/WarpRenderer.cpp
++++ b/jni/feature_mos/src/mosaic_renderer/WarpRenderer.cpp
+@@ -149,9 +149,11 @@ bool WarpRenderer::DrawTexture(GLfloat *affine)
+ 
+         checkGlError("glDrawElements");
+ 
++        glFlush();
+         glBindFramebuffer(GL_FRAMEBUFFER, 0);
+         succeeded = true;
+     } while (false);
++    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+     return succeeded;
+ }
+ 
+diff --git a/jni/feature_mos/src/mosaic_renderer/YVURenderer.cpp b/jni/feature_mos/src/mosaic_renderer/YVURenderer.cpp
+index f7dcf6f..9b2ad5e 100755
+--- a/jni/feature_mos/src/mosaic_renderer/YVURenderer.cpp
++++ b/jni/feature_mos/src/mosaic_renderer/YVURenderer.cpp
+@@ -113,6 +113,7 @@ bool YVURenderer::DrawTexture()
+ 
+         checkGlError("glDrawElements");
+ 
++        glFlush();
+         glBindFramebuffer(GL_FRAMEBUFFER, 0);
+         succeeded = true;
+     } while (false);
+diff --git a/jni/feature_mos_jni.cpp b/jni/feature_mos_jni.cpp
+index e40b75a..5458ec1 100644
+--- a/jni/feature_mos_jni.cpp
++++ b/jni/feature_mos_jni.cpp
+@@ -355,8 +355,8 @@ void ConvertYVUAiToPlanarYVU(unsigned char *planar, unsigned char *in, int width
+     for (int i = 0; i < planeSize; i++)
+     {
+         *Yptr++ = *in++;
+-        *Vptr++ = *in++;
+-        *Uptr++ = *in++;
++        *Vptr++ = *in++ + 128; // Adjust for greenish tint
++        *Uptr++ = *in++ + 90;
+         in++;   // Alpha
+     }
+ }
+diff --git a/jni/mosaic_renderer_jni.cpp b/jni/mosaic_renderer_jni.cpp
+index 50312c4..af1cc07 100644
+--- a/jni/mosaic_renderer_jni.cpp
++++ b/jni/mosaic_renderer_jni.cpp
+@@ -638,6 +638,7 @@ JNIEXPORT void JNICALL Java_com_android_camera_panorama_MosaicRenderer_preproces
+ 
+     gSurfTexRenderer[LR].DrawTexture(g_dAffinetransIdentGL);
+     gSurfTexRenderer[HR].DrawTexture(g_dAffinetransIdentGL);
++    glFlush();
+ }
+ 
+ #ifndef now_ms
+@@ -663,6 +664,7 @@ JNIEXPORT void JNICALL Java_com_android_camera_panorama_MosaicRenderer_transferG
+     gYVURenderer[LR].DrawTexture();
+     gYVURenderer[HR].DrawTexture();
+ 
++    glFlush();
+     sem_wait(&gPreviewImage_semaphore);
+     // Bind to the input LR FBO and read the Low-Res data from there...
+     glBindFramebuffer(GL_FRAMEBUFFER, gBufferInputYVU[LR].GetFrameBufferName());
+@@ -691,6 +693,7 @@ JNIEXPORT void JNICALL Java_com_android_camera_panorama_MosaicRenderer_transferG
+     checkGlError("glReadPixels HR");
+ 
+     sem_post(&gPreviewImage_semaphore);
++    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+ }
+ 
+ JNIEXPORT void JNICALL Java_com_android_camera_panorama_MosaicRenderer_step(
+diff --git a/src/com/android/camera/panorama/PanoramaActivity.java b/src/com/android/camera/panorama/PanoramaActivity.java
+index 3278bd6..48b131b 100755
+--- a/src/com/android/camera/panorama/PanoramaActivity.java
++++ b/src/com/android/camera/panorama/PanoramaActivity.java
+@@ -933,7 +933,11 @@ public class PanoramaActivity extends ActivityBase implements
+ 
+     private void resetToPreview() {
+         reset();
+-        if (!mPausing) startCameraPreview();
++        if (!mPausing) {
++           mMosaicView.onPause();
++           mMosaicView.onResume();
++           startCameraPreview();
++        }
+     }
+ 
+     private void showFinalMosaic(Bitmap bitmap) {
+-- 
+1.7.9.5
+

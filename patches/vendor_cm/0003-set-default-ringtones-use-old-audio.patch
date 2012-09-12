@@ -1,0 +1,42 @@
+From 018af3c23dde4ae5eadc784ddd1261624b0d842e Mon Sep 17 00:00:00 2001
+From: Konsta <konsta09@gmail.com>
+Date: Thu, 2 Aug 2012 22:01:52 +0300
+Subject: [PATCH 4/5] set default ringtones, use old audio
+
+Change-Id: Ia4a6dff5dc46cfd02dd549f61aba3ba6be4c064d
+---
+ config/common_mini_phone.mk |   10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
+
+diff --git a/config/common_mini_phone.mk b/config/common_mini_phone.mk
+index d407176..1fbdfd4 100644
+--- a/config/common_mini_phone.mk
++++ b/config/common_mini_phone.mk
+@@ -2,19 +2,19 @@
+ $(call inherit-product, vendor/cm/config/common.mk)
+ 
+ # Bring in all audio files
+-include frameworks/base/data/sounds/NewAudio.mk
++include frameworks/base/data/sounds/OldAudio.mk
+ 
+ # Include CM audio files
+ #include vendor/cm/config/cm_audio.mk
+ 
+ # Default ringtone
+ PRODUCT_PROPERTY_OVERRIDES += \
+-    ro.config.ringtone=CyanTone.ogg \
+-    ro.config.notification_sound=CyanMessage.ogg \
+-    ro.config.alarm_alert=CyanAlarm.ogg
++    ro.config.ringtone=Ring_Digital_02.ogg \
++    ro.config.notification_sound=F1_New_SMS.ogg \
++    ro.config.alarm_alert=Alarm_Beep_03.ogg
+ 
+ PRODUCT_PACKAGES += \
+-  Mms
++    Mms
+ 
+ ifeq ($(TARGET_SCREEN_WIDTH) $(TARGET_SCREEN_HEIGHT),$(space))
+     PRODUCT_COPY_FILES += \
+-- 
+1.7.9.5
+

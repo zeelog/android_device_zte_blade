@@ -1,0 +1,26 @@
+From 571966f268f9297e8a6c7658267fa2135b3f2239 Mon Sep 17 00:00:00 2001
+From: Konsta <konsta09@gmail.com>
+Date: Mon, 20 Aug 2012 13:47:59 +0300
+Subject: [PATCH 5/5] Revert "opticharger: do not compress resources.arsc"
+
+This reverts commit bb56531b18d89296e8328394f3126e4602b2714e.
+---
+ tools/opticharger |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/tools/opticharger b/tools/opticharger
+index 0473008..e7cd77e 100755
+--- a/tools/opticharger
++++ b/tools/opticharger
+@@ -130,7 +130,7 @@ then
+     cp $BASE/$1 $BASE/$1.old
+ 
+     [ $QUIET ] || echo "Repacking apk.."
+-    aapt p -0 .dat -0 .dict -0 .arsc -F $NAME .
++    aapt p -0 .dat -0 .dict -F $NAME .
+     
+     [ $QUIET ] || echo "Resigning with cert: `echo $CERT`"
+ 
+-- 
+1.7.9.5
+

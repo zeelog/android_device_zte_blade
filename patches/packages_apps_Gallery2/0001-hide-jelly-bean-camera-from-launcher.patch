@@ -1,0 +1,25 @@
+From a1bec557f613573509deab3beac0608d75d8925d Mon Sep 17 00:00:00 2001
+From: Konsta <konsta09@gmail.com>
+Date: Thu, 30 Aug 2012 11:51:20 +0300
+Subject: [PATCH] hide jelly bean camera from launcher
+
+Change-Id: Iae87e28d386e75bc60b8f5146d6debe848ae3df9
+---
+ AndroidManifest.xml |    1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/AndroidManifest.xml b/AndroidManifest.xml
+index 5f30113..8962cb2 100644
+--- a/AndroidManifest.xml
++++ b/AndroidManifest.xml
+@@ -278,7 +278,6 @@
+             <intent-filter>
+                 <action android:name="android.intent.action.MAIN" />
+                 <category android:name="android.intent.category.DEFAULT" />
+-                <category android:name="android.intent.category.LAUNCHER" />
+             </intent-filter>
+         </activity-alias>
+ 
+-- 
+1.7.9.5
+

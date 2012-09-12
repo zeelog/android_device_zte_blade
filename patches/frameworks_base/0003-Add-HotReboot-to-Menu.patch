@@ -1,14 +1,14 @@
-From a84dc11b6644a828b835504ce6d8b3a9d6e848ca Mon Sep 17 00:00:00 2001
+From 6a2c3b5bb148fe55262edcdc380339ea1f2a14e5 Mon Sep 17 00:00:00 2001
 From: burstlam <burstlam@gmail.com>
 Date: Fri, 27 Jul 2012 16:55:52 +0800
-Subject: [PATCH 4/5] Add HotReboot to Menu
+Subject: [PATCH 05/10] Add HotReboot to Menu
 
 Change-Id: I6eea6286df3afc08bb364a8f7bfa69b7e4e4c2f9
 ---
  core/res/res/values/arrays.xml                     |    2 +
  core/res/res/values/strings.xml                    |    2 +
- .../java/com/android/server/pm/ShutdownThread.java |   43 +++++++++++++++-----
- 3 files changed, 36 insertions(+), 11 deletions(-)
+ .../java/com/android/server/pm/ShutdownThread.java |   41 +++++++++++++++-----
+ 3 files changed, 35 insertions(+), 10 deletions(-)
 
 diff --git a/core/res/res/values/arrays.xml b/core/res/res/values/arrays.xml
 index a55297d..6657a00 100644
@@ -31,7 +31,7 @@ index a55297d..6657a00 100644
          <item>bootloader</item>
      </string-array>
 diff --git a/core/res/res/values/strings.xml b/core/res/res/values/strings.xml
-index 3355abd..df694cc 100755
+index 1eabba3..32a203c 100755
 --- a/core/res/res/values/strings.xml
 +++ b/core/res/res/values/strings.xml
 @@ -320,6 +320,8 @@
@@ -44,7 +44,7 @@ index 3355abd..df694cc 100755
      <string name="reboot_recovery">Recovery</string>
      <!-- Button to reboot the phone into bootloader, within the Reboot Options dialog -->
 diff --git a/services/java/com/android/server/pm/ShutdownThread.java b/services/java/com/android/server/pm/ShutdownThread.java
-index f947bf6..bdbed76 100644
+index 2c8a2f9..5ba20e8 100644
 --- a/services/java/com/android/server/pm/ShutdownThread.java
 +++ b/services/java/com/android/server/pm/ShutdownThread.java
 @@ -32,6 +32,8 @@ import android.content.DialogInterface;
@@ -64,7 +64,7 @@ index f947bf6..bdbed76 100644
  
      // Provides shutdown assurance in case the system_server is killed
      public static final String SHUTDOWN_ACTION_PROPERTY = "sys.shutdown.requested";
-@@ -144,6 +147,9 @@ public final class ShutdownThread extends Thread {
+@@ -143,6 +146,9 @@ public final class ShutdownThread extends Thread {
                          .setPositiveButton(com.android.internal.R.string.yes, new DialogInterface.OnClickListener() {
                              public void onClick(DialogInterface dialog, int which) {
                                  mReboot = true;
@@ -74,7 +74,7 @@ index f947bf6..bdbed76 100644
                                  beginShutdownSequence(context);
                              }
                          })
-@@ -318,15 +324,16 @@ public final class ShutdownThread extends Thread {
+@@ -317,15 +323,16 @@ public final class ShutdownThread extends Thread {
              }
          };
  
@@ -100,7 +100,7 @@ index f947bf6..bdbed76 100644
  
          /*
           * If we are rebooting into safe mode, write a system property
-@@ -355,7 +362,8 @@ public final class ShutdownThread extends Thread {
+@@ -354,7 +361,8 @@ public final class ShutdownThread extends Thread {
                      mActionDoneSync.wait(delay);
                  } catch (InterruptedException e) {
                  }
@@ -110,7 +110,7 @@ index f947bf6..bdbed76 100644
          }
  
          Log.i(TAG, "Shutting down activity manager...");
-@@ -535,6 +543,19 @@ public final class ShutdownThread extends Thread {
+@@ -534,6 +542,19 @@ public final class ShutdownThread extends Thread {
      public static void rebootOrShutdown(boolean reboot, String reason) {
          if (reboot) {
              Log.i(TAG, "Rebooting, reason: " + reason);
@@ -130,13 +130,6 @@ index f947bf6..bdbed76 100644
              try {
                  PowerManagerService.lowLevelReboot(reason);
              } catch (Exception e) {
-@@ -561,4 +582,4 @@ public final class ShutdownThread extends Thread {
-         Log.i(TAG, "Performing low-level shutdown...");
-         PowerManagerService.lowLevelShutdown();
-     }
--}
-\ No newline at end of file
-+}
 -- 
 1.7.9.5
 

@@ -1,7 +1,7 @@
-From 039cef79e64f6a9fb32c88bb8ac9949caf166bb7 Mon Sep 17 00:00:00 2001
+From 5b4a04777718eb924302390e374c33410c16e6d6 Mon Sep 17 00:00:00 2001
 From: Konsta <konsta09@gmail.com>
 Date: Mon, 23 Jul 2012 14:09:59 +0300
-Subject: [PATCH 3/7] add option to disable bootanimation
+Subject: [PATCH 06/15] add option to disable bootanimation
 
 Change-Id: Ie694fed4f8e5733d8d36a7bb406967c4ee65de64
 ---
@@ -11,10 +11,10 @@ Change-Id: Ie694fed4f8e5733d8d36a7bb406967c4ee65de64
  3 files changed, 22 insertions(+)
 
 diff --git a/res/values/strings.xml b/res/values/strings.xml
-index 33f5c84..3987e13 100644
+index e34d793..0c74c2e 100644
 --- a/res/values/strings.xml
 +++ b/res/values/strings.xml
-@@ -4836,5 +4836,9 @@
+@@ -4895,5 +4895,9 @@
      <string name="konsta_web_title">CyanogenMod 10 - KonstaKANG</string>
      <string name="konsta_web_summary">Visit MoDaCo thread</string>
      <string name="konsta_web_url">http://www.modaco.com/topic/355903-devrom-cyanogenmod-10-android-411/</string>
@@ -25,10 +25,10 @@ index 33f5c84..3987e13 100644
      <!-- **** CYANOGENMOD ADDITIONS END **** -->
  </resources>
 diff --git a/res/xml/performance_settings.xml b/res/xml/performance_settings.xml
-index 24ce692..cfacb24 100644
+index 8644a70..547e41a 100644
 --- a/res/xml/performance_settings.xml
 +++ b/res/xml/performance_settings.xml
-@@ -44,4 +44,9 @@
+@@ -50,4 +50,9 @@
          android:entries="@array/dithering_entries"
          android:entryValues="@array/dithering_values"/>
  
@@ -39,7 +39,7 @@ index 24ce692..cfacb24 100644
 +
  </PreferenceScreen>
 diff --git a/src/com/android/settings/cyanogenmod/PerformanceSettings.java b/src/com/android/settings/cyanogenmod/PerformanceSettings.java
-index f3f6a81..ad0ed60 100644
+index 0c100e5..f6130a5 100644
 --- a/src/com/android/settings/cyanogenmod/PerformanceSettings.java
 +++ b/src/com/android/settings/cyanogenmod/PerformanceSettings.java
 @@ -45,10 +45,16 @@ public class PerformanceSettings extends SettingsPreferenceFragment
@@ -59,7 +59,7 @@ index f3f6a81..ad0ed60 100644
      private AlertDialog alertDialog;
  
      @Override
-@@ -70,6 +76,10 @@ public class PerformanceSettings extends SettingsPreferenceFragment
+@@ -71,6 +77,10 @@ public class PerformanceSettings extends SettingsPreferenceFragment
              String use16bppAlpha = SystemProperties.get(USE_16BPP_ALPHA_PROP, "0");
              mUse16bppAlphaPref.setChecked("1".equals(use16bppAlpha));
  
@@ -70,7 +70,7 @@ index f3f6a81..ad0ed60 100644
              /* Display the warning dialog */
              alertDialog = new AlertDialog.Builder(getActivity()).create();
              alertDialog.setTitle(R.string.performance_settings_warning_title);
-@@ -91,6 +101,9 @@ public class PerformanceSettings extends SettingsPreferenceFragment
+@@ -92,6 +102,9 @@ public class PerformanceSettings extends SettingsPreferenceFragment
          if (preference == mUse16bppAlphaPref) {
              SystemProperties.set(USE_16BPP_ALPHA_PROP,
                      mUse16bppAlphaPref.isChecked() ? "1" : "0");

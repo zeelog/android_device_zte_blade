@@ -1,22 +1,22 @@
-From e7ff039e8a5e1f9993ecb8b6cbcfd1684d75bc8d Mon Sep 17 00:00:00 2001
+From 49059ab6872e80037bd7e2784b6b0ae3f67b4008 Mon Sep 17 00:00:00 2001
 From: Konsta <konsta09@gmail.com>
 Date: Mon, 23 Jul 2012 12:53:13 +0300
-Subject: [PATCH 1/7] add option to display navigation bar (2/2)
+Subject: [PATCH] add option to display navigation bar (2/2)
 
 Change-Id: I1801d7d15cbf68d4883168bf7259c13f52a256a5
 ---
- res/values/strings.xml                             |    7 ++++
+ res/values/strings.xml                             |    7 +++
  res/xml/system_settings.xml                        |    5 +++
- .../settings/cyanogenmod/SystemSettings.java       |   34 +++++++++++++++++++-
- 3 files changed, 45 insertions(+), 1 deletion(-)
+ .../settings/cyanogenmod/SystemSettings.java       |   45 ++++++++++++++++++++
+ 3 files changed, 57 insertions(+)
 
 diff --git a/res/values/strings.xml b/res/values/strings.xml
-index 5109665..5d04a6b 100644
+index 1ff7f28..ca1a980 100644
 --- a/res/values/strings.xml
 +++ b/res/values/strings.xml
-@@ -4824,5 +4824,12 @@
-     <!-- Power menu screenshot -->
-     <string name="power_menu_screenshot_title">Power menu screenshot</string>
+@@ -4883,5 +4883,12 @@
+     <string name="volume_key_cursor_control_on">Volume up/down moves cursor left/right</string>
+     <string name="volume_key_cursor_control_on_reverse">Volume up/down moves cursor right/left</string>
  
 +    <!-- Navbar -->
 +    <string name="konsta_navbar">Show navigation bar</string>
@@ -28,7 +28,7 @@ index 5109665..5d04a6b 100644
      <!-- **** CYANOGENMOD ADDITIONS END **** -->
  </resources>
 diff --git a/res/xml/system_settings.xml b/res/xml/system_settings.xml
-index 43f70e6..27b3865 100644
+index 4af357c..2fd8a55 100644
 --- a/res/xml/system_settings.xml
 +++ b/res/xml/system_settings.xml
 @@ -58,6 +58,11 @@
@@ -44,10 +44,10 @@ index 43f70e6..27b3865 100644
      <PreferenceScreen
          android:key="hardware_keys"
 diff --git a/src/com/android/settings/cyanogenmod/SystemSettings.java b/src/com/android/settings/cyanogenmod/SystemSettings.java
-index 74572c8..56a7cc4 100644
+index e7ee4b2..a174b67 100644
 --- a/src/com/android/settings/cyanogenmod/SystemSettings.java
 +++ b/src/com/android/settings/cyanogenmod/SystemSettings.java
-@@ -17,12 +17,16 @@
+@@ -17,15 +17,21 @@
  package com.android.settings.cyanogenmod;
  
  import android.app.ActivityManagerNative;
@@ -61,26 +61,30 @@ index 74572c8..56a7cc4 100644
  import android.os.ServiceManager;
 +import android.os.IBinder;
 +import android.os.IPowerManager;
- import android.preference.CheckBoxPreference;
++import android.preference.CheckBoxPreference;
  import android.preference.ListPreference;
  import android.preference.Preference;
-@@ -45,11 +49,13 @@ public class SystemSettings extends SettingsPreferenceFragment implements
+ import android.preference.PreferenceScreen;
++import android.provider.Settings;
+ import android.util.Log;
+ import android.view.IWindowManager;
+ 
+@@ -42,10 +48,12 @@ public class SystemSettings extends SettingsPreferenceFragment implements
+     private static final String KEY_NOTIFICATION_DRAWER_TABLET = "notification_drawer_tablet";
      private static final String KEY_NAVIGATION_BAR = "navigation_bar";
-     private static final String KEY_SCREENSHOT = "power_menu_screenshot";
      private static final String KEY_HARDWARE_KEYS = "hardware_keys";
 +    private static final String KONSTA_NAVBAR = "konsta_navbar";
  
      private ListPreference mFontSizePref;
      private PreferenceScreen mPhoneDrawer;
      private PreferenceScreen mTabletDrawer;
-     private CheckBoxPreference mScreenshotPref;
 +    private CheckBoxPreference mKonstaNavbar;
  
      private final Configuration mCurConfig = new Configuration();
  
-@@ -67,6 +73,10 @@ public class SystemSettings extends SettingsPreferenceFragment implements
-         mScreenshotPref.setChecked((Settings.System.getInt(getContentResolver(),
-                 Settings.System.POWER_MENU_SCREENSHOT_ENABLED, 0) == 1));
+@@ -60,6 +68,10 @@ public class SystemSettings extends SettingsPreferenceFragment implements
+         mPhoneDrawer = (PreferenceScreen) findPreference(KEY_NOTIFICATION_DRAWER);
+         mTabletDrawer = (PreferenceScreen) findPreference(KEY_NOTIFICATION_DRAWER_TABLET);
  
 +        mKonstaNavbar = (CheckBoxPreference) findPreference(KONSTA_NAVBAR);
 +        mKonstaNavbar.setChecked(Settings.System.getInt(getActivity().getContentResolver(),
@@ -89,11 +93,15 @@ index 74572c8..56a7cc4 100644
          if (Utils.isTablet(getActivity())) {
              if (mPhoneDrawer != null) {
                  getPreferenceScreen().removePreference(mPhoneDrawer);
-@@ -160,10 +170,32 @@ public class SystemSettings extends SettingsPreferenceFragment implements
-             Settings.System.putInt(getContentResolver(),
-                     Settings.System.POWER_MENU_SCREENSHOT_ENABLED,
-                     value ? 1 : 0);
-+        } else if (preference == mKonstaNavbar) {
+@@ -144,6 +156,39 @@ public class SystemSettings extends SettingsPreferenceFragment implements
+         }
+     }
+ 
++    @Override
++    public boolean onPreferenceTreeClick(PreferenceScreen preferenceScreen, Preference preference) {
++        boolean value;
++
++        if (preference == mKonstaNavbar) {
 +            Settings.System.putInt(getContentResolver(), Settings.System.KONSTA_NAVBAR,
 +                    mKonstaNavbar.isChecked() ? 1 : 0);
 +
@@ -116,13 +124,15 @@ index 74572c8..56a7cc4 100644
 +                    })
 +                    .create()
 +                    .show();
-         } else {
-             return super.onPreferenceTreeClick(preferenceScreen, preference);
-         }
--
-         return true;
-     }
- 
++        } else {
++            return super.onPreferenceTreeClick(preferenceScreen, preference);
++        }
++        return true;
++    }
++
+     public boolean onPreferenceChange(Preference preference, Object objValue) {
+         final String key = preference.getKey();
+         if (KEY_FONT_SIZE.equals(key)) {
 -- 
 1.7.9.5
 

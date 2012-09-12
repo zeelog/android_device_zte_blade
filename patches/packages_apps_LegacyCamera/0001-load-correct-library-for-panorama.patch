@@ -1,0 +1,40 @@
+From d39898487907234db19c8fcbb00d70843a589ef2 Mon Sep 17 00:00:00 2001
+From: Konsta <konsta09@gmail.com>
+Date: Tue, 28 Aug 2012 11:56:38 +0300
+Subject: [PATCH 1/4] load correct library for panorama
+
+Change-Id: I2b0397712eae7ad5d5b21d46740c0b4db858efdd
+---
+ src/com/android/camera/panorama/Mosaic.java        |    2 +-
+ .../android/camera/panorama/MosaicRenderer.java    |    2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/src/com/android/camera/panorama/Mosaic.java b/src/com/android/camera/panorama/Mosaic.java
+index 5064cec..90bf2ad 100644
+--- a/src/com/android/camera/panorama/Mosaic.java
++++ b/src/com/android/camera/panorama/Mosaic.java
+@@ -93,7 +93,7 @@ public class Mosaic {
+ 
+ 
+     static {
+-        System.loadLibrary("jni_mosaic");
++        System.loadLibrary("jni_legacymosaic");
+     }
+ 
+     /**
+diff --git a/src/com/android/camera/panorama/MosaicRenderer.java b/src/com/android/camera/panorama/MosaicRenderer.java
+index f055c0e..f4e9abc 100644
+--- a/src/com/android/camera/panorama/MosaicRenderer.java
++++ b/src/com/android/camera/panorama/MosaicRenderer.java
+@@ -24,7 +24,7 @@ public class MosaicRenderer
+ {
+      static
+      {
+-         System.loadLibrary("jni_mosaic");
++         System.loadLibrary("jni_legacymosaic");
+      }
+ 
+      /**
+-- 
+1.7.9.5
+

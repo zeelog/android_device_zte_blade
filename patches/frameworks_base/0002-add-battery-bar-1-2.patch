@@ -1,7 +1,7 @@
-From e6946e74017a861d2b5d2dde83511b28d416e98e Mon Sep 17 00:00:00 2001
+From b4eb47ef407766573e1755817e1463770a7fdceb Mon Sep 17 00:00:00 2001
 From: Konsta <konsta09@gmail.com>
 Date: Tue, 24 Jul 2012 16:01:58 +0300
-Subject: [PATCH 2/5] add battery bar (1/2)
+Subject: [PATCH] add battery bar (1/2)
 
 thanks to Spitemare
 https://github.com/Spitemare/android_frameworks_base/commit/2faad0bc7b7a14bab0a28363eda508c03cd790bd
@@ -18,10 +18,10 @@ Change-Id: I3fb94b5dc52ef75ea0249921e0efc18a050da3dc
  create mode 100644 packages/SystemUI/src/com/android/systemui/statusbar/phone/BatteryBar.java
 
 diff --git a/core/java/android/provider/Settings.java b/core/java/android/provider/Settings.java
-index 51a7df9..22265e8 100644
+index 8ac41f3..1d6a520 100644
 --- a/core/java/android/provider/Settings.java
 +++ b/core/java/android/provider/Settings.java
-@@ -2422,6 +2422,7 @@ public final class Settings {
+@@ -2443,6 +2443,7 @@ public final class Settings {
           * 0: Display the stock battery information
           * 1: Display cm battery percentage implementation / dont show stock icon
           * 2: Hide the battery information
@@ -85,12 +85,12 @@ index cd37e65..2180e80 100644
 +        android:layout_height="1dip" />
  </com.android.systemui.statusbar.phone.PhoneStatusBarView>
 diff --git a/packages/SystemUI/res/values/styles.xml b/packages/SystemUI/res/values/styles.xml
-index 0076928..d0f0547 100644
+index 8463c0b..7d9ebe0 100644
 --- a/packages/SystemUI/res/values/styles.xml
 +++ b/packages/SystemUI/res/values/styles.xml
-@@ -107,5 +107,12 @@
-         <!-- Note: must be dp to fit in status bar -->
-         <item name="android:textSize">14dp</item>
+@@ -130,5 +130,12 @@
+         <item name="android:textColor">?android:attr/textColorPrimary</item>
+         <item name="android:textSize">18sp</item>
      </style>
 -    
 +
