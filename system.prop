@@ -30,3 +30,6 @@ ro.vold.umsdirtyratio=20
 # Dalviks
 dalvik.vm.dexopt-data-only=1
 dalvik.vm.execution-mode=int:jit
+dalvik.vm.verify_bytecode=false
+dalvik.vm.checkjni=0
+ro.kernel.android.checkjni=0
