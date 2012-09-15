@@ -1,0 +1,28 @@
+From 1088517193444f24fe303b40da3df5cfcf0b7e26 Mon Sep 17 00:00:00 2001
+From: Steve Kondik <shade@chemlab.org>
+Date: Thu, 16 Aug 2012 23:43:22 -0700
+Subject: [PATCH] hwui: Disable QCOM tile renderer by default
+
+ * Revert once we have new Adreno drivers
+
+Change-Id: Iebf5f1f01a51138c1cd0ff25d1132a6344c9ec35
+---
+ core/java/android/view/HardwareRenderer.java |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/core/java/android/view/HardwareRenderer.java b/core/java/android/view/HardwareRenderer.java
+index dc99561..62544a4 100644
+--- a/core/java/android/view/HardwareRenderer.java
++++ b/core/java/android/view/HardwareRenderer.java
+@@ -623,7 +623,7 @@ public abstract class HardwareRenderer {
+         static boolean sTileRendering;
+         static {
+             String dirtyProperty = SystemProperties.get(RENDER_DIRTY_REGIONS_PROPERTY, "true");
+-            String trProperty = SystemProperties.get(TILE_RENDERING_PROPERTY, "true");
++            String trProperty = SystemProperties.get(TILE_RENDERING_PROPERTY, "false");
+             //noinspection PointlessBooleanExpression,ConstantConditions
+             //enable dirty regions if tile-rendering enabled or dirty regions property enabled
+             sTileRendering = "true".equalsIgnoreCase(trProperty);
+-- 
+1.7.9.5
+

@@ -1,42 +1,24 @@
-From 01a23e055df8ba9d95b6ec2eb7f81c6ea7a3a390 Mon Sep 17 00:00:00 2001
+From a3a8ada394690df47490fd8c2e3842eadb2b28d7 Mon Sep 17 00:00:00 2001
 From: Konsta <konsta09@gmail.com>
 Date: Sat, 14 Jul 2012 12:00:57 +0300
-Subject: [PATCH] remove tts, videoeditor and live wallpapers
+Subject: [PATCH] remove tts and videoeditor
 
 Change-Id: Id240a428b21fb9f6194060dabddf46c4dc0338f6
 ---
- target/product/full_base.mk |   32 ++++++++++++++++----------------
- 1 file changed, 16 insertions(+), 16 deletions(-)
+ target/product/full_base.mk |   16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
 
 diff --git a/target/product/full_base.mk b/target/product/full_base.mk
-index 294bf01..5f3193e 100644
+index 0f74eab..9affda9 100644
 --- a/target/product/full_base.mk
 +++ b/target/product/full_base.mk
-@@ -24,25 +24,25 @@ PRODUCT_PACKAGES := \
+@@ -24,15 +24,15 @@ PRODUCT_PACKAGES := \
      libdrmframework \
      libdrmframework_jni \
      libfwdlockengine \
 -    VideoEditor \
      WAPPushManager
 +#    VideoEditor \
- 
- PRODUCT_PACKAGES += \
--    Galaxy4 \
--    HoloSpiralWallpaper \
--    LiveWallpapers \
--    LiveWallpapersPicker \
--    MagicSmokeWallpapers \
--    NoiseField \
--    PhaseBeam \
--    VisualizationWallpapers
-+#    Galaxy4 \
-+#    HoloSpiralWallpaper \
-+#    LiveWallpapers \
-+    LiveWallpapersPicker# \
-+#    MagicSmokeWallpapers \
-+#    NoiseField \
-+#    PhaseBeam \
-+#    VisualizationWallpapers
  
 -PRODUCT_PACKAGES += \
 -    libvideoeditor_jni \
@@ -53,7 +35,7 @@ index 294bf01..5f3193e 100644
  
  # Additional settings used in all AOSP builds
  PRODUCT_PROPERTY_OVERRIDES := \
-@@ -55,7 +55,7 @@ PRODUCT_LOCALES := en_US
+@@ -45,7 +45,7 @@ PRODUCT_LOCALES := en_US
  $(call inherit-product-if-exists, frameworks/base/data/sounds/AllAudio.mk)
  
  # Get the TTS language packs

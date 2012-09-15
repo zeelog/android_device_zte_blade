@@ -1,4 +1,4 @@
-From c1b48face8126f0d80848b19eabe8d5a0d43724c Mon Sep 17 00:00:00 2001
+From 3e388ae779400fc51a2ee8612725334b47b2b64b Mon Sep 17 00:00:00 2001
 From: Konsta <konsta09@gmail.com>
 Date: Sat, 1 Sep 2012 10:36:08 +0300
 Subject: [PATCH] add option to exit to homescreen after call
@@ -7,39 +7,38 @@ ported from aokp
 
 Change-Id: Ie1e94ec494c9ceb79488084034e38a83dd7edef1
 ---
- res/values/strings.xml                         |    4 ++++
+ res/values/strings.xml                         |    3 +++
  res/xml/call_feature_setting.xml               |    5 +++++
  src/com/android/phone/CallFeaturesSetting.java |    5 +++++
  src/com/android/phone/InCallScreen.java        |   15 +++++++++++++++
- 4 files changed, 29 insertions(+)
+ 4 files changed, 28 insertions(+)
 
 diff --git a/res/values/strings.xml b/res/values/strings.xml
-index 0c03f08..4fe067a 100644
+index b943f74..8e0c0b8 100644
 --- a/res/values/strings.xml
 +++ b/res/values/strings.xml
-@@ -1514,4 +1514,8 @@
-     <string name="vibrate_call_waiting">Vibrate call waiting</string>
-     <string name="vibrate_call_waiting_sum">Vibrate on call waiting</string>
-     <!-- End Advanced Settings -->
-+
+@@ -1511,4 +1511,7 @@
+     <string name="vibrate_45">Vibrate every 45 seconds</string>
+     <string name="vibrate_45_sum">Vibrates at the 45 second mark of every minute during outgoing calls</string>
+ 
 +    <!-- Exit to home screen setting -->
 +    <string name="exit_to_home_screen_title">Exit to home screen</string>
 +    <string name="exit_to_home_screen_summary">Exit to home screen when call ends instead of call log</string>
  </resources>
 diff --git a/res/xml/call_feature_setting.xml b/res/xml/call_feature_setting.xml
-index 05ea53d..ef84fc0 100644
+index 65993e8..34f76a1 100644
 --- a/res/xml/call_feature_setting.xml
 +++ b/res/xml/call_feature_setting.xml
-@@ -57,6 +57,11 @@
-         android:title="@string/vibrate_call_waiting"
-         android:persistent="true"
-         android:summary="@string/vibrate_call_waiting_sum"/>
-+     <CheckBoxPreference
-+        android:key="button_exit_to_home_screen_key"
-+        android:title="@string/exit_to_home_screen_title"
-+        android:persistent="true"
-+        android:summary="@string/exit_to_home_screen_summary"/>
-   </PreferenceCategory>
+@@ -58,6 +58,11 @@
+             android:title="@string/vibrate_45"
+             android:persistent="true"
+             android:summary="@string/vibrate_45_sum" />
++        <CheckBoxPreference
++            android:key="button_exit_to_home_screen_key"
++            android:title="@string/exit_to_home_screen_title"
++            android:persistent="true"
++            android:summary="@string/exit_to_home_screen_summary"/>
+     </PreferenceCategory>
  
    <PreferenceCategory
 diff --git a/src/com/android/phone/CallFeaturesSetting.java b/src/com/android/phone/CallFeaturesSetting.java
