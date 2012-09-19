@@ -11,7 +11,11 @@ wifi.interface=wlan0
 wifi.supplicant_scan_interval=60
 
 # Graphics
+debug.qctwa.statusbar=1
+debug.qctwa.preservebuf=1
+debug.qc.hardware=true
 com.qc.hardware=true
+ro.max.fling_velocity=4000
 ro.sf.lcd_density=240
 ro.sf.hwrotation=180
 qemu.sf.lcd_density=240
