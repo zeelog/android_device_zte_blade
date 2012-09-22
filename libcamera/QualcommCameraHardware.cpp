@@ -162,9 +162,9 @@ union zoomimage
     struct mdp_blit_req_list list;
 } zoomImage;
 
-//Default to VGA
-#define DEFAULT_PREVIEW_WIDTH 480
-#define DEFAULT_PREVIEW_HEIGHT 320
+//Default to QVGA
+#define DEFAULT_PREVIEW_WIDTH 320
+#define DEFAULT_PREVIEW_HEIGHT 240
 
 /*
  * Modifying preview size requires modification
@@ -1034,7 +1034,7 @@ void QualcommCameraHardware::initDefaultParameters()
     mParameters.setPictureSize(DEFAULT_PICTURE_WIDTH, DEFAULT_PICTURE_HEIGHT);
     mParameters.setPictureFormat("jpeg"); // informative
 
-    mParameters.set(CameraParameters::KEY_JPEG_QUALITY, "85"); // max quality
+    mParameters.set(CameraParameters::KEY_JPEG_QUALITY, "100"); // max quality
     mParameters.set(CameraParameters::KEY_JPEG_THUMBNAIL_WIDTH,
                     THUMBNAIL_WIDTH_STR); // informative
     mParameters.set(CameraParameters::KEY_JPEG_THUMBNAIL_HEIGHT,

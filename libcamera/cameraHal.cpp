@@ -105,6 +105,8 @@ CameraHAL_CopyBuffers_Hw(int srcFd, int destFd,
     int    fb_fd = open("/dev/graphics/fb0", O_RDWR);
 
 #ifndef MSM_COPY_HW
+    if (fb_fd > 0)
+        close(fb_fd);
     return false;
 #endif
 
@@ -418,11 +420,11 @@ void
 CameraHAL_FixupParams(android::CameraParameters &settings)
 {
    const char *preview_sizes =
-      "640x480,576x432,480x320,384x288,352x288,320x240,240x160,176x144";
+      "640x480,384x288,352x288,320x240,240x160,176x144";
    const char *video_sizes =
-      "640x480,352x288,320x240,176x144";
-   const char *preferred_size       = "480x320";
-   const char *preview_frame_rates  = "10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25";
+      "640x480,384x288,352x288,320x240,240x160,176x144";
+   const char *preferred_size       = "320x240";
+   const char *preview_frame_rates  = "25,24,15";
    const char *preferred_frame_rate = "15";
    const char *frame_rate_range     = "(10,25)";
    const char *preferred_horizontal_viewing_angle = "51.2";
@@ -551,6 +553,7 @@ qcamera_start_preview(struct camera_device * device)
    ALOGV("qcamera_start_preview: Preview enabled:%d msg enabled:%d\n",
         qCamera->previewEnabled(),
         qCamera->msgTypeEnabled(CAMERA_MSG_PREVIEW_FRAME));
+
    if (!qCamera->msgTypeEnabled(CAMERA_MSG_PREVIEW_FRAME)) {
         qCamera->enableMsgType(CAMERA_MSG_PREVIEW_FRAME);
    }
