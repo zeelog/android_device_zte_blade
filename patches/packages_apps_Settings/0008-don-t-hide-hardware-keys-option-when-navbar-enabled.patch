@@ -1,0 +1,29 @@
+From 7ee50110560546512a16ef92a2cc4d8cea87ff4f Mon Sep 17 00:00:00 2001
+From: Konsta <konsta09@gmail.com>
+Date: Wed, 19 Sep 2012 23:49:43 +0300
+Subject: [PATCH 1/4] don't hide hardware keys option when navbar enabled
+
+Change-Id: I0539f167d17b941d7bb72238ca291d81fdab58b2
+---
+ .../settings/cyanogenmod/SystemSettings.java       |    5 -----
+ 1 file changed, 5 deletions(-)
+
+diff --git a/src/com/android/settings/cyanogenmod/SystemSettings.java b/src/com/android/settings/cyanogenmod/SystemSettings.java
+index a174b67..c7b9e98 100644
+--- a/src/com/android/settings/cyanogenmod/SystemSettings.java
++++ b/src/com/android/settings/cyanogenmod/SystemSettings.java
+@@ -90,11 +90,6 @@ public class SystemSettings extends SettingsPreferenceFragment implements
+                 if (naviBar != null) {
+                     getPreferenceScreen().removePreference(naviBar);
+                 }
+-            } else {
+-                Preference hardKeys = findPreference(KEY_HARDWARE_KEYS);
+-                if (hardKeys != null) {
+-                    getPreferenceScreen().removePreference(hardKeys);
+-                }
+             }
+         } catch (RemoteException e) {
+         }
+-- 
+1.7.9.5
+

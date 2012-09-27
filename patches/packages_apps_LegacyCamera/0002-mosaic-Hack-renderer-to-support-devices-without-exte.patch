@@ -1,0 +1,59 @@
+From 21252ab3dc4cdfa386fbce6679d6f33585f6c382 Mon Sep 17 00:00:00 2001
+From: Ricardo Cerqueira <github@cerqueira.org>
+Date: Fri, 10 Feb 2012 11:51:32 +0000
+Subject: [PATCH 2/3] mosaic: Hack renderer to support devices without
+ external textures
+
+Change-Id: I01511705d3452ccaa4f761e95c9e71e236b1da77
+---
+ .../src/mosaic_renderer/SurfaceTextureRenderer.cpp |    8 ++++++++
+ jni/mosaic_renderer_jni.cpp                        |    4 ++++
+ 2 files changed, 12 insertions(+)
+
+diff --git a/jni/feature_mos/src/mosaic_renderer/SurfaceTextureRenderer.cpp b/jni/feature_mos/src/mosaic_renderer/SurfaceTextureRenderer.cpp
+index 88aac36..7e9cfe6 100755
+--- a/jni/feature_mos/src/mosaic_renderer/SurfaceTextureRenderer.cpp
++++ b/jni/feature_mos/src/mosaic_renderer/SurfaceTextureRenderer.cpp
+@@ -29,7 +29,11 @@ const GLfloat g_vVertices[] = {
+ };
+ GLushort g_iIndices2[] = { 0, 1, 2, 3 };
+ 
++#ifdef MISSING_EGL_EXTERNAL_IMAGE
++const int GL_TEXTURE_EXTERNAL_OES_ENUM = 0x0DE1;
++#else
+ const int GL_TEXTURE_EXTERNAL_OES_ENUM = 0x8D65;
++#endif
+ 
+ const int VERTEX_STRIDE = 6 * sizeof(GLfloat);
+ 
+@@ -177,7 +181,11 @@ const char* SurfaceTextureRenderer::FragmentShaderSource() const
+         "#extension GL_OES_EGL_image_external : require\n"
+         "precision mediump float;\n"
+         "varying vec2 vTextureNormCoord;\n"
++#ifdef MISSING_EGL_EXTERNAL_IMAGE
++        "uniform sampler2D sTexture;\n"
++#else
+         "uniform samplerExternalOES sTexture;\n"
++#endif
+         "void main() {\n"
+         "  gl_FragColor = texture2D(sTexture, vTextureNormCoord);\n"
+         "}\n";
+diff --git a/jni/mosaic_renderer_jni.cpp b/jni/mosaic_renderer_jni.cpp
+index bb01e7f..50312c4 100644
+--- a/jni/mosaic_renderer_jni.cpp
++++ b/jni/mosaic_renderer_jni.cpp
+@@ -166,7 +166,11 @@ float g_dIdent3x3[] = {
+     0.0, 1.0, 0.0,
+     0.0, 0.0, 1.0};
+ 
++#ifdef MISSING_EGL_EXTERNAL_IMAGE
++const int GL_TEXTURE_EXTERNAL_OES_ENUM = 0x0DE1;
++#else
+ const int GL_TEXTURE_EXTERNAL_OES_ENUM = 0x8D65;
++#endif
+ 
+ static void printGLString(const char *name, GLenum s) {
+     const char *v = (const char *) glGetString(s);
+-- 
+1.7.9.5
+
