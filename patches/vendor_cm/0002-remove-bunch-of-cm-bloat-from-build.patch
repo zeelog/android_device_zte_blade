@@ -1,24 +1,21 @@
-From 25084142c96521b754abf80f09a5fb8ca07d58ec Mon Sep 17 00:00:00 2001
+From 3c2fa098f844484b74dc342cd24a96a92f72fc5c Mon Sep 17 00:00:00 2001
 From: Konsta <konsta09@gmail.com>
 Date: Sat, 14 Jul 2012 12:05:53 +0300
 Subject: [PATCH 3/6] remove bunch of cm bloat from build
 
 Change-Id: I779f9c5e48f31aade1dcf4bf0df7652d0d6a1515
 ---
- config/common.mk            |   18 ++++++++++--------
+ config/common.mk            |   16 ++++++++--------
  config/common_mini_phone.mk |    2 +-
- 2 files changed, 11 insertions(+), 9 deletions(-)
+ 2 files changed, 9 insertions(+), 9 deletions(-)
 
 diff --git a/config/common.mk b/config/common.mk
-index 77f4bc8..5a586d0 100644
+index 77f4bc8..21c6547 100644
 --- a/config/common.mk
 +++ b/config/common.mk
-@@ -99,10 +99,12 @@ PRODUCT_COPY_FILES +=  \
-     vendor/cm/proprietary/Term.apk:system/app/Term.apk \
+@@ -100,9 +100,9 @@ PRODUCT_COPY_FILES +=  \
      vendor/cm/proprietary/lib/armeabi/libjackpal-androidterm4.so:system/lib/libjackpal-androidterm4.so
  
-+#    vendor/cm/proprietary/RomManager.apk:system/app/RomManager.apk \
-+
  # Bring in camera effects
 -PRODUCT_COPY_FILES +=  \
 -    vendor/cm/prebuilt/common/media/LMprec_508.emd:system/media/LMprec_508.emd \
@@ -29,7 +26,7 @@ index 77f4bc8..5a586d0 100644
  
  # Enable SIP+VoIP on all targets
  PRODUCT_COPY_FILES += \
-@@ -130,20 +132,20 @@ PRODUCT_PACKAGES += \
+@@ -130,20 +130,20 @@ PRODUCT_PACKAGES += \
  
  # Optional CM packages
  PRODUCT_PACKAGES += \

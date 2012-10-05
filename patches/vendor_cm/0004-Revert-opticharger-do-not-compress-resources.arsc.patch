@@ -1,4 +1,4 @@
-From fe7523182e45676e97230fb6d42172d50de60182 Mon Sep 17 00:00:00 2001
+From 3fbf286572e665e148bdf24e720a219928f28482 Mon Sep 17 00:00:00 2001
 From: Konsta <konsta09@gmail.com>
 Date: Mon, 20 Aug 2012 13:47:59 +0300
 Subject: [PATCH 5/6] Revert "opticharger: do not compress resources.arsc"
