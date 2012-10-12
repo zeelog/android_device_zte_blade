@@ -4,9 +4,6 @@ on init
     write /sys/devices/platform/android_usb/functions/cur_pid 1351
     write /sys/devices/platform/android_usb/functions/enable_switch 0
 
-on boot
-   start start_usb0
-
 on property:sys.usb.config=adb
     write /sys/module/g_android/parameters/product_id 1352
     start adbd

@@ -99,7 +99,6 @@ PRODUCT_COPY_FILES := \
         device/zte/blade/prebuilt/system/etc/media_profiles.xml:system/etc/media_profiles.xml \
         device/zte/blade/prebuilt/system/etc/media_codecs.xml:system/etc/media_codecs.xml \
         device/zte/blade/prebuilt/system/etc/audio_policy.conf:system/etc/audio_policy.conf \
-        device/zte/blade/prebuilt/system/etc/start_usb0.sh:system/etc/start_usb0.sh \
         device/zte/blade/prebuilt/system/etc/gps.conf:system/etc/gps.conf
 
 # Bluetooth configuration files

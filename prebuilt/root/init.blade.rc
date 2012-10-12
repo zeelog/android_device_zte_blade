@@ -133,11 +133,6 @@ service dhcpcd_wlan0 /system/bin/dhcpcd -BKL
     disabled
     oneshot
 
-service start_usb0 /system/bin/logwrapper /system/bin/sh /etc/start_usb0.sh
-    class main
-    disabled
-    oneshot
-
 service iprenew_wlan0 /system/bin/dhcpcd -n
     class main
     disabled
