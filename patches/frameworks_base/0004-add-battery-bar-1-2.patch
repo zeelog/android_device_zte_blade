@@ -1,7 +1,7 @@
-From b4eb47ef407766573e1755817e1463770a7fdceb Mon Sep 17 00:00:00 2001
+From 56f23ccbae8239d8bca12c76545ac61b3f98da5f Mon Sep 17 00:00:00 2001
 From: Konsta <konsta09@gmail.com>
 Date: Tue, 24 Jul 2012 16:01:58 +0300
-Subject: [PATCH] add battery bar (1/2)
+Subject: [PATCH 16/16] add battery bar (1/2)
 
 thanks to Spitemare
 https://github.com/Spitemare/android_frameworks_base/commit/2faad0bc7b7a14bab0a28363eda508c03cd790bd
@@ -18,14 +18,14 @@ Change-Id: I3fb94b5dc52ef75ea0249921e0efc18a050da3dc
  create mode 100644 packages/SystemUI/src/com/android/systemui/statusbar/phone/BatteryBar.java
 
 diff --git a/core/java/android/provider/Settings.java b/core/java/android/provider/Settings.java
-index 8ac41f3..1d6a520 100644
+index 2d5bec3..4207a44 100644
 --- a/core/java/android/provider/Settings.java
 +++ b/core/java/android/provider/Settings.java
-@@ -2443,6 +2443,7 @@ public final class Settings {
-          * 0: Display the stock battery information
-          * 1: Display cm battery percentage implementation / dont show stock icon
-          * 2: Hide the battery information
-+         * 3: Show MIUI-style battery bar on the status bar
+@@ -2465,6 +2465,7 @@ public final class Settings {
+          * 2: Display cm circle battery implementation without percentage
+          * 3: Display cm circle battery implementation with percentage
+          * 4: Hide the battery information
++         * 5: Show MIUI-style battery bar on the status bar
           * default: 0
           * @hide
           */
@@ -71,10 +71,10 @@ index 0000000..9515882
 +
 +</layer-list>
 diff --git a/packages/SystemUI/res/layout/status_bar.xml b/packages/SystemUI/res/layout/status_bar.xml
-index cd37e65..2180e80 100644
+index 2af3e97..c651c13 100644
 --- a/packages/SystemUI/res/layout/status_bar.xml
 +++ b/packages/SystemUI/res/layout/status_bar.xml
-@@ -167,4 +167,9 @@
+@@ -193,4 +193,9 @@
                  />
          </com.android.systemui.statusbar.phone.TickerView>
      </LinearLayout>
@@ -85,10 +85,10 @@ index cd37e65..2180e80 100644
 +        android:layout_height="1dip" />
  </com.android.systemui.statusbar.phone.PhoneStatusBarView>
 diff --git a/packages/SystemUI/res/values/styles.xml b/packages/SystemUI/res/values/styles.xml
-index 8463c0b..7d9ebe0 100644
+index 7accf87..cc46097 100644
 --- a/packages/SystemUI/res/values/styles.xml
 +++ b/packages/SystemUI/res/values/styles.xml
-@@ -130,5 +130,12 @@
+@@ -133,5 +133,12 @@
          <item name="android:textColor">?android:attr/textColorPrimary</item>
          <item name="android:textSize">18sp</item>
      </style>
@@ -104,7 +104,7 @@ index 8463c0b..7d9ebe0 100644
  </resources>
 diff --git a/packages/SystemUI/src/com/android/systemui/statusbar/phone/BatteryBar.java b/packages/SystemUI/src/com/android/systemui/statusbar/phone/BatteryBar.java
 new file mode 100644
-index 0000000..65984a7
+index 0000000..082a0a0
 --- /dev/null
 +++ b/packages/SystemUI/src/com/android/systemui/statusbar/phone/BatteryBar.java
 @@ -0,0 +1,173 @@
@@ -233,7 +233,7 @@ index 0000000..65984a7
 +    private void updateSettings() {
 +        ContentResolver resolver = mContext.getContentResolver();
 +        mShowBatteryBar = (Settings.System.getInt(resolver,
-+                Settings.System.STATUS_BAR_BATTERY, 0) == 3);
++                Settings.System.STATUS_BAR_BATTERY, 0) == 5);
 +        if (mShowBatteryBar) {
 +            setVisibility(VISIBLE);
 +        } else {

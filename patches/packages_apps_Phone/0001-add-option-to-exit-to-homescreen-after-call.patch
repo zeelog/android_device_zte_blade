@@ -1,4 +1,4 @@
-From 3e388ae779400fc51a2ee8612725334b47b2b64b Mon Sep 17 00:00:00 2001
+From c9ca5328997c7b6c75b2f92f28e4b0d7351c4305 Mon Sep 17 00:00:00 2001
 From: Konsta <konsta09@gmail.com>
 Date: Sat, 1 Sep 2012 10:36:08 +0300
 Subject: [PATCH] add option to exit to homescreen after call
@@ -14,10 +14,10 @@ Change-Id: Ie1e94ec494c9ceb79488084034e38a83dd7edef1
  4 files changed, 28 insertions(+)
 
 diff --git a/res/values/strings.xml b/res/values/strings.xml
-index b943f74..8e0c0b8 100644
+index 177c636..5a50557 100644
 --- a/res/values/strings.xml
 +++ b/res/values/strings.xml
-@@ -1511,4 +1511,7 @@
+@@ -1515,4 +1515,7 @@
      <string name="vibrate_45">Vibrate every 45 seconds</string>
      <string name="vibrate_45_sum">Vibrates at the 45 second mark of every minute during outgoing calls</string>
  
@@ -26,10 +26,10 @@ index b943f74..8e0c0b8 100644
 +    <string name="exit_to_home_screen_summary">Exit to home screen when call ends instead of call log</string>
  </resources>
 diff --git a/res/xml/call_feature_setting.xml b/res/xml/call_feature_setting.xml
-index 65993e8..34f76a1 100644
+index 47ba03e..9c5ec9b 100644
 --- a/res/xml/call_feature_setting.xml
 +++ b/res/xml/call_feature_setting.xml
-@@ -58,6 +58,11 @@
+@@ -68,6 +68,11 @@
              android:title="@string/vibrate_45"
              android:persistent="true"
              android:summary="@string/vibrate_45_sum" />
@@ -42,7 +42,7 @@ index 65993e8..34f76a1 100644
  
    <PreferenceCategory
 diff --git a/src/com/android/phone/CallFeaturesSetting.java b/src/com/android/phone/CallFeaturesSetting.java
-index 98502f2..7ab313f 100644
+index cd2dde2..7cff622 100644
 --- a/src/com/android/phone/CallFeaturesSetting.java
 +++ b/src/com/android/phone/CallFeaturesSetting.java
 @@ -179,6 +179,8 @@ public class CallFeaturesSetting extends PreferenceActivity
@@ -54,15 +54,15 @@ index 98502f2..7ab313f 100644
      private static final String BUTTON_SIP_CALL_OPTIONS =
              "sip_call_options_key";
      private static final String BUTTON_SIP_CALL_OPTIONS_WIFI_ONLY =
-@@ -267,6 +269,7 @@ public class CallFeaturesSetting extends PreferenceActivity
-     private PreferenceScreen mVoicemailSettings;
+@@ -270,6 +272,7 @@ public class CallFeaturesSetting extends PreferenceActivity
      private ListPreference mVoicemailNotificationVibrateWhen;
      private SipSharedPreferences mSipSharedPreferences;
+     private CheckBoxPreference mCallEndedWithScreenOffLocks;
 +    private CheckBoxPreference mButtonExitToHomeScreen;
  
      private class VoiceMailProvider {
          public VoiceMailProvider(String name, Intent intent) {
-@@ -1531,6 +1534,8 @@ public class CallFeaturesSetting extends PreferenceActivity
+@@ -1539,6 +1542,8 @@ public class CallFeaturesSetting extends PreferenceActivity
              }
          }
  
@@ -72,7 +72,7 @@ index 98502f2..7ab313f 100644
          mButtonAutoRetry = (CheckBoxPreference) findPreference(BUTTON_RETRY_KEY);
          mButtonHAC = (CheckBoxPreference) findPreference(BUTTON_HAC_KEY);
 diff --git a/src/com/android/phone/InCallScreen.java b/src/com/android/phone/InCallScreen.java
-index 9f8ec31..ac93e31 100755
+index 008efd8..88d2bfd 100755
 --- a/src/com/android/phone/InCallScreen.java
 +++ b/src/com/android/phone/InCallScreen.java
 @@ -32,6 +32,7 @@ import android.content.DialogInterface;
@@ -126,7 +126,7 @@ index 9f8ec31..ac93e31 100755
          mIsForegroundActivity = true;
          mIsForegroundActivityForProximity = true;
  
-@@ -2679,6 +2688,7 @@ public class InCallScreen extends Activity
+@@ -2692,6 +2701,7 @@ public class InCallScreen extends Activity
                          log("- Show Call Log (or Dialtacts) after disconnect. Current intent: "
                                  + intent);
                      }
@@ -134,7 +134,7 @@ index 9f8ec31..ac93e31 100755
                      try {
                          startActivity(intent, opts.toBundle());
                      } catch (ActivityNotFoundException e) {
-@@ -4638,4 +4648,9 @@ public class InCallScreen extends Activity
+@@ -4651,4 +4661,9 @@ public class InCallScreen extends Activity
              log("Requested to remove provider info after " + PROVIDER_INFO_TIMEOUT + " msec.");
          }
      }

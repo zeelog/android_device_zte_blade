@@ -1,7 +1,7 @@
-From 5b4a04777718eb924302390e374c33410c16e6d6 Mon Sep 17 00:00:00 2001
+From f60bde9d67a2e47ace5fed8c4ee0f12948b80552 Mon Sep 17 00:00:00 2001
 From: Konsta <konsta09@gmail.com>
 Date: Mon, 23 Jul 2012 14:09:59 +0300
-Subject: [PATCH 06/15] add option to disable bootanimation
+Subject: [PATCH 03/11] add option to disable bootanimation
 
 Change-Id: Ie694fed4f8e5733d8d36a7bb406967c4ee65de64
 ---
@@ -11,10 +11,10 @@ Change-Id: Ie694fed4f8e5733d8d36a7bb406967c4ee65de64
  3 files changed, 22 insertions(+)
 
 diff --git a/res/values/strings.xml b/res/values/strings.xml
-index e34d793..0c74c2e 100644
+index ec9a824..347c4d9 100644
 --- a/res/values/strings.xml
 +++ b/res/values/strings.xml
-@@ -4895,5 +4895,9 @@
+@@ -4938,5 +4938,9 @@
      <string name="konsta_web_title">CyanogenMod 10 - KonstaKANG</string>
      <string name="konsta_web_summary">Visit MoDaCo thread</string>
      <string name="konsta_web_url">http://www.modaco.com/topic/355903-devrom-cyanogenmod-10-android-411/</string>

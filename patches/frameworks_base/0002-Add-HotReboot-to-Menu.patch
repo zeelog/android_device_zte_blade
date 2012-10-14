@@ -1,7 +1,7 @@
-From 6a2c3b5bb148fe55262edcdc380339ea1f2a14e5 Mon Sep 17 00:00:00 2001
+From 0d281d3322b57075b83550dee1f760345605fad2 Mon Sep 17 00:00:00 2001
 From: burstlam <burstlam@gmail.com>
 Date: Fri, 27 Jul 2012 16:55:52 +0800
-Subject: [PATCH 05/10] Add HotReboot to Menu
+Subject: [PATCH 02/16] Add HotReboot to Menu
 
 Change-Id: I6eea6286df3afc08bb364a8f7bfa69b7e4e4c2f9
 ---
@@ -31,7 +31,7 @@ index a55297d..6657a00 100644
          <item>bootloader</item>
      </string-array>
 diff --git a/core/res/res/values/strings.xml b/core/res/res/values/strings.xml
-index 1eabba3..32a203c 100755
+index bb02081..ff921d3 100755
 --- a/core/res/res/values/strings.xml
 +++ b/core/res/res/values/strings.xml
 @@ -320,6 +320,8 @@

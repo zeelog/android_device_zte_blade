@@ -1,4 +1,4 @@
-From be9fa60326da2e5a6c37b03843fb2941bdf6cd48 Mon Sep 17 00:00:00 2001
+From c6421d844f286ca1cf0a3b608425549484b90d95 Mon Sep 17 00:00:00 2001
 From: Konsta <konsta09@gmail.com>
 Date: Wed, 11 Jul 2012 14:45:30 +0300
 Subject: [PATCH 1/6] add blade to lunch menu
@@ -9,10 +9,11 @@ Change-Id: I35e1e559d55f34c0dec8aa89c2f7361c578ca0a5
  1 file changed, 1 insertion(+)
 
 diff --git a/jenkins-build-targets b/jenkins-build-targets
-index 2ec7d5d..62b5a3a 100644
+index b2e8892..2d0ef60 100644
 --- a/jenkins-build-targets
 +++ b/jenkins-build-targets
-@@ -1,3 +1,4 @@
+@@ -1,4 +1,5 @@
+ cm_a700-userdebug
 +cm_blade-userdebug
  cm_captivatemtd-userdebug
  cm_crespo-userdebug
