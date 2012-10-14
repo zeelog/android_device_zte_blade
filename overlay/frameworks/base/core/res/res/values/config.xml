@@ -109,10 +109,10 @@
     </integer-array>
 
     <!-- Package name providing network location support. -->
-    <string name="config_networkLocationProviderPackageName">com.google.android.location.NetworkLocationProvider</string>
+    <string name="config_networkLocationProviderPackageName" translatable="false">com.google.android.location</string>
 
     <!-- Package name providing geocoder API support. -->
-    <string name="config_geocodeProviderPackageName">com.google.android.location.GeocodeProvider</string>
+    <string name="config_geocodeProviderPackageName" translatable="false">com.google.android.location</string>
 
     <!-- Boolean indicating if current platform supports bluetooth SCO for off call
     use cases -->
