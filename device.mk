@@ -39,8 +39,7 @@ PRODUCT_PACKAGES += \
 
 # Camera
 PRODUCT_PACKAGES += \
-        camera.msm7x27 \
-        LegacyCamera
+        camera.msm7x27
 
 # GPS
 PRODUCT_PACKAGES += \
