@@ -1,7 +1,7 @@
-From 265aec2417cf24aef59c072f814990276da33c20 Mon Sep 17 00:00:00 2001
+From 30f6dc3627bca110149897f6646b7e0321c487dd Mon Sep 17 00:00:00 2001
 From: Konsta <konsta09@gmail.com>
 Date: Thu, 5 Jul 2012 00:51:19 +0300
-Subject: [PATCH 11/11] add battery bar (2/2)
+Subject: [PATCH] add battery bar (2/2)
 
 Change-Id: I3d582ba787721970ef2f973fac220ecc070b00b7
 ---
@@ -10,7 +10,7 @@ Change-Id: I3d582ba787721970ef2f973fac220ecc070b00b7
  2 files changed, 3 insertions(+)
 
 diff --git a/res/values/arrays.xml b/res/values/arrays.xml
-index 1950e83..a3d461b 100644
+index ce23492..7a0371b 100644
 --- a/res/values/arrays.xml
 +++ b/res/values/arrays.xml
 @@ -1034,6 +1034,7 @@
@@ -18,7 +18,7 @@ index 1950e83..a3d461b 100644
          <item>@string/status_bar_battery_status_circle</item>
          <item>@string/status_bar_battery_status_circle_percentage</item>
 +        <item>@string/status_bar_battery_status_statusbar</item>
-         <item>@string/status_bar_battery_status_hidden</item>
+         <item>@string/status_bar_style_hidden</item>
      </string-array>
  
 @@ -1042,6 +1043,7 @@
@@ -30,17 +30,17 @@ index 1950e83..a3d461b 100644
      </string-array>
  
 diff --git a/res/values/strings.xml b/res/values/strings.xml
-index cd9e38e..04f445a 100644
+index c26ee10..fa421b5 100644
 --- a/res/values/strings.xml
 +++ b/res/values/strings.xml
-@@ -4415,6 +4415,7 @@
+@@ -4414,6 +4414,7 @@
      <string name="status_bar_battery_status_percentage">Percentage</string>
      <string name="status_bar_battery_status_circle">Circle</string>
      <string name="status_bar_battery_status_circle_percentage">Circle with percentage</string>
 +    <string name="status_bar_battery_status_statusbar">Status bar</string>
-     <string name="status_bar_battery_status_hidden">Hidden</string> <!-- TODO: dedup -->
  
      <string name="lock_screen_title">Lock screen</string>
+ 
 -- 
 1.7.9.5
 

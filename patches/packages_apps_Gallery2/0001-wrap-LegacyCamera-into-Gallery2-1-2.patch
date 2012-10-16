@@ -1,0 +1,69 @@
+From c8dd040bf63149a63301e230d2f1cd41a9e024d9 Mon Sep 17 00:00:00 2001
+From: Bryan Gantt <dragonzkiller@gmail.com>
+Date: Sat, 29 Sep 2012 23:33:45 -0500
+Subject: [PATCH] wrap LegacyCamera into Gallery2 (1/2)
+
+Change-Id: I6353c24fc17bc348d8ba999d8e58d277d229fffa
+---
+ Android.mk          |   12 ++++++------
+ AndroidManifest.xml |    2 +-
+ 2 files changed, 7 insertions(+), 7 deletions(-)
+
+diff --git a/Android.mk b/Android.mk
+index ea71b39..1cf0407 100644
+--- a/Android.mk
++++ b/Android.mk
+@@ -9,9 +9,9 @@ LOCAL_STATIC_JAVA_LIBRARIES += com.android.gallery3d.common2
+ 
+ LOCAL_SRC_FILES := $(call all-java-files-under, src)
+ LOCAL_SRC_FILES += $(call all-java-files-under, src_pd)
+-LOCAL_SRC_FILES += $(call all-java-files-under, ../Camera/src)
++LOCAL_SRC_FILES += $(call all-java-files-under, ../LegacyCamera/src)
+ 
+-LOCAL_RESOURCE_DIR += $(LOCAL_PATH)/res packages/apps/Camera/res
++LOCAL_RESOURCE_DIR += $(LOCAL_PATH)/res packages/apps/LegacyCamera/res
+ LOCAL_AAPT_FLAGS := --auto-add-overlay --extra-packages com.android.camera
+ 
+ LOCAL_PACKAGE_NAME := Gallery2
+@@ -20,21 +20,21 @@ LOCAL_OVERRIDES_PACKAGES := Gallery Gallery3D GalleryNew3D
+ 
+ #LOCAL_SDK_VERSION := current
+ 
+-LOCAL_JNI_SHARED_LIBRARIES := libjni_mosaic libjni_eglfence
++LOCAL_JNI_SHARED_LIBRARIES := libjni_legacymosaic
+ 
+-LOCAL_REQUIRED_MODULES := libjni_mosaic libjni_eglfence
++LOCAL_REQUIRED_MODULES := libjni_legacymosaic
+ 
+ LOCAL_PROGUARD_FLAG_FILES := proguard.flags
+ 
+ include $(BUILD_PACKAGE)
+ 
+-include $(call all-makefiles-under, jni)
++include $(call all-makefiles-under, ../LegacyCamera/jni)
+ 
+ ifeq ($(strip $(LOCAL_PACKAGE_OVERRIDES)),)
+ # Use the following include to make gallery test apk.
+ include $(call all-makefiles-under, $(LOCAL_PATH))
+ 
+ # Use the following include to make camera test apk.
+-include $(call all-makefiles-under, ../Camera)
++include $(call all-makefiles-under, ../LegacyCamera)
+ 
+ endif
+diff --git a/AndroidManifest.xml b/AndroidManifest.xml
+index 5f30113..09531c5 100644
+--- a/AndroidManifest.xml
++++ b/AndroidManifest.xml
+@@ -299,7 +299,7 @@
+                 <category android:name="android.intent.category.DEFAULT" />
+             </intent-filter>
+         </activity>
+-        <activity android:name="com.android.camera.PanoramaActivity"
++        <activity android:name="com.android.camera.panorama.PanoramaActivity"
+                 android:taskAffinity="com.android.camera"
+                 android:label="@string/pano_dialog_title"
+                 android:theme="@style/ThemeCamera"
+-- 
+1.7.9.5
+

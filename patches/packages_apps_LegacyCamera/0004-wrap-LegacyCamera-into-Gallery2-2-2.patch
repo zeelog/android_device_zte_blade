@@ -1,0 +1,40 @@
+From 21349d2ae5c65f3220bd45397e28ab4f5f511583 Mon Sep 17 00:00:00 2001
+From: Bryan Gantt <dragonzkiller@gmail.com>
+Date: Sat, 29 Sep 2012 23:35:20 -0500
+Subject: [PATCH] wrap LegacyCamera into Gallery2 (2/2)
+
+Change-Id: I107d8820975c2259e26f003420149106d4ebcf57
+---
+ res/xml/camera_preferences.xml |    2 +-
+ res/xml/video_preferences.xml  |    2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/res/xml/camera_preferences.xml b/res/xml/camera_preferences.xml
+index d9ffcd6..15a62b1 100644
+--- a/res/xml/camera_preferences.xml
++++ b/res/xml/camera_preferences.xml
+@@ -15,7 +15,7 @@
+ -->
+ 
+ <PreferenceGroup
+-        xmlns:camera="http://schemas.android.com/apk/res/com.android.camera"
++        xmlns:camera="http://schemas.android.com/apk/res/com.android.gallery3d"
+         camera:title="@string/pref_camera_settings_category">
+     <IconListPreference
+             camera:key="pref_camera_flashmode_key"
+diff --git a/res/xml/video_preferences.xml b/res/xml/video_preferences.xml
+index e158139..abc5dfe 100644
+--- a/res/xml/video_preferences.xml
++++ b/res/xml/video_preferences.xml
+@@ -15,7 +15,7 @@
+ -->
+ 
+ <PreferenceGroup
+-        xmlns:camera="http://schemas.android.com/apk/res/com.android.camera"
++        xmlns:camera="http://schemas.android.com/apk/res/com.android.gallery3d"
+         camera:title="@string/pref_camcorder_settings_category">
+     <IconListPreference
+             camera:key="pref_video_quality_key"
+-- 
+1.7.9.5
+
