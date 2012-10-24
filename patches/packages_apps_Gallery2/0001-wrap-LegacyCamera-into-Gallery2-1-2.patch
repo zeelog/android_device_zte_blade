@@ -1,15 +1,16 @@
-From 80af6d9114ba08e4c00916fa0ede2a3006bf13a0 Mon Sep 17 00:00:00 2001
+From e2f0b5c2ff7e045a974d66ed87afa700a1d27f05 Mon Sep 17 00:00:00 2001
 From: Bryan Gantt <dragonzkiller@gmail.com>
 Date: Sat, 29 Sep 2012 23:33:45 -0500
 Subject: [PATCH] wrap LegacyCamera into Gallery2 (1/2)
 
 Change-Id: I6353c24fc17bc348d8ba999d8e58d277d229fffa
 ---
- Android.mk |   12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ Android.mk   |   10 +++++-----
+ CleanSpec.mk |    2 ++
+ 2 files changed, 7 insertions(+), 5 deletions(-)
 
 diff --git a/Android.mk b/Android.mk
-index ea71b39..1cf0407 100644
+index ea71b39..686d6e1 100644
 --- a/Android.mk
 +++ b/Android.mk
 @@ -9,9 +9,9 @@ LOCAL_STATIC_JAVA_LIBRARIES += com.android.gallery3d.common2
@@ -24,25 +25,19 @@ index ea71b39..1cf0407 100644
  LOCAL_AAPT_FLAGS := --auto-add-overlay --extra-packages com.android.camera
  
  LOCAL_PACKAGE_NAME := Gallery2
-@@ -20,21 +20,21 @@ LOCAL_OVERRIDES_PACKAGES := Gallery Gallery3D GalleryNew3D
+@@ -20,9 +20,9 @@ LOCAL_OVERRIDES_PACKAGES := Gallery Gallery3D GalleryNew3D
  
  #LOCAL_SDK_VERSION := current
  
 -LOCAL_JNI_SHARED_LIBRARIES := libjni_mosaic libjni_eglfence
-+LOCAL_JNI_SHARED_LIBRARIES := libjni_legacymosaic
++LOCAL_JNI_SHARED_LIBRARIES := libjni_legacymosaic libjni_eglfence
  
 -LOCAL_REQUIRED_MODULES := libjni_mosaic libjni_eglfence
-+LOCAL_REQUIRED_MODULES := libjni_legacymosaic
++LOCAL_REQUIRED_MODULES := libjni_legacymosaic libjni_eglfence
  
  LOCAL_PROGUARD_FLAG_FILES := proguard.flags
  
- include $(BUILD_PACKAGE)
- 
--include $(call all-makefiles-under, jni)
-+include $(call all-makefiles-under, ../LegacyCamera/jni)
- 
- ifeq ($(strip $(LOCAL_PACKAGE_OVERRIDES)),)
- # Use the following include to make gallery test apk.
+@@ -35,6 +35,6 @@ ifeq ($(strip $(LOCAL_PACKAGE_OVERRIDES)),)
  include $(call all-makefiles-under, $(LOCAL_PATH))
  
  # Use the following include to make camera test apk.
@@ -50,6 +45,19 @@ index ea71b39..1cf0407 100644
 +include $(call all-makefiles-under, ../LegacyCamera)
  
  endif
+diff --git a/CleanSpec.mk b/CleanSpec.mk
+index cc930a1..e8125a9 100644
+--- a/CleanSpec.mk
++++ b/CleanSpec.mk
+@@ -45,6 +45,8 @@
+ #$(call add-clean-step, rm -rf $(PRODUCT_OUT)/data/*)
+ $(call add-clean-step, rm -rf $(PRODUCT_OUT)/obj/APPS/Camera*)
+ $(call add-clean-step, rm -rf $(OUT_DIR)/target/common/obj/APPS/Camera*)
++$(call add-clean-step, rm -rf $(PRODUCT_OUT)/obj/APPS/LegacyCamera*)
++$(call add-clean-step, rm -rf $(OUT_DIR)/target/common/obj/APPS/LegacyCamera*)
+ $(call add-clean-step, rm -rf $(PRODUCT_OUT)/obj/APPS/Gallery*)
+ $(call add-clean-step, rm -rf $(OUT_DIR)/target/common/obj/APPS/Gallery*)
+ 
 -- 
 1.7.9.5
 

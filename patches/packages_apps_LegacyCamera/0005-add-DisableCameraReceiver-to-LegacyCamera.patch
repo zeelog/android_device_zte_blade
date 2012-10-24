@@ -1,20 +1,20 @@
-From 90b98252595a0811fbb74ecd0e987875c7db5cbf Mon Sep 17 00:00:00 2001
+From ed077acd7cc0b4e0380ff08da447261289cc92e0 Mon Sep 17 00:00:00 2001
 From: Konsta <konsta09@gmail.com>
 Date: Tue, 16 Oct 2012 23:23:06 +0300
-Subject: [PATCH 2/2] add DisableCameraReceiver to LegacyCamera
+Subject: [PATCH] add DisableCameraReceiver to LegacyCamera
 
 Change-Id: I39084e502cbf2edf606f3f55dff6cf4313307c39
 ---
- src/com/android/camera/DisableCameraReceiver.java |   50 +++++++++++++++++++++
- 1 file changed, 50 insertions(+)
+ src/com/android/camera/DisableCameraReceiver.java |   46 +++++++++++++++++++++
+ 1 file changed, 46 insertions(+)
  create mode 100644 src/com/android/camera/DisableCameraReceiver.java
 
 diff --git a/src/com/android/camera/DisableCameraReceiver.java b/src/com/android/camera/DisableCameraReceiver.java
 new file mode 100644
-index 0000000..3238872
+index 0000000..6342d8c
 --- /dev/null
 +++ b/src/com/android/camera/DisableCameraReceiver.java
-@@ -0,0 +1,50 @@
+@@ -0,0 +1,46 @@
 +/*
 + * Copyright (C) 2012 The Android Open Source Project
 + *
@@ -42,10 +42,6 @@ index 0000000..3238872
 +// This receiver runs when BOOT_COMPLETED intent is received. After running
 +// once this receiver will be disabled, so it will not run again.
 +public class DisableCameraReceiver extends BroadcastReceiver {
-+    private static final String TAG = "DisableCameraReceiver";
-+    private static final String ACTIVITIES[] = {
-+        "com.android.camera.CameraLauncher",
-+    };
 +
 +    @Override
 +    public void onReceive(Context context, Intent intent) {
