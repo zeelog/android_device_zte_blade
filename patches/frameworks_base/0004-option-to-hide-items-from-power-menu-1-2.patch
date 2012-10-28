@@ -1,7 +1,7 @@
-From 24564ba0f9665c6869b827d8cc0a40843871e459 Mon Sep 17 00:00:00 2001
+From de917e623ab02d325f705d2f5a516562f5a77f28 Mon Sep 17 00:00:00 2001
 From: Konsta <konsta09@gmail.com>
 Date: Tue, 19 Jun 2012 11:34:38 +0300
-Subject: [PATCH 09/16] option to hide items from power menu (1/2)
+Subject: [PATCH 08/17] option to hide items from power menu (1/2)
 
 Change-Id: Ic39d0d6c12ea891bd844d15128981d900596cf8a
 ---

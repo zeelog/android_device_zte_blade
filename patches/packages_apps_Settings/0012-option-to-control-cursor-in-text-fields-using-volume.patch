@@ -1,7 +1,7 @@
-From 7c017ddd5533d3b11aa8b192d018dde83741edae Mon Sep 17 00:00:00 2001
+From 1b9c4d1efae2d503db652409e7ba2429f39c2133 Mon Sep 17 00:00:00 2001
 From: Konsta <konsta09@gmail.com>
 Date: Mon, 27 Aug 2012 12:17:58 +0300
-Subject: [PATCH 1/3] option to control cursor in text fields using volume
+Subject: [PATCH 17/19] option to control cursor in text fields using volume
  keys (2/2)
 
 Change-Id: Id0706badc7b99880bb7462d10cdb1126563e73cf
@@ -36,7 +36,7 @@ index 9760a02..f46c696 100644
      <!-- **** CYANOGENMOD EDITS END **** -->
  </resources>
 diff --git a/res/values/strings.xml b/res/values/strings.xml
-index 2e1e45f..70e3a0f 100644
+index 1903ee9..8ae89a8 100644
 --- a/res/values/strings.xml
 +++ b/res/values/strings.xml
 @@ -4505,6 +4505,12 @@ found in the list of installed apps.</string>

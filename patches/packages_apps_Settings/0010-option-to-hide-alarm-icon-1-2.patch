@@ -1,7 +1,7 @@
-From e922a669fa22eaf5dfa456cbf1fddbc9fae33a92 Mon Sep 17 00:00:00 2001
+From 8c95d70fe9da2b320a12ee9f2f7af1acae1a6472 Mon Sep 17 00:00:00 2001
 From: Konsta <konsta09@gmail.com>
 Date: Thu, 5 Jul 2012 11:31:43 +0300
-Subject: [PATCH 16/16] option to hide alarm icon (1/2)
+Subject: [PATCH 15/19] option to hide alarm icon (1/2)
 
 Change-Id: If06bac4286d13780a9ffcbc644b9922d18c40a7d
 ---
@@ -11,10 +11,10 @@ Change-Id: If06bac4286d13780a9ffcbc644b9922d18c40a7d
  3 files changed, 20 insertions(+)
 
 diff --git a/res/values/strings.xml b/res/values/strings.xml
-index d600c20..bd01f33 100644
+index a06578a..e0a2adb 100644
 --- a/res/values/strings.xml
 +++ b/res/values/strings.xml
-@@ -970,6 +970,8 @@
+@@ -962,6 +962,8 @@
      <string name="status_bar_signal_text_show_bars">Icon (default)</string>
      <string name="status_bar_signal_text_show_text">Text</string>
      <string name="status_bar_signal_text_hidden">Hidden</string>
@@ -24,14 +24,14 @@ index d600c20..bd01f33 100644
      <string name="lock_screen_title">Lock screen</string>
  
 diff --git a/res/xml/status_bar.xml b/res/xml/status_bar.xml
-index e4e2dda..5b35799 100644
+index e4e2dda..e5fd7a9 100644
 --- a/res/xml/status_bar.xml
 +++ b/res/xml/status_bar.xml
 @@ -71,6 +71,12 @@
              android:entries="@array/entries_status_bar_signal"
              android:entryValues="@array/values_status_bar_signal" />
  
-+        <CheckBoxPreference 
++        <CheckBoxPreference
 +            android:key="status_bar_alarm"
 +            android:title="@string/status_bar_alarm_title"
 +            android:summary="@string/status_bar_alarm_summary"

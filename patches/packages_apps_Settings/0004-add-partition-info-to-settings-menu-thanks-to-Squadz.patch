@@ -1,7 +1,7 @@
-From 56c790e327712acc391b075e08494a169adddeee Mon Sep 17 00:00:00 2001
+From ce6874c22e0226b274f81b308af66bef5772bd42 Mon Sep 17 00:00:00 2001
 From: Konsta <konsta09@gmail.com>
 Date: Fri, 15 Jun 2012 22:15:46 +0300
-Subject: [PATCH 07/16] add partition info to settings menu (thanks to
+Subject: [PATCH 07/19] add partition info to settings menu (thanks to
  Squadzone)
 
 Change-Id: I28ace571f5e4ebe15b406f9c46749cd28b4d322e
@@ -36,10 +36,10 @@ index 3a835c1..520d161 100644
                  android:label="@string/settings_license_activity_title"
                  android:theme="@android:style/Theme.Holo.Panel"
 diff --git a/res/values/strings.xml b/res/values/strings.xml
-index 268302d..2287d41 100644
+index c786217..5c1579f 100644
 --- a/res/values/strings.xml
 +++ b/res/values/strings.xml
-@@ -4525,6 +4525,15 @@ found in the list of installed apps.</string>
+@@ -4517,6 +4517,15 @@ found in the list of installed apps.</string>
      <string name="konsta_web_title">CyanogenMod 9 - KonstaKANG</string>
      <string name="konsta_web_summary">Visit MoDaCo thread</string>
  

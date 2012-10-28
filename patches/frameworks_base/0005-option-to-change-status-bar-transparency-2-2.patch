@@ -1,7 +1,7 @@
-From afa1cdbd7dde054834b0b793c0c7d6ccaf95f989 Mon Sep 17 00:00:00 2001
+From 7d5a54b338d4b94897cccb54faa1b89433e53370 Mon Sep 17 00:00:00 2001
 From: Konsta <konsta09@gmail.com>
 Date: Wed, 27 Jun 2012 18:33:13 +0300
-Subject: [PATCH 10/16] option to change status bar transparency (2/2)
+Subject: [PATCH 09/17] option to change status bar transparency (2/2)
 
 ported from AOKP
 

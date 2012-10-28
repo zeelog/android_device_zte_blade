@@ -1,23 +1,24 @@
-From 164dd41455d4ae8e08559f88ea33fda8e83ac3a8 Mon Sep 17 00:00:00 2001
+From 1e64c40683f5de4fe700e2507fdd1d85c9cd018a Mon Sep 17 00:00:00 2001
 From: Konsta <konsta09@gmail.com>
 Date: Mon, 21 May 2012 22:54:30 +0300
 Subject: [PATCH 1/8] Add Blade to lunch menu
 
 Change-Id: I9b714a7481401759bc9aae9da51ec127087d5abf
 ---
- vendorsetup.sh |    1 +
+ jenkins-build-targets |    1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/vendorsetup.sh b/vendorsetup.sh
-index b440711..27c901e 100644
---- a/vendorsetup.sh
-+++ b/vendorsetup.sh
-@@ -1,4 +1,5 @@
- add_lunch_combo cm_anzu-userdebug
-+add_lunch_combo cm_blade-userdebug
- add_lunch_combo cm_captivatemtd-userdebug
- add_lunch_combo cm_coconut-userdebug
- add_lunch_combo cm_crespo-userdebug
+diff --git a/jenkins-build-targets b/jenkins-build-targets
+index 8044d41..f3a216e 100644
+--- a/jenkins-build-targets
++++ b/jenkins-build-targets
+@@ -1,5 +1,6 @@
+ cm_aoba-userdebug
+ cm_anzu-userdebug
++cm_blade-userdebug
+ cm_c800-userdebug
+ cm_coconut-userdebug
+ cm_e400-userdebug
 -- 
 1.7.9.5
 

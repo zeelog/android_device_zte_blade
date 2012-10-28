@@ -1,7 +1,7 @@
-From 962d982c9cdd1b483e6c52e885c4289f2b61ffd4 Mon Sep 17 00:00:00 2001
+From 9152ba63e2f1ae1dd2fcdec3d8c5ee686bb20eb5 Mon Sep 17 00:00:00 2001
 From: Konsta <konsta09@gmail.com>
 Date: Tue, 7 Aug 2012 23:35:43 +0300
-Subject: [PATCH 1/2] partition info improvements
+Subject: [PATCH 16/19] partition info improvements
 
 Change-Id: I4ea38c549d0936f8e2cde13932bb3a5537df66a3
 ---
@@ -11,7 +11,7 @@ Change-Id: I4ea38c549d0936f8e2cde13932bb3a5537df66a3
  3 files changed, 61 insertions(+), 65 deletions(-)
 
 diff --git a/res/values/strings.xml b/res/values/strings.xml
-index 9b776ac..2e1e45f 100644
+index e0a2adb..1903ee9 100644
 --- a/res/values/strings.xml
 +++ b/res/values/strings.xml
 @@ -4547,14 +4547,13 @@ found in the list of installed apps.</string>

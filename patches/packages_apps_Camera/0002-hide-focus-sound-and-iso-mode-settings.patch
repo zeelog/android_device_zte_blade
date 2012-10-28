@@ -1,7 +1,7 @@
-From 1dd338c1ab5ab6b5214125b9347b84d809b1bbca Mon Sep 17 00:00:00 2001
+From b085b83501ebf628568cb101556d296d74a4ce29 Mon Sep 17 00:00:00 2001
 From: Konsta <konsta09@gmail.com>
 Date: Thu, 12 Jul 2012 18:14:54 +0300
-Subject: [PATCH] hide focus sound and iso mode settings
+Subject: [PATCH 2/2] hide focus sound and iso mode settings
 
 Change-Id: I168963e486c57306c3ec7e5ed2f74bdf65378cef
 ---
@@ -9,7 +9,7 @@ Change-Id: I168963e486c57306c3ec7e5ed2f74bdf65378cef
  1 file changed, 12 deletions(-)
 
 diff --git a/res/xml/camera_preferences.xml b/res/xml/camera_preferences.xml
-index 00ae4eb..bec440c 100644
+index de93895..ae79d0d 100644
 --- a/res/xml/camera_preferences.xml
 +++ b/res/xml/camera_preferences.xml
 @@ -66,12 +66,6 @@

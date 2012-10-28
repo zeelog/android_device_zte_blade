@@ -1,7 +1,7 @@
-From 0fb147441d092a85efc7226af8ced55875011a7e Mon Sep 17 00:00:00 2001
+From b9f74314ca90ca7f1ef0bd6dc7a2d4ae4b33118a Mon Sep 17 00:00:00 2001
 From: Konsta <konsta09@gmail.com>
 Date: Tue, 7 Aug 2012 23:49:08 +0300
-Subject: [PATCH 1/2] add hot reboot option to power menu
+Subject: [PATCH 14/17] add hot reboot option to power menu
 
 Change-Id: Idd31aaaf51fe036049f400f8b19ffbab2268e4f9
 ---

@@ -1,7 +1,7 @@
-From 193148fb431558368c12a197c0f3120447d4673a Mon Sep 17 00:00:00 2001
+From 63ddcadfd263970e45e833bbab8d39d60aa82937 Mon Sep 17 00:00:00 2001
 From: Konsta <konsta09@gmail.com>
 Date: Wed, 20 Jun 2012 15:42:09 +0300
-Subject: [PATCH] add option to exit to homescreen after call (ported from
+Subject: [PATCH 1/2] add option to exit to homescreen after call (ported from
  AOKP)
 
 https://github.com/AOKP/packages_apps_Phone/commit/5baa129996562c8f536cc9e5bd0aa2d269d2c08d

@@ -1,7 +1,7 @@
-From 50fbd0123c1a7be926e95b2b05ce2bf1e0ea30a8 Mon Sep 17 00:00:00 2001
+From e3267bad9a50057bf77970486ef4f05ac55a8f37 Mon Sep 17 00:00:00 2001
 From: Konsta <konsta09@gmail.com>
 Date: Tue, 26 Jun 2012 12:33:47 +0300
-Subject: [PATCH 10/16] center clock (2/2)
+Subject: [PATCH 10/19] center clock (2/2)
 
 Change-Id: Iabaf585334a7aae111007f2e6c5641a5852db4de
 ---
@@ -11,10 +11,10 @@ Change-Id: Iabaf585334a7aae111007f2e6c5641a5852db4de
  3 files changed, 22 insertions(+), 1 deletion(-)
 
 diff --git a/res/values/strings.xml b/res/values/strings.xml
-index 306683f..417eeb5 100644
+index bf9c3e6..f6691f9 100644
 --- a/res/values/strings.xml
 +++ b/res/values/strings.xml
-@@ -937,7 +937,9 @@
+@@ -929,7 +929,9 @@
      <string name="status_bar_clock_title">Clock</string>
      <string name="status_bar_general_title">General</string>
      <string name="status_bar_show_clock_title">Show clock</string>

@@ -1,7 +1,7 @@
-From 9f5b5f040df39c0480a9ddd3eae4692173b50f00 Mon Sep 17 00:00:00 2001
+From 7bf23eb8f6770096a3d9b830e6080c2f21d483b6 Mon Sep 17 00:00:00 2001
 From: Konsta <konsta09@gmail.com>
 Date: Mon, 28 May 2012 11:46:56 +0300
-Subject: [PATCH 03/16] center lockscreen clock
+Subject: [PATCH 03/17] center lockscreen clock
 
 Change-Id: Ic525b2cbcd0df4642f2285aa90e2cb81b559ff56
 ---

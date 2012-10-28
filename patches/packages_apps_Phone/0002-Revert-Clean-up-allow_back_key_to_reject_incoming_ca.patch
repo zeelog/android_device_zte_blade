@@ -1,8 +1,8 @@
-From b33a8471acebbdb74cef15e3129b651122d01a64 Mon Sep 17 00:00:00 2001
+From 1c6aa074822f4360c264e2651a2524e670342558 Mon Sep 17 00:00:00 2001
 From: Konsta <konsta09@gmail.com>
 Date: Sun, 15 Jul 2012 00:00:25 +0300
-Subject: [PATCH] Revert "Clean up "allow_back_key_to_reject_incoming_call"
- resource"
+Subject: [PATCH 2/2] Revert "Clean up
+ "allow_back_key_to_reject_incoming_call" resource"
 
 This reverts commit 435662fc2982da833d7bd85aff342b41329d9c5b.
 ---
