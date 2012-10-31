@@ -1,7 +1,7 @@
-From fe5bc60a1b204624bdd0985b8f4460a83da43283 Mon Sep 17 00:00:00 2001
+From d0e19b6d29b73cfd4225f8078a07f70b97c39782 Mon Sep 17 00:00:00 2001
 From: Konsta <konsta09@gmail.com>
 Date: Sat, 16 Jun 2012 23:51:14 +0300
-Subject: [PATCH 7/8] remove some dictionaries
+Subject: [PATCH 6/7] remove some dictionaries
 
 Change-Id: Ife9d81b10ec8637a52353ec564a6ff18841cb061
 ---

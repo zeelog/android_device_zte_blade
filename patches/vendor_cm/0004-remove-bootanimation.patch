@@ -1,7 +1,7 @@
-From 81789dbb45c35e6085f977d389fbf0b1ab54bbc6 Mon Sep 17 00:00:00 2001
+From dfad89da5a73ec0f5e48525de4c02674e188b724 Mon Sep 17 00:00:00 2001
 From: Konsta <konsta09@gmail.com>
 Date: Tue, 29 May 2012 16:18:23 +0300
-Subject: [PATCH 4/8] remove bootanimation
+Subject: [PATCH 4/7] remove bootanimation
 
 Change-Id: Id2caa786269151803883043a74905f91417af24e
 ---
@@ -10,7 +10,7 @@ Change-Id: Id2caa786269151803883043a74905f91417af24e
  2 files changed, 8 insertions(+), 8 deletions(-)
 
 diff --git a/config/common.mk b/config/common.mk
-index 139994f..45d8a08 100644
+index 8bbe096..0dcf0f6 100644
 --- a/config/common.mk
 +++ b/config/common.mk
 @@ -1,9 +1,9 @@

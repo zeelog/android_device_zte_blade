@@ -1,0 +1,112 @@
+From 85de28e6facac192b53a305ce5afd2add0cdcfb2 Mon Sep 17 00:00:00 2001
+From: Konsta <konsta09@gmail.com>
+Date: Mon, 27 Aug 2012 12:21:02 +0300
+Subject: [PATCH] Revert "Add ability to use volume rockers as cursor"
+
+This reverts commit ad56a6c056e5c96aa0ecf7869ac0ab3d4bb48cd0.
+---
+ java/res/values/strings.xml                        |    3 ---
+ java/res/xml/prefs.xml                             |    6 ------
+ .../com/android/inputmethod/latin/LatinIME.java    |   12 ------------
+ .../com/android/inputmethod/latin/Settings.java    |    7 +------
+ 4 files changed, 1 insertion(+), 27 deletions(-)
+
+diff --git a/java/res/values/strings.xml b/java/res/values/strings.xml
+index 22d7801..f2d20ac 100644
+--- a/java/res/values/strings.xml
++++ b/java/res/values/strings.xml
+@@ -354,7 +354,4 @@
+     <string name="prefs_keypress_vibration_duration_settings">Keypress vibration duration settings</string>
+     <!-- Title of the settings for keypress sound volume -->
+     <string name="prefs_keypress_sound_volume_settings">Keypress sound volume settings</string>
+-
+-    <string name="prefs_volume_cursor">Volume cursor</string>
+-    <string name="prefs_volume_cursor_summary">Use the volume keys to move the cursor</string>
+ </resources>
+diff --git a/java/res/xml/prefs.xml b/java/res/xml/prefs.xml
+index f5738dd..dcaa202 100644
+--- a/java/res/xml/prefs.xml
++++ b/java/res/xml/prefs.xml
+@@ -56,12 +56,6 @@
+             android:entryValues="@array/voice_input_modes_values"
+             android:entries="@array/voice_input_modes"
+             android:defaultValue="@string/voice_mode_main" />
+-        <CheckBoxPreference
+-            android:key="volume_cursor"
+-            android:title="@string/prefs_volume_cursor"
+-            android:summary="@string/prefs_volume_cursor_summary"
+-            android:persistent="true"
+-            android:defaultValue="false" />
+     </PreferenceCategory>
+     <PreferenceCategory
+         android:title="@string/correction_category"
+diff --git a/java/src/com/android/inputmethod/latin/LatinIME.java b/java/src/com/android/inputmethod/latin/LatinIME.java
+index 35adfde..9c321bc 100644
+--- a/java/src/com/android/inputmethod/latin/LatinIME.java
++++ b/java/src/com/android/inputmethod/latin/LatinIME.java
+@@ -1113,14 +1113,6 @@ public class LatinIME extends InputMethodServiceCompatWrapper implements Keyboar
+                 }
+             }
+             break;
+-        case KeyEvent.KEYCODE_VOLUME_UP:
+-        case KeyEvent.KEYCODE_VOLUME_DOWN:
+-            if (mKeyboardSwitcher.isInputViewShown() && mSettingsValues.mEnableVolumeCursor) {
+-                sendDownUpKeyEvents((keyCode == KeyEvent.KEYCODE_VOLUME_UP ? KeyEvent.KEYCODE_DPAD_RIGHT
+-                        : KeyEvent.KEYCODE_DPAD_LEFT));
+-                return true;
+-            }
+-            break;
+         }
+         return super.onKeyDown(keyCode, event);
+     }
+@@ -1145,10 +1137,6 @@ public class LatinIME extends InputMethodServiceCompatWrapper implements Keyboar
+                 return true;
+             }
+             break;
+-        case KeyEvent.KEYCODE_VOLUME_DOWN:
+-        case KeyEvent.KEYCODE_VOLUME_UP:
+-            if (mKeyboardSwitcher.isInputViewShown() && mSettingsValues.mEnableVolumeCursor)
+-                return true;
+         }
+         return super.onKeyUp(keyCode, event);
+     }
+diff --git a/java/src/com/android/inputmethod/latin/Settings.java b/java/src/com/android/inputmethod/latin/Settings.java
+index 32fccf3..773efe7 100644
+--- a/java/src/com/android/inputmethod/latin/Settings.java
++++ b/java/src/com/android/inputmethod/latin/Settings.java
+@@ -97,9 +97,6 @@ public class Settings extends InputMethodSettingsActivity
+ 
+     public static final String PREF_KEYPRESS_SOUND_VOLUME =
+             "pref_keypress_sound_volume";
+-
+-    public static final String PREF_VOLUME_KEYS_AS_CURSOR = "volume_cursor";
+-
+     // Dialog ids
+     private static final int VOICE_INPUT_CONFIRM_DIALOG = 0;
+ 
+@@ -127,7 +124,6 @@ public class Settings extends InputMethodSettingsActivity
+         public final boolean mBigramPredictionEnabled;
+         public final boolean mUseContactsDict;
+         public final boolean mEnableSuggestionSpanInsertion;
+-        public final boolean mEnableVolumeCursor;
+ 
+         private final boolean mShowSettingsKey;
+         private final boolean mVoiceKeyEnabled;
+@@ -191,7 +187,6 @@ public class Settings extends InputMethodSettingsActivity
+             final String voiceMode = prefs.getString(PREF_VOICE_SETTINGS_KEY, voiceModeMain);
+             mVoiceKeyEnabled = voiceMode != null && !voiceMode.equals(voiceModeOff);
+             mVoiceKeyOnMain = voiceMode != null && voiceMode.equals(voiceModeMain);
+-            mEnableVolumeCursor = prefs.getBoolean(Settings.PREF_VOLUME_KEYS_AS_CURSOR, false);
+ 
+             LocaleUtils.setSystemLocale(res, savedLocale);
+         }
+@@ -779,4 +774,4 @@ public class Settings extends InputMethodSettingsActivity
+         builder.setView(v);
+         builder.create().show();
+     }
+-}
++}
+\ No newline at end of file
+-- 
+1.7.9.5
+
