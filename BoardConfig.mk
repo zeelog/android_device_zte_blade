@@ -73,7 +73,6 @@ TARGET_FORCE_CPU_UPLOAD := true
 BOARD_USES_QCOM_HARDWARE := true
 COMMON_GLOBAL_CFLAGS += -DQCOM_HARDWARE
 BOARD_NEEDS_MEMORYHEAPPMEM := true
-TARGET_DISABLE_ARM_PIE := true
 
 # Graphics
 BOARD_EGL_CFG := device/zte/blade/prebuilt/system/lib/egl/egl.cfg
@@ -92,6 +91,10 @@ SMALLER_FONT_FOOTPRINT := true
 BOARD_FM_DEVICE := si4708
 BOARD_HAVE_FM_RADIO := true
 BOARD_GLOBAL_CFLAGS += -DHAVE_FM_RADIO -DQCOM_FM_ENABLED
+
+# Camera
+TARGET_DISABLE_ARM_PIE := true
+BOARD_CPU_COLOR_CONVERT := true
 
 # dev:    size   erasesize  name
 # mtd0: 00500000 00020000 "recovery"
