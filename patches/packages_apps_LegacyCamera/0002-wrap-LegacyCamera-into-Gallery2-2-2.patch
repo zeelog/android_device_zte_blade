@@ -1,0 +1,222 @@
+From 7cb7f2e3d6ad9bb25f8a187fb087bd14b5c0f840 Mon Sep 17 00:00:00 2001
+From: Konsta <konsta09@gmail.com>
+Date: Tue, 6 Nov 2012 11:45:31 +0200
+Subject: [PATCH 2/2] wrap LegacyCamera into Gallery2 (2/2)
+
+Change-Id: I75c9d30ea2a7e9b53791471cb165d88f366eaf7a
+---
+ Android.mk          |   30 --------------------
+ AndroidManifest.xml |   77 ---------------------------------------------------
+ CleanSpec.mk        |   52 ----------------------------------
+ proguard.flags      |   19 -------------
+ 4 files changed, 178 deletions(-)
+ delete mode 100644 Android.mk
+ delete mode 100644 AndroidManifest.xml
+ delete mode 100644 CleanSpec.mk
+ delete mode 100644 proguard.flags
+
+diff --git a/Android.mk b/Android.mk
+deleted file mode 100644
+index 9c514d6..0000000
+--- a/Android.mk
++++ /dev/null
+@@ -1,30 +0,0 @@
+-ifneq (,$(findstring Gallery2,$(PRODUCT_PACKAGES)))
+-
+-LOCAL_PATH:= $(call my-dir)
+-include $(CLEAR_VARS)
+-
+-LOCAL_MODULE_TAGS := optional
+-
+-LOCAL_SRC_FILES := $(call all-java-files-under, src)
+-
+-LOCAL_PACKAGE_NAME := LegacyCamera
+-#LOCAL_SDK_VERSION := current
+-
+-endif
+-
+-LOCAL_JNI_SHARED_LIBRARIES := libjni_legacymosaic
+-
+-LOCAL_REQUIRED_MODULES := libjni_legacymosaic
+-
+-ifneq (,$(findstring Gallery2,$(PRODUCT_PACKAGES)))
+-
+-LOCAL_PROGUARD_FLAG_FILES := proguard.flags
+-
+-include $(BUILD_PACKAGE)
+-
+-ifeq ($(strip $(LOCAL_PACKAGE_OVERRIDES)),)
+-# Use the following include to make our test apk.
+-include $(call all-makefiles-under, $(LOCAL_PATH))
+-endif
+-
+-endif
+diff --git a/AndroidManifest.xml b/AndroidManifest.xml
+deleted file mode 100644
+index 8f990ca..0000000
+--- a/AndroidManifest.xml
++++ /dev/null
+@@ -1,77 +0,0 @@
+-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+-        package="com.android.camera"
+-        android:versionCode="1"
+-        android:versionName="1"
+-        >
+-
+-    <original-package android:name="com.android.camera" />
+-
+-    <uses-permission android:name="android.permission.CAMERA" />
+-    <uses-feature android:name="android.hardware.camera" />
+-    <uses-feature android:name="android.hardware.camera.autofocus" android:required="false" />
+-
+-    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+-    <uses-permission android:name="android.permission.WAKE_LOCK" />
+-    <uses-permission android:name="android.permission.SET_WALLPAPER" />
+-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+-    <uses-permission android:name="android.permission.READ_SMS" />
+-
+-    <application android:icon="@mipmap/ic_launcher_camera"
+-            android:name="com.android.camera.CameraAppImpl"
+-            android:label="@string/camera_label"
+-            android:theme="@style/ThemeCamera"
+-            android:hardwareAccelerated="true">
+-        <uses-library android:name="com.google.android.media.effects" android:required="false" />
+-        <receiver android:name="com.android.camera.CameraButtonIntentReceiver">
+-            <intent-filter>
+-                <action android:name="android.intent.action.CAMERA_BUTTON"/>
+-            </intent-filter>
+-        </receiver>
+-        <activity android:name="com.android.camera.Camera"
+-                android:configChanges="orientation|screenSize|keyboardHidden"
+-                android:clearTaskOnLaunch="true"
+-                android:windowSoftInputMode="stateAlwaysHidden|adjustPan">
+-            <intent-filter>
+-                <action android:name="android.intent.action.MAIN" />
+-                <category android:name="android.intent.category.DEFAULT" />
+-                <category android:name="android.intent.category.LAUNCHER" />
+-            </intent-filter>
+-            <intent-filter>
+-                <action android:name="android.media.action.IMAGE_CAPTURE" />
+-                <category android:name="android.intent.category.DEFAULT" />
+-            </intent-filter>
+-            <intent-filter>
+-                <action android:name="android.media.action.STILL_IMAGE_CAMERA" />
+-                <category android:name="android.intent.category.DEFAULT" />
+-            </intent-filter>
+-        </activity>
+-        <activity android:name="com.android.camera.VideoCamera"
+-                android:label="@string/video_camera_label"
+-                android:configChanges="orientation|screenSize|keyboardHidden"
+-                android:icon="@mipmap/ic_launcher_video_camera"
+-                android:clearTaskOnLaunch="true"
+-                android:windowSoftInputMode="stateAlwaysHidden|adjustPan">
+-            <intent-filter>
+-                <action android:name="android.media.action.VIDEO_CAMERA" />
+-                <category android:name="android.intent.category.DEFAULT" />
+-            </intent-filter>
+-            <intent-filter>
+-                <action android:name="android.media.action.VIDEO_CAPTURE" />
+-                <category android:name="android.intent.category.DEFAULT" />
+-            </intent-filter>
+-        </activity>
+-        <!-- Suppose users enter panorama from launcher, turn off the screen,
+-             turn on the screen, and enter the camera from the lock screen.
+-             They can switch to panorama from there. Use singleTask so there
+-             will be only one panorama activity. -->
+-        <activity android:name="com.android.camera.PanoramaActivity"
+-                android:label="@string/pano_dialog_title"
+-                android:configChanges="orientation|screenSize|keyboardHidden"
+-                android:clearTaskOnLaunch="true"
+-                android:windowSoftInputMode="stateAlwaysHidden|adjustPan"
+-                android:launchMode="singleTask">
+-        </activity>
+-    </application>
+-</manifest>
+-
+diff --git a/CleanSpec.mk b/CleanSpec.mk
+deleted file mode 100644
+index 1cf8763..0000000
+--- a/CleanSpec.mk
++++ /dev/null
+@@ -1,52 +0,0 @@
+-# Copyright (C) 2007 The Android Open Source Project
+-#
+-# Licensed under the Apache License, Version 2.0 (the "License");
+-# you may not use this file except in compliance with the License.
+-# You may obtain a copy of the License at
+-#
+-#      http://www.apache.org/licenses/LICENSE-2.0
+-#
+-# Unless required by applicable law or agreed to in writing, software
+-# distributed under the License is distributed on an "AS IS" BASIS,
+-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+-# See the License for the specific language governing permissions and
+-# limitations under the License.
+-#
+-
+-# If you don't need to do a full clean build but would like to touch
+-# a file or delete some intermediate files, add a clean step to the end
+-# of the list.  These steps will only be run once, if they haven't been
+-# run before.
+-#
+-# E.g.:
+-#     $(call add-clean-step, touch -c external/sqlite/sqlite3.h)
+-#     $(call add-clean-step, rm -rf $(PRODUCT_OUT)/obj/STATIC_LIBRARIES/libz_intermediates)
+-#
+-# Always use "touch -c" and "rm -f" or "rm -rf" to gracefully deal with
+-# files that are missing or have been moved.
+-#
+-# Use $(PRODUCT_OUT) to get to the "out/target/product/blah/" directory.
+-# Use $(OUT_DIR) to refer to the "out" directory.
+-#
+-# If you need to re-do something that's already mentioned, just copy
+-# the command and add it to the bottom of the list.  E.g., if a change
+-# that you made last week required touching a file and a change you
+-# made today requires touching the same file, just copy the old
+-# touch step and add it to the end of the list.
+-#
+-# ************************************************
+-# NEWER CLEAN STEPS MUST BE AT THE END OF THE LIST
+-# ************************************************
+-
+-# For example:
+-#$(call add-clean-step, rm -rf $(OUT_DIR)/target/common/obj/APPS/AndroidTests_intermediates)
+-#$(call add-clean-step, rm -rf $(OUT_DIR)/target/common/obj/JAVA_LIBRARIES/core_intermediates)
+-#$(call add-clean-step, find $(OUT_DIR) -type f -name "IGTalkSession*" -print0 | xargs -0 rm -f)
+-#$(call add-clean-step, rm -rf $(PRODUCT_OUT)/data/*)
+-$(call add-clean-step, rm -rf $(PRODUCT_OUT)/obj/APPS/Camera*)
+-$(call add-clean-step, rm -rf $(OUT_DIR)/target/common/obj/APPS/Camera*)
+-$(call add-clean-step, rm -rf $(OUT_DIR)/target/common/obj/APPS/Camera*)
+-
+-# ************************************************
+-# NEWER CLEAN STEPS MUST BE AT THE END OF THE LIST
+-# ************************************************
+diff --git a/proguard.flags b/proguard.flags
+deleted file mode 100644
+index 5bce096..0000000
+--- a/proguard.flags
++++ /dev/null
+@@ -1,19 +0,0 @@
+-# ctors of subclasses of CameraPreference are called with Java reflection.
+--keep class * extends com.android.camera.CameraPreference {
+-  <init>(...);
+-}
+-
+--keep class com.android.camera.ActivityBase {
+-  public int getResultCode();
+-  public android.content.Intent getResultData();
+-}
+-
+--keep class com.android.camera.VideoCamera {
+-  public boolean isRecording();
+-  public void onCancelBgTraining(...);
+-  public void onProtectiveCurtainClick(...);
+-}
+-
+--keep class * extends android.app.Activity {
+-  @com.android.camera.OnClickAttr <methods>;
+-}
+-- 
+1.7.9.5
+

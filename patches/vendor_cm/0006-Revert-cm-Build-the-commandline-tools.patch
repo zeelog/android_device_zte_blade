@@ -1,7 +1,7 @@
-From c5512068ebf0e3b3fcda626b03b5eb8db765ba5c Mon Sep 17 00:00:00 2001
+From 342692bf96e3044ab9a0ff092f7643c67b3cd35a Mon Sep 17 00:00:00 2001
 From: Konsta <konsta09@gmail.com>
 Date: Tue, 16 Oct 2012 21:32:22 +0300
-Subject: [PATCH] Revert "cm: Build the commandline tools"
+Subject: [PATCH 7/7] Revert "cm: Build the commandline tools"
 
 This reverts commit 1949eb5c59fdc1c0fcc2cb157d486fa97f972e82.
 ---
@@ -9,10 +9,10 @@ This reverts commit 1949eb5c59fdc1c0fcc2cb157d486fa97f972e82.
  1 file changed, 1 insertion(+), 7 deletions(-)
 
 diff --git a/config/common.mk b/config/common.mk
-index 0a36448..f6c8169 100644
+index 21f8285..75da400 100644
 --- a/config/common.mk
 +++ b/config/common.mk
-@@ -153,13 +153,7 @@ PRODUCT_PACKAGES += \
+@@ -154,13 +154,7 @@ PRODUCT_PACKAGES += \
      openvpn \
      e2fsck \
      mke2fs \

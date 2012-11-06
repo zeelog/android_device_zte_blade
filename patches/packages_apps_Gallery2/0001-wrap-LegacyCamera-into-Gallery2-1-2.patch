@@ -1,48 +1,40 @@
-From e2f0b5c2ff7e045a974d66ed87afa700a1d27f05 Mon Sep 17 00:00:00 2001
-From: Bryan Gantt <dragonzkiller@gmail.com>
-Date: Sat, 29 Sep 2012 23:33:45 -0500
+From 6fedbe89c3a6ce039b6449961e3dd8a105fe04db Mon Sep 17 00:00:00 2001
+From: Konsta <konsta09@gmail.com>
+Date: Tue, 6 Nov 2012 11:00:30 +0200
 Subject: [PATCH] wrap LegacyCamera into Gallery2 (1/2)
 
-Change-Id: I6353c24fc17bc348d8ba999d8e58d277d229fffa
+Change-Id: I0c0b0222fad7e5d5444eccb00b6a3d14b4c6e47a
 ---
- Android.mk   |   10 +++++-----
+ Android.mk   |    8 ++------
  CleanSpec.mk |    2 ++
- 2 files changed, 7 insertions(+), 5 deletions(-)
+ 2 files changed, 4 insertions(+), 6 deletions(-)
 
 diff --git a/Android.mk b/Android.mk
-index ea71b39..686d6e1 100644
+index e9dcec5..231f407 100644
 --- a/Android.mk
 +++ b/Android.mk
-@@ -9,9 +9,9 @@ LOCAL_STATIC_JAVA_LIBRARIES += com.android.gallery3d.common2
+@@ -44,11 +44,7 @@ LOCAL_PROGUARD_FLAG_FILES := proguard.flags
  
- LOCAL_SRC_FILES := $(call all-java-files-under, src)
- LOCAL_SRC_FILES += $(call all-java-files-under, src_pd)
--LOCAL_SRC_FILES += $(call all-java-files-under, ../Camera/src)
-+LOCAL_SRC_FILES += $(call all-java-files-under, ../LegacyCamera/src)
+ include $(BUILD_PACKAGE)
  
--LOCAL_RESOURCE_DIR += $(LOCAL_PATH)/res packages/apps/Camera/res
-+LOCAL_RESOURCE_DIR += $(LOCAL_PATH)/res packages/apps/LegacyCamera/res
- LOCAL_AAPT_FLAGS := --auto-add-overlay --extra-packages com.android.camera
+-ifeq (,$(findstring LegacyCamera,$(PRODUCT_PACKAGES)))
+-include $(call all-makefiles-under, packages/apps/LegacyCamera/jni)
+-else
+ include $(call all-makefiles-under, jni)
+-endif
  
- LOCAL_PACKAGE_NAME := Gallery2
-@@ -20,9 +20,9 @@ LOCAL_OVERRIDES_PACKAGES := Gallery Gallery3D GalleryNew3D
- 
- #LOCAL_SDK_VERSION := current
- 
--LOCAL_JNI_SHARED_LIBRARIES := libjni_mosaic libjni_eglfence
-+LOCAL_JNI_SHARED_LIBRARIES := libjni_legacymosaic libjni_eglfence
- 
--LOCAL_REQUIRED_MODULES := libjni_mosaic libjni_eglfence
-+LOCAL_REQUIRED_MODULES := libjni_legacymosaic libjni_eglfence
- 
- LOCAL_PROGUARD_FLAG_FILES := proguard.flags
- 
-@@ -35,6 +35,6 @@ ifeq ($(strip $(LOCAL_PACKAGE_OVERRIDES)),)
- include $(call all-makefiles-under, $(LOCAL_PATH))
+ ifeq ($(strip $(LOCAL_PACKAGE_OVERRIDES)),)
+ # Use the following include to make gallery test apk.
+@@ -56,9 +52,9 @@ include $(call all-makefiles-under, $(LOCAL_PATH))
  
  # Use the following include to make camera test apk.
--include $(call all-makefiles-under, ../Camera)
+ ifeq (,$(findstring LegacyCamera,$(PRODUCT_PACKAGES)))
+-include $(call all-makefiles-under, packages/apps/LegacyCamera)
 +include $(call all-makefiles-under, ../LegacyCamera)
+ else
+-include $(call all-makefiles-under, packages/apps/Camera)
++include $(call all-makefiles-under, ../Camera)
+ endif
  
  endif
 diff --git a/CleanSpec.mk b/CleanSpec.mk

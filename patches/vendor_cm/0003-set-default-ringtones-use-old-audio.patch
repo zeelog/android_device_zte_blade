@@ -1,7 +1,7 @@
-From b3ed1e4b125ed6aee0357bfa9bc8689dbadd7e30 Mon Sep 17 00:00:00 2001
+From 1a09af0e66f49290d5d9f3f8db44548260fbaa98 Mon Sep 17 00:00:00 2001
 From: Konsta <konsta09@gmail.com>
 Date: Thu, 2 Aug 2012 22:01:52 +0300
-Subject: [PATCH 4/6] set default ringtones, use old audio
+Subject: [PATCH 4/7] set default ringtones, use old audio
 
 Change-Id: Ia4a6dff5dc46cfd02dd549f61aba3ba6be4c064d
 ---

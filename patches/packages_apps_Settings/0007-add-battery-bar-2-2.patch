@@ -1,7 +1,7 @@
-From 30f6dc3627bca110149897f6646b7e0321c487dd Mon Sep 17 00:00:00 2001
+From 7adc62672e6dac4502c93e7cdc2d6bdb3ce872e6 Mon Sep 17 00:00:00 2001
 From: Konsta <konsta09@gmail.com>
 Date: Thu, 5 Jul 2012 00:51:19 +0300
-Subject: [PATCH] add battery bar (2/2)
+Subject: [PATCH 10/10] add battery bar (2/2)
 
 Change-Id: I3d582ba787721970ef2f973fac220ecc070b00b7
 ---
@@ -10,10 +10,10 @@ Change-Id: I3d582ba787721970ef2f973fac220ecc070b00b7
  2 files changed, 3 insertions(+)
 
 diff --git a/res/values/arrays.xml b/res/values/arrays.xml
-index ce23492..7a0371b 100644
+index 6c005ca..8d1730d 100644
 --- a/res/values/arrays.xml
 +++ b/res/values/arrays.xml
-@@ -1034,6 +1034,7 @@
+@@ -1036,6 +1036,7 @@
          <item>@string/status_bar_battery_status_percentage</item>
          <item>@string/status_bar_battery_status_circle</item>
          <item>@string/status_bar_battery_status_circle_percentage</item>
@@ -21,7 +21,7 @@ index ce23492..7a0371b 100644
          <item>@string/status_bar_style_hidden</item>
      </string-array>
  
-@@ -1042,6 +1043,7 @@
+@@ -1044,6 +1045,7 @@
          <item>1</item>
          <item>2</item>
          <item>3</item>
@@ -30,7 +30,7 @@ index ce23492..7a0371b 100644
      </string-array>
  
 diff --git a/res/values/strings.xml b/res/values/strings.xml
-index c26ee10..fa421b5 100644
+index 438522b..6179e14 100644
 --- a/res/values/strings.xml
 +++ b/res/values/strings.xml
 @@ -4414,6 +4414,7 @@

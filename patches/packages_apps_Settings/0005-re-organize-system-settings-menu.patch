@@ -1,7 +1,7 @@
-From f2287f190eeccb92da2e1981d635073f16dddc3a Mon Sep 17 00:00:00 2001
+From cc519a9b9dbd9f673192c79216244fac4fa654b9 Mon Sep 17 00:00:00 2001
 From: Konsta <konsta09@gmail.com>
 Date: Fri, 27 Jul 2012 15:11:18 +0300
-Subject: [PATCH 05/11] re-organize system settings menu
+Subject: [PATCH 05/10] re-organize system settings menu
 
 Change-Id: Idefc4bfb6a18b958308b8a83bfcbd22bf2dcf8bc
 ---

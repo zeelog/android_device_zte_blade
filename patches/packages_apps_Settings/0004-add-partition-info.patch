@@ -1,7 +1,7 @@
-From df2f553998a748e33ace6f5e923a2f8e1cf236fb Mon Sep 17 00:00:00 2001
+From ea26094150b0a0493087fb35af57a6ebda5f7616 Mon Sep 17 00:00:00 2001
 From: Konsta <konsta09@gmail.com>
 Date: Tue, 24 Jul 2012 11:04:32 +0300
-Subject: [PATCH 04/11] add partition info
+Subject: [PATCH 04/10] add partition info
 
 Change-Id: I2abea99edc9765d898536b19ad9159fe3ed4e9b6
 ---
@@ -15,7 +15,7 @@ Change-Id: I2abea99edc9765d898536b19ad9159fe3ed4e9b6
  create mode 100644 src/com/android/settings/PartitionInfo.java
 
 diff --git a/AndroidManifest.xml b/AndroidManifest.xml
-index 2436fca..1926f74 100644
+index ac790fd..819d52d 100644
 --- a/AndroidManifest.xml
 +++ b/AndroidManifest.xml
 @@ -787,6 +787,15 @@
@@ -35,10 +35,10 @@ index 2436fca..1926f74 100644
                  android:label="@string/location_settings_title"
                  android:configChanges="orientation|keyboardHidden|screenSize"
 diff --git a/res/values/strings.xml b/res/values/strings.xml
-index 347c4d9..c749c04 100644
+index 47d6efb..d6886d1 100644
 --- a/res/values/strings.xml
 +++ b/res/values/strings.xml
-@@ -4942,5 +4942,13 @@
+@@ -4985,5 +4985,13 @@
      <!-- Performance : Disable bootanimation -->
      <string name="pref_disable_bootanimation_title">Disable boot animation</string>
      <string name="pref_disable_bootanimation_summary">Don\'t show the boot animation for faster boot</string>
