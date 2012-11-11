@@ -1,4 +1,4 @@
-From 342692bf96e3044ab9a0ff092f7643c67b3cd35a Mon Sep 17 00:00:00 2001
+From 8e040986aa7e6b0e1ba68afd46a393f32f4d1b60 Mon Sep 17 00:00:00 2001
 From: Konsta <konsta09@gmail.com>
 Date: Tue, 16 Oct 2012 21:32:22 +0300
 Subject: [PATCH 7/7] Revert "cm: Build the commandline tools"

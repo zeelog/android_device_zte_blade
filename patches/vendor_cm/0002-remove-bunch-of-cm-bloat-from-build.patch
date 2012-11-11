@@ -1,4 +1,4 @@
-From 10e8949271c92a9d285a533c60e1981c45557758 Mon Sep 17 00:00:00 2001
+From fb15aa8ee994eee64a0c73017fabb8aa95ebcdd8 Mon Sep 17 00:00:00 2001
 From: Konsta <konsta09@gmail.com>
 Date: Sat, 14 Jul 2012 12:05:53 +0300
 Subject: [PATCH 3/7] remove bunch of cm bloat from build
