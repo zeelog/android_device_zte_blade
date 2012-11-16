@@ -1,0 +1,40 @@
+From d1e6b45ea42d4af995b37778fa6853f769fb32ab Mon Sep 17 00:00:00 2001
+From: Konsta <konsta09@gmail.com>
+Date: Tue, 30 Oct 2012 09:43:05 +0200
+Subject: [PATCH] build omxcore for msm7x27
+
+I'm being lazy, just use msm7x27a stuff here :P
+
+Change-Id: Ide2497abff8c888c53763f3ca74a732c5bbdd778
+---
+ Android.mk         |    2 +-
+ mm-core/Android.mk |    2 ++
+ 2 files changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/Android.mk b/Android.mk
+index 08f1472..57ecbb5 100755
+--- a/Android.mk
++++ b/Android.mk
+@@ -1,5 +1,5 @@
+ QCOM_MEDIA_ROOT := $(call my-dir)
+-ifneq ($(filter msm8974 msm8960 msm8660 msm7x27a msm7x30,$(TARGET_BOARD_PLATFORM)),)
++ifneq ($(filter msm8974 msm8960 msm8660 msm7x27a msm7x27 msm7x30,$(TARGET_BOARD_PLATFORM)),)
+ include $(QCOM_MEDIA_ROOT)/mm-core/Android.mk
+ include $(QCOM_MEDIA_ROOT)/libstagefrighthw/Android.mk
+ endif
+diff --git a/mm-core/Android.mk b/mm-core/Android.mk
+index e8b8698..8a699b4 100644
+--- a/mm-core/Android.mk
++++ b/mm-core/Android.mk
+@@ -14,6 +14,8 @@ OMXCORE_CFLAGS += -U_ENABLE_QC_MSG_LOG_
+ 
+ ifeq ($(TARGET_BOARD_PLATFORM),msm7x27a)
+ MM_CORE_TARGET = 7627A
++else ifeq ($(TARGET_BOARD_PLATFORM),msm7x27)
++MM_CORE_TARGET = 7627A
+ else ifeq ($(TARGET_BOARD_PLATFORM),msm7x30)
+ MM_CORE_TARGET = 7630
+ else ifeq ($(TARGET_BOARD_PLATFORM),msm8660)
+-- 
+1.7.9.5
+

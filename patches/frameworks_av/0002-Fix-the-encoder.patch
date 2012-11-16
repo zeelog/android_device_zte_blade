@@ -1,0 +1,30 @@
+From 05013a25679bbac27d30166419160e99dc714e36 Mon Sep 17 00:00:00 2001
+From: WinSuk <goodboy735@gmail.com>
+Date: Wed, 14 Nov 2012 23:03:24 -0800
+Subject: [PATCH 2/2] Fix the encoder
+
+Change-Id: I929c769b24d0b891487faf4f0d3c9fa66e04eeef
+---
+ media/libstagefright/OMXCodec.cpp |    6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
+
+diff --git a/media/libstagefright/OMXCodec.cpp b/media/libstagefright/OMXCodec.cpp
+index cd75ebf..77b215a 100644
+--- a/media/libstagefright/OMXCodec.cpp
++++ b/media/libstagefright/OMXCodec.cpp
+@@ -3741,7 +3741,11 @@ bool OMXCodec::drainInputBuffer(BufferInfo *info) {
+ 
+                 status_t err = mOMX->getParameter(mNode, OMX_IndexParamPortDefinition,
+                                                   &def, sizeof(def));
+-                CHECK_EQ(err, (status_t)OK);
++#ifdef QCOM_LEGACY_OMX
++                // Don't run this check with the legacy encoder
++                if (strncmp(mComponentName, "OMX.qcom.video.encoder.", 23))
++#endif
++                    CHECK_EQ(err, (status_t)OK);
+ 
+                 if (def.eDomain == OMX_PortDomainVideo) {
+                     OMX_VIDEO_PORTDEFINITIONTYPE *videoDef = &def.format.video;
+-- 
+1.7.9.5
+

@@ -1,4 +1,4 @@
-From fb15aa8ee994eee64a0c73017fabb8aa95ebcdd8 Mon Sep 17 00:00:00 2001
+From c22f4a9dca825d415a0955426bc0b180178c3253 Mon Sep 17 00:00:00 2001
 From: Konsta <konsta09@gmail.com>
 Date: Sat, 14 Jul 2012 12:05:53 +0300
 Subject: [PATCH 3/7] remove bunch of cm bloat from build
@@ -10,7 +10,7 @@ Change-Id: I779f9c5e48f31aade1dcf4bf0df7652d0d6a1515
  2 files changed, 8 insertions(+), 8 deletions(-)
 
 diff --git a/config/common.mk b/config/common.mk
-index 6bb9bc0..21f8285 100644
+index f64420a..ebeac01 100644
 --- a/config/common.mk
 +++ b/config/common.mk
 @@ -103,9 +103,9 @@ PRODUCT_COPY_FILES +=  \
@@ -53,7 +53,7 @@ index 6bb9bc0..21f8285 100644
  # Extra tools in CM
  PRODUCT_PACKAGES += \
 diff --git a/config/common_mini_phone.mk b/config/common_mini_phone.mk
-index 6c939da..d407176 100644
+index 11b89e8..be98a53 100644
 --- a/config/common_mini_phone.mk
 +++ b/config/common_mini_phone.mk
 @@ -5,7 +5,7 @@ $(call inherit-product, vendor/cm/config/common.mk)
