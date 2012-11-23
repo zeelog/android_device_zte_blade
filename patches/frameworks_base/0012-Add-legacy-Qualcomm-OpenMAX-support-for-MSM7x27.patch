@@ -1,15 +1,31 @@
-From 6eaf9ccb4c95be58423642808874270562c49490 Mon Sep 17 00:00:00 2001
+From a2ae89cdac38f4e5a400bfe3786e1a361e30a269 Mon Sep 17 00:00:00 2001
 From: Alexey Shavykin <ganster0x29@gmail.com>
 Date: Sun, 28 Oct 2012 13:57:33 +0200
-Subject: [PATCH 17/17] Added support legacy Qualcomm OpenMAX IL libs for
- MSM7x27
+Subject: [PATCH] Add legacy Qualcomm OpenMAX support for MSM7x27
 
+This is a combination of 3 commits.
+
+Author: Alexey Shavykin <ganster0x29@gmail.com>
+Date:   Sun Oct 28 13:57:33 2012 +0200
+    Added support legacy Qualcomm OpenMAX IL libs for MSM7x27
+
+Author: Ganster41 <ganster0x29@gmail.com>
+Date:   Mon Nov 19 15:12:44 2012 +0200
+    Correct gralloc usage flags for renderer
+
+Author: Ganster41 <ganster0x29@gmail.com>
+Date:   Thu Nov 22 10:38:04 2012 +0200
+    Fix using extended extractor from older Androids
+
+Change-Id: Ia56425c449169e33ab3fbb7fa122382210177260
 ---
- media/libstagefright/AwesomePlayer.cpp             |    5 +++
- media/libstagefright/OMXCodec.cpp                  |   29 ++++++++++---
- .../colorconversion/SoftwareRenderer.cpp           |   44 ++++++++++++++++++++
+ media/libstagefright/AwesomePlayer.cpp             |    5 ++
+ media/libstagefright/DataSource.cpp                |    2 +-
+ media/libstagefright/OMXCodec.cpp                  |   29 +++++++++--
+ media/libstagefright/colorconversion/Android.mk    |    1 +
+ .../colorconversion/SoftwareRenderer.cpp           |   54 +++++++++++++++++++-
  media/libstagefright/include/SoftwareRenderer.h    |    3 ++
- 4 files changed, 76 insertions(+), 5 deletions(-)
+ 6 files changed, 87 insertions(+), 7 deletions(-)
 
 diff --git a/media/libstagefright/AwesomePlayer.cpp b/media/libstagefright/AwesomePlayer.cpp
 index 6da986a..bf37b10 100644
@@ -28,6 +44,19 @@ index 6da986a..bf37b10 100644
  #define FRAME_DROP_FREQ 0
  
  namespace android {
+diff --git a/media/libstagefright/DataSource.cpp b/media/libstagefright/DataSource.cpp
+index 66a16c1..6c98526 100755
+--- a/media/libstagefright/DataSource.cpp
++++ b/media/libstagefright/DataSource.cpp
+@@ -84,7 +84,7 @@ bool DataSource::sniff(
+     for (List<SnifferFunc>::iterator it = gSniffers.begin();
+          it != gSniffers.end(); ++it) {
+ 
+-#ifdef QCOM_HARDWARE
++#if defined(QCOM_HARDWARE) && !defined(QCOM_LEGACY_OMX)
+         //Dont call the first sniffer from extended extarctor
+         if(it == extendedSnifferPosition)
+             continue;
 diff --git a/media/libstagefright/OMXCodec.cpp b/media/libstagefright/OMXCodec.cpp
 index 60ea9df..ac8e114 100644
 --- a/media/libstagefright/OMXCodec.cpp
@@ -131,12 +160,30 @@ index 60ea9df..ac8e114 100644
              mOutputFormat->setInt32(kKeyColorFormat, video_def->eColorFormat);
  
              if (!mIsEncoder) {
+diff --git a/media/libstagefright/colorconversion/Android.mk b/media/libstagefright/colorconversion/Android.mk
+index f62665e..26f6cfb 100644
+--- a/media/libstagefright/colorconversion/Android.mk
++++ b/media/libstagefright/colorconversion/Android.mk
+@@ -11,6 +11,7 @@ LOCAL_C_INCLUDES := \
+ 
+ ifeq ($(BOARD_USES_QCOM_HARDWARE),true)
+         LOCAL_C_INCLUDES += $(TOP)/vendor/qcom/opensource/omx/mm-core/omxcore/inc
++        LOCAL_C_INCLUDES += $(TOP)/hardware/qcom/display/libgralloc
+ endif
+ 
+ LOCAL_MODULE:= libstagefright_color_conversion
 diff --git a/media/libstagefright/colorconversion/SoftwareRenderer.cpp b/media/libstagefright/colorconversion/SoftwareRenderer.cpp
-index 2ce8fa7..02d07c8 100644
+index 2ce8fa7..ff4bde7 100644
 --- a/media/libstagefright/colorconversion/SoftwareRenderer.cpp
 +++ b/media/libstagefright/colorconversion/SoftwareRenderer.cpp
-@@ -30,6 +30,11 @@
+@@ -28,8 +28,17 @@
+ #include <ui/GraphicBufferMapper.h>
+ #include <gui/ISurfaceTexture.h>
  
++#ifdef QCOM_LEGACY_OMX
++#include <gralloc_priv.h>
++#endif
++
  namespace android {
  
 +#ifdef QCOM_HARDWARE
@@ -147,7 +194,7 @@ index 2ce8fa7..02d07c8 100644
  SoftwareRenderer::SoftwareRenderer(
          const sp<ANativeWindow> &nativeWindow, const sp<MetaData> &meta)
      : mConverter(NULL),
-@@ -72,6 +77,16 @@ SoftwareRenderer::SoftwareRenderer(
+@@ -72,6 +81,16 @@ SoftwareRenderer::SoftwareRenderer(
              break;
          }
  #endif
@@ -164,7 +211,7 @@ index 2ce8fa7..02d07c8 100644
  
          default:
              halFormat = HAL_PIXEL_FORMAT_RGB_565;
-@@ -84,6 +99,10 @@ SoftwareRenderer::SoftwareRenderer(
+@@ -84,6 +103,10 @@ SoftwareRenderer::SoftwareRenderer(
              break;
      }
  
@@ -175,7 +222,20 @@ index 2ce8fa7..02d07c8 100644
      CHECK(mNativeWindow != NULL);
      CHECK(mCropWidth > 0);
      CHECK(mCropHeight > 0);
-@@ -200,6 +219,31 @@ void SoftwareRenderer::render(
+@@ -93,7 +116,11 @@ SoftwareRenderer::SoftwareRenderer(
+             native_window_set_usage(
+             mNativeWindow.get(),
+             GRALLOC_USAGE_SW_READ_NEVER | GRALLOC_USAGE_SW_WRITE_OFTEN
+-            | GRALLOC_USAGE_HW_TEXTURE | GRALLOC_USAGE_EXTERNAL_DISP));
++            | GRALLOC_USAGE_HW_TEXTURE | GRALLOC_USAGE_EXTERNAL_DISP
++#ifdef QCOM_LEGACY_OMX
++            | GRALLOC_USAGE_PRIVATE_ADSP_HEAP | GRALLOC_USAGE_PRIVATE_UNCACHED
++#endif
++            ));
+ 
+     CHECK_EQ(0,
+             native_window_set_scaling_mode(
+@@ -200,6 +227,31 @@ void SoftwareRenderer::render(
              dst_u += dst_c_stride;
              dst_v += dst_c_stride;
          }
