@@ -1,16 +1,39 @@
-From c32e2b213947e1f5b43dddad21705ccedd92477b Mon Sep 17 00:00:00 2001
+From 63b0c79a7691e9d8ae8058ceef89391368e820b8 Mon Sep 17 00:00:00 2001
 From: Alexey Shavykin <ganster0x29@gmail.com>
 Date: Sun, 28 Oct 2012 22:46:34 +0200
-Subject: [PATCH 1/2] Quick untested port of support legacy Qualcomm OMX OL
- libs
+Subject: [PATCH] Add legacy Qualcomm OpenMAX support for MSM7x27
 
-Change-Id: I543f0c77c544feff00d152ebaef383ad7ef31ea8
+This is a combination of 5 commits.
+
+Author: Alexey Shavykin <ganster0x29@gmail.com>
+Date:   Sun Oct 28 22:46:34 2012 +0200
+    Quick untested port of support legacy Qualcomm OMX OL libs
+
+Author: Alexey Shavykin <ganster0x29@gmail.com>
+Date:   Mon Oct 29 00:42:13 2012 +0200
+    Replaced LOGI to ALOGI
+
+Author: WinSuk <goodboy735@gmail.com>
+Date:   Wed, 14 Nov 2012 23:03:24 -0800
+    Fix the encoder
+
+Author: Ganster41 <ganster0x29@gmail.com>
+Date:   Mon Nov 19 15:35:36 2012 +0200
+    Correct gralloc usage flags for renderer
+
+Author: Ganster41 <ganster0x29@gmail.com>
+Date:   Thu Nov 22 10:58:36 2012 +0200
+    Fix using extended extractor from older Androids
+
+Change-Id: I6c013873a0552269e906a1a2558493e826a2ce6a
 ---
- media/libstagefright/AwesomePlayer.cpp             |    5 +++
- media/libstagefright/OMXCodec.cpp                  |   18 +++++++-
- .../colorconversion/SoftwareRenderer.cpp           |   44 ++++++++++++++++++++
+ media/libstagefright/AwesomePlayer.cpp             |    5 ++
+ media/libstagefright/DataSource.cpp                |    2 +-
+ media/libstagefright/OMXCodec.cpp                  |   24 ++++++++-
+ media/libstagefright/colorconversion/Android.mk    |    4 ++
+ .../colorconversion/SoftwareRenderer.cpp           |   54 +++++++++++++++++++-
  media/libstagefright/include/SoftwareRenderer.h    |    3 ++
- 4 files changed, 69 insertions(+), 1 deletion(-)
+ 6 files changed, 88 insertions(+), 4 deletions(-)
 
 diff --git a/media/libstagefright/AwesomePlayer.cpp b/media/libstagefright/AwesomePlayer.cpp
 index b7b661f..437cce0 100644
@@ -29,8 +52,21 @@ index b7b661f..437cce0 100644
  #define FRAME_DROP_FREQ 0
  
  namespace android {
+diff --git a/media/libstagefright/DataSource.cpp b/media/libstagefright/DataSource.cpp
+index 8e61719..9d66486 100644
+--- a/media/libstagefright/DataSource.cpp
++++ b/media/libstagefright/DataSource.cpp
+@@ -95,7 +95,7 @@ bool DataSource::sniff(
+     for (List<SnifferFunc>::iterator it = gSniffers.begin();
+          it != gSniffers.end(); ++it) {
+ 
+-#ifdef QCOM_HARDWARE
++#if defined(QCOM_HARDWARE) && !defined(QCOM_LEGACY_OMX)
+         //Dont call the first sniffer from extended extarctor
+         if(it == extendedSnifferPosition)
+             continue;
 diff --git a/media/libstagefright/OMXCodec.cpp b/media/libstagefright/OMXCodec.cpp
-index 05a2fa6..cd75ebf 100644
+index 05a2fa6..77b215a 100644
 --- a/media/libstagefright/OMXCodec.cpp
 +++ b/media/libstagefright/OMXCodec.cpp
 @@ -90,6 +90,11 @@ const static int64_t kBufferFilledEventTimeOutNs = 3000000000LL;
@@ -66,7 +102,20 @@ index 05a2fa6..cd75ebf 100644
                          ? NULL : nativeWindow)
  #ifdef QCOM_HARDWARE
        ,mThumbnailMode(false),
-@@ -5403,6 +5413,12 @@ void OMXCodec::initOutputFormat(const sp<MetaData> &inputFormat) {
+@@ -3731,7 +3741,11 @@ bool OMXCodec::drainInputBuffer(BufferInfo *info) {
+ 
+                 status_t err = mOMX->getParameter(mNode, OMX_IndexParamPortDefinition,
+                                                   &def, sizeof(def));
+-                CHECK_EQ(err, (status_t)OK);
++#ifdef QCOM_LEGACY_OMX
++                // Don't run this check with the legacy encoder
++                if (strncmp(mComponentName, "OMX.qcom.video.encoder.", 23))
++#endif
++                    CHECK_EQ(err, (status_t)OK);
+ 
+                 if (def.eDomain == OMX_PortDomainVideo) {
+                     OMX_VIDEO_PORTDEFINITIONTYPE *videoDef = &def.format.video;
+@@ -5403,6 +5417,12 @@ void OMXCodec::initOutputFormat(const sp<MetaData> &inputFormat) {
  
              mOutputFormat->setInt32(kKeyWidth, video_def->nFrameWidth);
              mOutputFormat->setInt32(kKeyHeight, video_def->nFrameHeight);
@@ -79,12 +128,33 @@ index 05a2fa6..cd75ebf 100644
              mOutputFormat->setInt32(kKeyColorFormat, video_def->eColorFormat);
  
              if (!mIsEncoder) {
+diff --git a/media/libstagefright/colorconversion/Android.mk b/media/libstagefright/colorconversion/Android.mk
+index a8f0f44..de880e8 100644
+--- a/media/libstagefright/colorconversion/Android.mk
++++ b/media/libstagefright/colorconversion/Android.mk
+@@ -13,6 +13,10 @@ ifeq ($(TARGET_BOARD_PLATFORM), exynos4)
+ LOCAL_CFLAGS += -DMALI_ALIGNMENT
+ endif
+ 
++ifeq ($(BOARD_USES_QCOM_HARDWARE),true)
++    LOCAL_C_INCLUDES += $(TOP)/hardware/qcom/display/libgralloc
++endif
++
+ LOCAL_MODULE:= libstagefright_color_conversion
+ 
+ include $(BUILD_STATIC_LIBRARY)
 diff --git a/media/libstagefright/colorconversion/SoftwareRenderer.cpp b/media/libstagefright/colorconversion/SoftwareRenderer.cpp
-index 9bfa364..f7d2b32 100644
+index 9bfa364..37c8620 100644
 --- a/media/libstagefright/colorconversion/SoftwareRenderer.cpp
 +++ b/media/libstagefright/colorconversion/SoftwareRenderer.cpp
-@@ -28,6 +28,11 @@
+@@ -26,8 +26,17 @@
+ #include <ui/GraphicBufferMapper.h>
+ #include <gui/ISurfaceTexture.h>
  
++#ifdef QCOM_LEGACY_OMX
++#include <gralloc_priv.h>
++#endif
++
  namespace android {
  
 +#ifdef QCOM_HARDWARE
@@ -95,7 +165,7 @@ index 9bfa364..f7d2b32 100644
  static bool runningInEmulator() {
      char prop[PROPERTY_VALUE_MAX];
      return (property_get("ro.kernel.qemu", prop, NULL) > 0);
-@@ -77,6 +82,16 @@ SoftwareRenderer::SoftwareRenderer(
+@@ -77,6 +86,16 @@ SoftwareRenderer::SoftwareRenderer(
  
              // fall through.
          }
@@ -112,7 +182,7 @@ index 9bfa364..f7d2b32 100644
  
          default:
              halFormat = HAL_PIXEL_FORMAT_RGB_565;
-@@ -89,6 +104,10 @@ SoftwareRenderer::SoftwareRenderer(
+@@ -89,6 +108,10 @@ SoftwareRenderer::SoftwareRenderer(
              break;
      }
  
@@ -123,7 +193,20 @@ index 9bfa364..f7d2b32 100644
      CHECK(mNativeWindow != NULL);
      CHECK(mCropWidth > 0);
      CHECK(mCropHeight > 0);
-@@ -201,6 +220,31 @@ void SoftwareRenderer::render(
+@@ -106,7 +129,11 @@ SoftwareRenderer::SoftwareRenderer(
+             native_window_set_usage(
+             mNativeWindow.get(),
+             GRALLOC_USAGE_SW_READ_NEVER | GRALLOC_USAGE_SW_WRITE_OFTEN
+-            | GRALLOC_USAGE_HW_TEXTURE | GRALLOC_USAGE_EXTERNAL_DISP));
++            | GRALLOC_USAGE_HW_TEXTURE | GRALLOC_USAGE_EXTERNAL_DISP
++#ifdef QCOM_LEGACY_OMX
++            | GRALLOC_USAGE_PRIVATE_ADSP_HEAP | GRALLOC_USAGE_PRIVATE_UNCACHED
++#endif
++            ));
+ #endif
+ 
+     CHECK_EQ(0,
+@@ -201,6 +228,31 @@ void SoftwareRenderer::render(
              dst_u += dst_c_stride;
              dst_v += dst_c_stride;
          }
