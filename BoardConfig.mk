@@ -23,8 +23,8 @@ USE_CAMERA_STUB := true
 
 # CPU
 TARGET_ARCH := arm
-TARGET_CPU_ABI := armeabi-v6l
-TARGET_CPU_ABI2 := armeabi
+TARGET_CPU_ABI := armeabi
+TARGET_CPU_ABI2 := armeabi-v6l
 TARGET_ARCH_VARIANT := armv6-vfp
 
 # Target and board properties
@@ -79,6 +79,9 @@ BOARD_NEEDS_MEMORYHEAPPMEM := true
 BOARD_EGL_CFG := device/zte/blade/prebuilt/system/lib/egl/egl.cfg
 USE_OPENGL_RENDERER := true
 TARGET_NO_HW_VSYNC := true
+TARGET_NO_HW_OVERLAY := true
+TARGET_USES_ION := false
+BOARD_HAVE_HDMI_SUPPORT := false
 BOARD_ADRENO_DECIDE_TEXTURE_TARGET := true
 COMMON_GLOBAL_CFLAGS += -DQCOM_ICS_COMPAT -DQCOM_NO_SECURE_PLAYBACK
 
