@@ -113,6 +113,15 @@
         <item>0</item>
     </integer-array>
 
+    <!-- Minimum screen brightness setting allowed by the power manager.
+         The user is forbidden from setting the brightness below this level. -->
+    <integer name="config_screenBrightnessSettingMinimum">20</integer>
+
+    <!-- Screen brightness used to dim the screen when the user activity
+         timeout expires.  May be less than the minimum allowed brightness setting
+         that can be set by the user. -->
+    <integer name="config_screenBrightnessDim">20</integer>
+
     <!-- Boolean indicating if current platform supports bluetooth SCO for off call
     use cases -->
     <bool name="config_bluetooth_sco_off_call">true</bool>
