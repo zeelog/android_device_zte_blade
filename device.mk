@@ -52,6 +52,10 @@ PRODUCT_PACKAGES += \
         sensors.blade \
         BladeParts
 
+# Power HAL
+PRODUCT_PACKAGES += \
+        power.msm7x27
+
 # Audio
 PRODUCT_PACKAGES += \
         audio.primary.blade \
