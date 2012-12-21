@@ -242,7 +242,6 @@ struct msmfb_overlay_data {
 	uint32_t version_key;
 	struct msmfb_data plane1_data;
 	struct msmfb_data plane2_data;
-	struct msmfb_data dst_data;
 };
 
 struct msmfb_img {
