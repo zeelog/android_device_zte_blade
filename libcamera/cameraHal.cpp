@@ -32,7 +32,7 @@
 #define MSM_COPY_HW 1
 #define HWA 1
 #ifdef HWA
-#include "qcom/display/libgralloc/gralloc_priv.h"
+#include "qcom/display-legacy/libgralloc/gralloc_priv.h"
 #else
 #include "libhardware/modules/gralloc/gralloc_priv.h"
 #endif
@@ -438,13 +438,6 @@ CameraHAL_FixupParams(android::CameraParameters &settings)
                    preview_sizes);
    }
 
-#if 0
-   if (!settings.get(android::CameraParameters::KEY_SUPPORTED_VIDEO_SIZES)) {
-      settings.set(android::CameraParameters::KEY_SUPPORTED_VIDEO_SIZES,
-                   video_sizes);
-   }
-#endif
-
    if (!settings.get(android::CameraParameters::KEY_VIDEO_SIZE)) {
       settings.set(android::CameraParameters::KEY_VIDEO_SIZE, preferred_size);
    }
@@ -590,12 +583,7 @@ int
 qcamera_start_recording(struct camera_device * device)
 {
    ALOGV("qcamera_start_recording\n");
-/*
-   if (qcamera_preview_enabled(device)){
-       ALOGD("Preview was enabled");
-       qcamera_stop_preview(device);
-   }
-*/
+
    qCamera->enableMsgType(CAMERA_MSG_VIDEO_FRAME);
    qCamera->startRecording();
 
@@ -609,9 +597,6 @@ qcamera_stop_recording(struct camera_device * device)
 
    qCamera->disableMsgType(CAMERA_MSG_VIDEO_FRAME);
    qCamera->stopRecording();
-/*
-   qcamera_start_preview(device);
-*/
 }
 
 int
@@ -758,7 +743,7 @@ qcamera_device_open(const hw_module_t* module, const char* name,
 
    void *libcameraHandle;
    int cameraId = atoi(name);
-   signal(SIGFPE,(*sighandle)); //@nAa: Bad boy doing hacks
+   signal(SIGFPE,(*sighandle));
 
    ALOGD("qcamera_device_open: name:%s device:%p cameraId:%d\n",
         name, device, cameraId);
