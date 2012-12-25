@@ -31,10 +31,6 @@ on boot
     chown bluetooth bluetooth /sys/devices/platform/msm_serial_hs.0/clock
     chmod 0660 /sys/devices/platform/msm_serial_hs.0/clock
 
-# Setup android gadget
-    write /sys/module/g_android/parameters/serial_number CM10.1-Blade
-    write /sys/module/g_android/parameters/product_id 0x1351
-
 # Create  WIFI filesystem structure
     mkdir /data/misc/wifi 0770 wifi wifi
     mkdir /data/misc/wifi/sockets 0770 wifi wifi
