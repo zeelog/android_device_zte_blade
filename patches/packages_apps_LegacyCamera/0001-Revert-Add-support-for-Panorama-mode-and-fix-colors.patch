@@ -1,0 +1,196 @@
+From a7ac215ede98d9982cbf8aae9f95a1fc7ddd3939 Mon Sep 17 00:00:00 2001
+From: Konsta <konsta09@gmail.com>
+Date: Sat, 17 Nov 2012 16:59:43 +0200
+Subject: [PATCH] Revert "Add support for Panorama mode and fix colors"
+
+This reverts commit 2595607df3cb7e4826fb7a5e1bd7438dd92e4ae6.
+---
+ jni/Android.mk                                     |    3 ---
+ .../src/mosaic_renderer/SurfaceTextureRenderer.cpp |    2 +-
+ .../src/mosaic_renderer/WarpRenderer.cpp           |    2 --
+ .../src/mosaic_renderer/YVURenderer.cpp            |   12 +----------
+ jni/feature_mos_jni.cpp                            |   22 --------------------
+ jni/mosaic_renderer_jni.cpp                        |    3 ---
+ src/com/android/camera/PanoramaActivity.java       |    8 ++-----
+ 7 files changed, 4 insertions(+), 48 deletions(-)
+
+diff --git a/jni/Android.mk b/jni/Android.mk
+index 7343eab..882e3a7 100755
+--- a/jni/Android.mk
++++ b/jni/Android.mk
+@@ -10,9 +10,6 @@ LOCAL_C_INCLUDES := \
+         $(LOCAL_PATH)/feature_mos/src/mosaic
+ 
+ LOCAL_CFLAGS := -O3 -DNDEBUG
+-ifeq ($(BOARD_CPU_COLOR_CONVERT), true)
+-LOCAL_CFLAGS += -DCPU_COLOR_CONVERT
+-endif
+ 
+ LOCAL_SRC_FILES := \
+         feature_mos_jni.cpp \
+diff --git a/jni/feature_mos/src/mosaic_renderer/SurfaceTextureRenderer.cpp b/jni/feature_mos/src/mosaic_renderer/SurfaceTextureRenderer.cpp
+index b8061a8..88aac36 100755
+--- a/jni/feature_mos/src/mosaic_renderer/SurfaceTextureRenderer.cpp
++++ b/jni/feature_mos/src/mosaic_renderer/SurfaceTextureRenderer.cpp
+@@ -149,7 +149,6 @@ bool SurfaceTextureRenderer::DrawTexture(GLfloat *affine)
+         // And, finally, execute the GL draw command.
+         glDrawElements(GL_TRIANGLE_STRIP, 4, GL_UNSIGNED_SHORT, g_iIndices2);
+ 
+-        glFlush();
+         glBindFramebuffer(GL_FRAMEBUFFER, 0);
+         succeeded = true;
+     } while (false);
+@@ -175,6 +174,7 @@ const char* SurfaceTextureRenderer::VertexShaderSource() const
+ const char* SurfaceTextureRenderer::FragmentShaderSource() const
+ {
+     static const char gFragmentShader[] =
++        "#extension GL_OES_EGL_image_external : require\n"
+         "precision mediump float;\n"
+         "varying vec2 vTextureNormCoord;\n"
+         "uniform samplerExternalOES sTexture;\n"
+diff --git a/jni/feature_mos/src/mosaic_renderer/WarpRenderer.cpp b/jni/feature_mos/src/mosaic_renderer/WarpRenderer.cpp
+index bf37cd3..af6779a 100755
+--- a/jni/feature_mos/src/mosaic_renderer/WarpRenderer.cpp
++++ b/jni/feature_mos/src/mosaic_renderer/WarpRenderer.cpp
+@@ -149,11 +149,9 @@ bool WarpRenderer::DrawTexture(GLfloat *affine)
+ 
+         checkGlError("glDrawElements");
+ 
+-        glFlush();
+         glBindFramebuffer(GL_FRAMEBUFFER, 0);
+         succeeded = true;
+     } while (false);
+-    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+     return succeeded;
+ }
+ 
+diff --git a/jni/feature_mos/src/mosaic_renderer/YVURenderer.cpp b/jni/feature_mos/src/mosaic_renderer/YVURenderer.cpp
+index 9599531..f7dcf6f 100755
+--- a/jni/feature_mos/src/mosaic_renderer/YVURenderer.cpp
++++ b/jni/feature_mos/src/mosaic_renderer/YVURenderer.cpp
+@@ -113,7 +113,6 @@ bool YVURenderer::DrawTexture()
+ 
+         checkGlError("glDrawElements");
+ 
+-        glFlush();
+         glBindFramebuffer(GL_FRAMEBUFFER, 0);
+         succeeded = true;
+     } while (false);
+@@ -138,7 +137,6 @@ const char* YVURenderer::VertexShaderSource() const
+ 
+ const char* YVURenderer::FragmentShaderSource() const
+ {
+-#ifndef CPU_COLOR_CONVERT
+     static const char gFragmentShader[] =
+         "precision mediump float;\n"
+         "uniform sampler2D s_texture;\n"
+@@ -157,14 +155,6 @@ const char* YVURenderer::FragmentShaderSource() const
+         "  p = texture2D(s_texture, v_texCoord);\n"
+         "  gl_FragColor[3] = dot(p, coeff_y);\n"
+         "}\n";
+-#else
+-    static const char gFragmentShader[] =
+-        "precision mediump float;\n"
+-        "uniform sampler2D s_texture;\n"
+-        "varying vec2 v_texCoord;\n"
+-        "void main() {\n"
+-        "  gl_FragColor = texture2D(s_texture, v_texCoord);\n"
+-        "}\n";
+-#endif
++
+     return gFragmentShader;
+ }
+diff --git a/jni/feature_mos_jni.cpp b/jni/feature_mos_jni.cpp
+index f0ecbef..85d14b7 100644
+--- a/jni/feature_mos_jni.cpp
++++ b/jni/feature_mos_jni.cpp
+@@ -354,32 +354,10 @@ void ConvertYVUAiToPlanarYVU(unsigned char *planar, unsigned char *in, int width
+ 
+     for (int i = 0; i < planeSize; i++)
+     {
+-#ifndef CPU_COLOR_CONVERT
+         *Yptr++ = *in++;
+         *Vptr++ = *in++;
+         *Uptr++ = *in++;
+         in++;   // Alpha
+-#else // CPU_COLOR_CONVERT
+-        int y, v, u;
+-
+-        y = (  66 * in[0] + 152 * in[1] +  25 * in[2] + 16);
+-        v = ( 112 * in[0] -  94 * in[1] -  18 * in[2] + 128);
+-        u = (- 38 * in[0] -  75 * in[1] + 112 * in[2] + 128);
+-
+-        y >>= 8;
+-        v >>= 8;
+-        u >>= 8;
+-
+-        y += 16;
+-        v += 128;
+-        u += 128;
+-
+-        *Yptr++ = (unsigned char) (y);
+-        *Vptr++ = (unsigned char) (v);
+-        *Uptr++ = (unsigned char) (u);
+-        in += 4;   // Alpha
+-
+-#endif // CPU_COLOR_CONVERT
+     }
+ }
+ 
+diff --git a/jni/mosaic_renderer_jni.cpp b/jni/mosaic_renderer_jni.cpp
+index 0e94e3a..ce4c07f 100644
+--- a/jni/mosaic_renderer_jni.cpp
++++ b/jni/mosaic_renderer_jni.cpp
+@@ -634,7 +634,6 @@ JNIEXPORT void JNICALL Java_com_android_camera_MosaicRenderer_preprocess(
+ 
+     gSurfTexRenderer[LR].DrawTexture(g_dAffinetransIdentGL);
+     gSurfTexRenderer[HR].DrawTexture(g_dAffinetransIdentGL);
+-    glFlush();
+ }
+ 
+ #ifndef now_ms
+@@ -660,7 +659,6 @@ JNIEXPORT void JNICALL Java_com_android_camera_MosaicRenderer_transferGPUtoCPU(
+     gYVURenderer[LR].DrawTexture();
+     gYVURenderer[HR].DrawTexture();
+ 
+-    glFlush();
+     sem_wait(&gPreviewImage_semaphore);
+     // Bind to the input LR FBO and read the Low-Res data from there...
+     glBindFramebuffer(GL_FRAMEBUFFER, gBufferInputYVU[LR].GetFrameBufferName());
+@@ -688,7 +686,6 @@ JNIEXPORT void JNICALL Java_com_android_camera_MosaicRenderer_transferGPUtoCPU(
+ 
+     checkGlError("glReadPixels HR");
+ 
+-    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+     sem_post(&gPreviewImage_semaphore);
+ }
+ 
+diff --git a/src/com/android/camera/PanoramaActivity.java b/src/com/android/camera/PanoramaActivity.java
+index 2732744..d5d6ee0 100755
+--- a/src/com/android/camera/PanoramaActivity.java
++++ b/src/com/android/camera/PanoramaActivity.java
+@@ -465,7 +465,7 @@ public class PanoramaActivity extends ActivityBase implements
+                 // means users exit and come back to panorama. Do not start the
+                 // preview. Preview will be started after final mosaic is
+                 // generated.
+-                if (!mPausing) {
++                if (!mPausing && !mThreadRunning) {
+                     startCameraPreview();
+                 }
+             }
+@@ -933,11 +933,7 @@ public class PanoramaActivity extends ActivityBase implements
+ 
+     private void resetToPreview() {
+         reset();
+-        if (!mPausing) {
+-            mMosaicView.onPause();
+-            mMosaicView.onResume();
+-            startCameraPreview();
+-        }
++        if (!mPausing) startCameraPreview();
+     }
+ 
+     private void showFinalMosaic(Bitmap bitmap) {
+-- 
+1.7.9.5
+

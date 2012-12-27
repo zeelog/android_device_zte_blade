@@ -1,9 +1,9 @@
-From 63b0c79a7691e9d8ae8058ceef89391368e820b8 Mon Sep 17 00:00:00 2001
+From 2ce093107da31b3aab57b49695a01e4273c8e6ff Mon Sep 17 00:00:00 2001
 From: Alexey Shavykin <ganster0x29@gmail.com>
 Date: Sun, 28 Oct 2012 22:46:34 +0200
 Subject: [PATCH] Add legacy Qualcomm OpenMAX support for MSM7x27
 
-This is a combination of 5 commits.
+This is a combination of 4 commits.
 
 Author: Alexey Shavykin <ganster0x29@gmail.com>
 Date:   Sun Oct 28 22:46:34 2012 +0200
@@ -21,19 +21,14 @@ Author: Ganster41 <ganster0x29@gmail.com>
 Date:   Mon Nov 19 15:35:36 2012 +0200
     Correct gralloc usage flags for renderer
 
-Author: Ganster41 <ganster0x29@gmail.com>
-Date:   Thu Nov 22 10:58:36 2012 +0200
-    Fix using extended extractor from older Androids
-
 Change-Id: I6c013873a0552269e906a1a2558493e826a2ce6a
 ---
  media/libstagefright/AwesomePlayer.cpp             |    5 ++
- media/libstagefright/DataSource.cpp                |    2 +-
  media/libstagefright/OMXCodec.cpp                  |   24 ++++++++-
  media/libstagefright/colorconversion/Android.mk    |    4 ++
  .../colorconversion/SoftwareRenderer.cpp           |   54 +++++++++++++++++++-
  media/libstagefright/include/SoftwareRenderer.h    |    3 ++
- 6 files changed, 88 insertions(+), 4 deletions(-)
+ 5 files changed, 87 insertions(+), 3 deletions(-)
 
 diff --git a/media/libstagefright/AwesomePlayer.cpp b/media/libstagefright/AwesomePlayer.cpp
 index b7b661f..437cce0 100644
@@ -52,19 +47,6 @@ index b7b661f..437cce0 100644
  #define FRAME_DROP_FREQ 0
  
  namespace android {
-diff --git a/media/libstagefright/DataSource.cpp b/media/libstagefright/DataSource.cpp
-index 8e61719..9d66486 100644
---- a/media/libstagefright/DataSource.cpp
-+++ b/media/libstagefright/DataSource.cpp
-@@ -95,7 +95,7 @@ bool DataSource::sniff(
-     for (List<SnifferFunc>::iterator it = gSniffers.begin();
-          it != gSniffers.end(); ++it) {
- 
--#ifdef QCOM_HARDWARE
-+#if defined(QCOM_HARDWARE) && !defined(QCOM_LEGACY_OMX)
-         //Dont call the first sniffer from extended extarctor
-         if(it == extendedSnifferPosition)
-             continue;
 diff --git a/media/libstagefright/OMXCodec.cpp b/media/libstagefright/OMXCodec.cpp
 index 05a2fa6..77b215a 100644
 --- a/media/libstagefright/OMXCodec.cpp
