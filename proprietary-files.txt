@@ -1,4 +1,4 @@
-## RIL related stuff
+## RIL
 bin/qmuxd
 lib/libauth.so
 lib/libcm.so
@@ -19,16 +19,17 @@ lib/libril-qcril-hook-oem.so
 lib/libwms.so
 lib/libwmsts.so
 
-## Camera proprietaries
+## Camera
 lib/liboemcamera.so
 lib/libmmjpeg.so
 lib/libmmipl.so
 
-## BT proprietary
+## Bluetooth
 etc/init.qcom.bt.sh
 bin/hci_qcomm_init
+bin/abtfilt
 
-## Adreno 200 files
+## Adreno 200
 etc/firmware/yamato_pfp.fw
 etc/firmware/yamato_pm4.fw
 lib/egl/eglsubAndroid.so
@@ -47,11 +48,10 @@ lib/libloc.so
 lib/libloc-rpc.so
 lib/libcommondefs.so
 
-## Other libraries and proprietary binaries
+## Sensors
 bin/akmd2
 
-#OMX
-#lib/libOmxVdec.so
+## OMX
 lib/libOmxEvrcEnc.so
 lib/libOmxAacDec.so
 lib/libOmxWmvDec.so
