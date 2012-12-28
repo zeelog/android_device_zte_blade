@@ -58,10 +58,6 @@ WIFI_DRIVER_MODULE_NAME     := ar6000
 # Bluetooth
 BOARD_HAVE_BLUETOOTH := true
 
-# USB mounting
-TARGET_USE_CUSTOM_LUN_FILE_PATH := /sys/devices/platform/msm_hsusb/gadget/lun0/file
-BOARD_UMS_LUNFILE := "/sys/devices/platform/msm_hsusb/gadget/lun0/file"
-
 # Browser
 WITH_JIT := true
 HTTP := chrome
