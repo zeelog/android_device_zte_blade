@@ -21,7 +21,6 @@ persist.sys.use_dithering=2
 ro.opengles.version=131072
 debug.enabletr=false
 debug.hwui.render_dirty_regions=false
-debug.hwui.disable_vsync=true
 debug.gr.numframebuffers=3
 
 # Camcorder
