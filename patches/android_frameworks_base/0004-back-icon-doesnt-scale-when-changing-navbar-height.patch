@@ -1,0 +1,25 @@
+From 27f7570dbc94f9aec6ed93a810c8fe63d2e94f60 Mon Sep 17 00:00:00 2001
+From: Konsta <konsta09@gmail.com>
+Date: Tue, 18 Dec 2012 16:35:48 +0200
+Subject: [PATCH 4/7] back icon doesnt scale when changing navbar height
+
+Change-Id: I722f947838c72123af966d44c49c2ea9c069a715
+---
+ packages/SystemUI/res/layout/navigation_bar.xml |    1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/packages/SystemUI/res/layout/navigation_bar.xml b/packages/SystemUI/res/layout/navigation_bar.xml
+index 440a4e1..de4c220 100644
+--- a/packages/SystemUI/res/layout/navigation_bar.xml
++++ b/packages/SystemUI/res/layout/navigation_bar.xml
+@@ -54,7 +54,6 @@
+                 android:src="@drawable/ic_sysbar_back"
+                 systemui:keyCode="4"
+                 android:layout_weight="0"
+-                android:scaleType="center"
+                 systemui:glowBackground="@drawable/ic_sysbar_highlight"
+                 android:contentDescription="@string/accessibility_back"
+                 />
+-- 
+1.7.9.5
+

@@ -1,0 +1,136 @@
+From f92e6ab6d496ce629be49a3a25f5c1b078e13ac0 Mon Sep 17 00:00:00 2001
+From: Konsta <konsta09@gmail.com>
+Date: Tue, 18 Dec 2012 14:58:36 +0200
+Subject: [PATCH 1/6] add option to display navbar (2/2)
+
+Change-Id: Idaf20f1a13db8045b5090fa9cf499ef33c5f790d
+---
+ res/values/strings.xml                             |    8 ++++
+ res/xml/system_settings.xml                        |    6 +++
+ .../settings/cyanogenmod/SystemSettings.java       |   47 ++++++++++++++++++++
+ 3 files changed, 61 insertions(+)
+
+diff --git a/res/values/strings.xml b/res/values/strings.xml
+index 8e2fb11..4006bb6 100644
+--- a/res/values/strings.xml
++++ b/res/values/strings.xml
+@@ -4420,6 +4420,14 @@
+ 
+     <!-- CYANOGENMOD EDITS START -->
+ 
++    <!-- Navbar -->
++    <string name="konsta_navbar">Show navigation bar</string>
++    <string name="konsta_navbar_reboot">Requires a reboot</string>
++    <string name="konsta_navbar_dialog_title">Reboot required</string>
++    <string name="konsta_navbar_dialog_msg">Please reboot to enable/disable the navigation bar</string>
++    <string name="konsta_navbar_dialog_negative">Reboot later</string>
++    <string name="konsta_navbar_dialog_positive">Hot reboot now</string>
++
+     <string name="ok">OK</string>
+ 
+     <!-- Quiet hours -->
+diff --git a/res/xml/system_settings.xml b/res/xml/system_settings.xml
+index 703c6f7..0df5487 100644
+--- a/res/xml/system_settings.xml
++++ b/res/xml/system_settings.xml
+@@ -64,4 +64,10 @@
+         android:fragment="com.android.settings.cyanogenmod.HardwareKeys"
+         android:title="@string/hardware_keys_title" />
+ 
++    <CheckBoxPreference
++        android:key="konsta_navbar"
++        android:title="@string/konsta_navbar"
++        android:summary="@string/konsta_navbar_reboot"
++        android:defaultValue="false" />
++
+ </PreferenceScreen>
+diff --git a/src/com/android/settings/cyanogenmod/SystemSettings.java b/src/com/android/settings/cyanogenmod/SystemSettings.java
+index 06a7bdf..9c3e635 100644
+--- a/src/com/android/settings/cyanogenmod/SystemSettings.java
++++ b/src/com/android/settings/cyanogenmod/SystemSettings.java
+@@ -16,11 +16,19 @@
+ 
+ package com.android.settings.cyanogenmod;
+ 
++import android.app.AlertDialog;
+ import android.content.Context;
++import android.os.Bundle;
++import android.os.RemoteException;
++import android.os.ServiceManager;
++import android.content.DialogInterface;
+ import android.content.pm.PackageManager.NameNotFoundException;
+ import android.os.Bundle;
+ import android.os.RemoteException;
+ import android.os.ServiceManager;
++import android.os.IBinder;
++import android.os.IPowerManager;
++import android.preference.CheckBoxPreference;
+ import android.preference.Preference;
+ import android.preference.PreferenceScreen;
+ import android.provider.Settings;
+@@ -40,9 +48,11 @@ public class SystemSettings extends SettingsPreferenceFragment {
+     private static final String KEY_BATTERY_LIGHT = "battery_light";
+     private static final String KEY_HARDWARE_KEYS = "hardware_keys";
+     private static final String KEY_LOCK_CLOCK = "lock_clock";
++    private static final String KONSTA_NAVBAR = "konsta_navbar";
+ 
+     private PreferenceScreen mNotificationPulse;
+     private PreferenceScreen mBatteryPulse;
++    private CheckBoxPreference mKonstaNavbar;
+ 
+     @Override
+     public void onCreate(Bundle savedInstanceState) {
+@@ -74,6 +84,10 @@ public class SystemSettings extends SettingsPreferenceFragment {
+             }
+         }
+ 
++        mKonstaNavbar = (CheckBoxPreference) findPreference(KONSTA_NAVBAR);
++        mKonstaNavbar.setChecked(Settings.System.getInt(getActivity().getContentResolver(),
++                Settings.System.KONSTA_NAVBAR, 0) == 1);
++
+         // Only show the hardware keys config on a device that does not have a navbar
+         IWindowManager windowManager = IWindowManager.Stub.asInterface(
+                 ServiceManager.getService(Context.WINDOW_SERVICE));
+@@ -105,6 +119,39 @@ public class SystemSettings extends SettingsPreferenceFragment {
+      }
+ 
+     @Override
++    public boolean onPreferenceTreeClick(PreferenceScreen preferenceScreen, Preference preference) {
++        boolean value;
++
++        if (preference == mKonstaNavbar) {
++            Settings.System.putInt(getContentResolver(), Settings.System.KONSTA_NAVBAR,
++                    mKonstaNavbar.isChecked() ? 1 : 0);
++
++            new AlertDialog.Builder(getActivity())
++                    .setTitle(getResources().getString(R.string.konsta_navbar_dialog_title))
++                    .setMessage(getResources().getString(R.string.konsta_navbar_dialog_msg))
++                    .setNegativeButton(getResources().getString(R.string.konsta_navbar_dialog_negative), null)
++                    .setCancelable(false)
++                    .setPositiveButton(getResources().getString(R.string.konsta_navbar_dialog_positive), new DialogInterface.OnClickListener() {
++                        @Override
++                        public void onClick(DialogInterface dialog, int which) {
++                            try {
++                                IBinder b = ServiceManager.getService(Context.POWER_SERVICE);
++                                IPowerManager pm = IPowerManager.Stub.asInterface(b);
++                                pm.crash("Navbar changed");
++                            } catch (android.os.RemoteException e) {
++                                //
++                            }
++                        }
++                    })
++                    .create()
++                    .show();
++        } else {
++            return super.onPreferenceTreeClick(preferenceScreen, preference);
++        }
++        return true;
++    }
++
++    @Override
+     public void onResume() {
+         super.onResume();
+         updateLightPulseDescription();
+-- 
+1.7.9.5
+
