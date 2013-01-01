@@ -39,6 +39,7 @@ BOARD_CUSTOM_GRAPHICS := ../../../device/zte/blade/recovery/graphics.c
 BOARD_CUSTOM_RECOVERY_KEYMAPPING := ../../device/zte/blade/recovery/recovery_ui.c
 TARGET_RECOVERY_INITRC := device/zte/blade/recovery/recovery.rc
 TARGET_RECOVERY_FSTAB := device/zte/blade/recovery/recovery.fstab
+BOARD_UMS_LUNFILE := "/sys/devices/platform/msm_hsusb/gadget/lun0/file"
 
 # Kernel
 TARGET_KERNEL_SOURCE := kernel/zte/zte-kernel-msm7x27
