@@ -70,7 +70,6 @@ TARGET_FORCE_CPU_UPLOAD := true
 # QCOM
 BOARD_USES_QCOM_HARDWARE := true
 COMMON_GLOBAL_CFLAGS += -DQCOM_HARDWARE -DQCOM_LEGACY_OMX
-BOARD_NEEDS_MEMORYHEAPPMEM := true
 
 # Graphics
 BOARD_EGL_CFG := device/zte/blade/prebuilt/system/lib/egl/egl.cfg
@@ -88,6 +87,7 @@ SMALLER_FONT_FOOTPRINT := true
 
 # Camera
 TARGET_DISABLE_ARM_PIE := true
+BOARD_NEEDS_MEMORYHEAPPMEM := true
 
 # dev:    size   erasesize  name
 # mtd0: 00500000 00020000 "recovery"
