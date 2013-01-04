@@ -84,7 +84,6 @@ SMALLER_FONT_FOOTPRINT := true
 
 # Camera
 TARGET_DISABLE_ARM_PIE := true
-BOARD_USES_LEGACY_CAMERA := true
 BOARD_NEEDS_MEMORYHEAPPMEM := true
 
 # dev:    size   erasesize  name
