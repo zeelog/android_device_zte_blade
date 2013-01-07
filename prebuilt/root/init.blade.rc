@@ -11,6 +11,13 @@ on init
     symlink /storage/sdcard0 /sdcard
 
 on boot
+# Setup boostpulse
+    write /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor ondemand
+    chown system system /sys/devices/system/cpu/cpufreq/ondemand/sampling_rate
+    chown system system /sys/devices/system/cpu/cpufreq/ondemand/boostpulse
+    chmod 0666 /sys/devices/system/cpu/cpufreq/ondemand/sampling_rate
+    chmod 0666 /sys/devices/system/cpu/cpufreq/ondemand/boostpulse
+
 # Setup charging
     chown system system /sys/module/msm_battery/parameters/usb_chg_enable
 
