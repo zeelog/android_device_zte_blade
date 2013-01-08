@@ -1,0 +1,100 @@
+From d4687e750e19f4a2e47c0099858dca32cbe55757 Mon Sep 17 00:00:00 2001
+From: Konsta <konsta09@gmail.com>
+Date: Sun, 30 Dec 2012 17:23:21 +0200
+Subject: [PATCH] hwcomposer: fake vsync events
+
+KANGed from Evervolv/drewis.
+
+Change-Id: I00b82228b36b5cae23a3bc1f8d295fce62cd8429
+---
+ libhwcomposer/hwc.cpp       |   20 +++++---------------
+ libhwcomposer/hwc_vsync.cpp |    9 +++++++--
+ 2 files changed, 12 insertions(+), 17 deletions(-)
+
+diff --git a/libhwcomposer/hwc.cpp b/libhwcomposer/hwc.cpp
+index 1209692..c4929f5 100644
+--- a/libhwcomposer/hwc.cpp
++++ b/libhwcomposer/hwc.cpp
+@@ -149,7 +149,6 @@ static int hwc_eventControl(struct hwc_composer_device* dev,
+     private_module_t* m = reinterpret_cast<private_module_t*>(
+                 ctx->mFbDev->common.module);
+     switch(event) {
+-#ifndef NO_HW_VSYNC
+         case HWC_EVENT_VSYNC:
+             if (value == prev_value){
+                 //TODO see why HWC gets repeated events
+@@ -157,9 +156,10 @@ static int hwc_eventControl(struct hwc_composer_device* dev,
+                         __FUNCTION__, (value)?"ENABLED":"DISABLED");
+             }
+             temp = ctx->vstate.enable;
++#ifndef NO_HW_VSYNC
+             if(ioctl(m->framebuffer->fd, MSMFB_OVERLAY_VSYNC_CTRL, &value) < 0)
+                 ret = -errno;
+-
++#endif
+             /* vsync state change logic */
+             if (value == 1) {
+                 //unblock vsync thread
+@@ -185,7 +185,6 @@ static int hwc_eventControl(struct hwc_composer_device* dev,
+                 ret = ctx->mExtDisplay->enableHDMIVsync(value);
+              }
+            break;
+-#endif
+        case HWC_EVENT_ORIENTATION:
+              ctx->deviceOrientation = value;
+            break;
+@@ -286,19 +285,10 @@ static int hwc_device_open(const struct hw_module_t* module, const char* name,
+         methods->eventControl = hwc_eventControl;
+ 
+         dev->device.common.tag     = HARDWARE_DEVICE_TAG;
+-#ifndef NO_HW_VSYNC
+-        //XXX: This disables hardware vsync on 8x55
+-        // Fix when HW vsync is available on 8x55
+-        if(dev->mMDP.version == 400 || (dev->mMDP.version >= 500)) {
+-#endif
+-            dev->device.common.version = 0;
+-            ALOGI("%s: Hardware VSYNC not supported", __FUNCTION__);
+-#ifndef NO_HW_VSYNC
+-        } else {
+-            dev->device.common.version = HWC_DEVICE_API_VERSION_0_3;
+-            ALOGI("%s: Hardware VSYNC supported", __FUNCTION__);
+-        }
++#ifdef NO_HW_VSYNC
++        ALOGI("%s: Faking Hardware VSYNC", __FUNCTION__);
+ #endif
++        dev->device.common.version = HWC_DEVICE_API_VERSION_0_3;
+         dev->device.common.module  = const_cast<hw_module_t*>(module);
+         dev->device.common.close   = hwc_device_close;
+         dev->device.prepare        = hwc_prepare;
+diff --git a/libhwcomposer/hwc_vsync.cpp b/libhwcomposer/hwc_vsync.cpp
+index cc86312..743d7ea 100644
+--- a/libhwcomposer/hwc_vsync.cpp
++++ b/libhwcomposer/hwc_vsync.cpp
+@@ -63,7 +63,7 @@ static void *vsync_loop(void *param)
+           pthread_cond_wait(&ctx->vstate.cond, &ctx->vstate.lock);
+         }
+         pthread_mutex_unlock(&ctx->vstate.lock);
+-
++#ifndef NO_HW_VSYNC
+        int hdmiconnected = ctx->mExtDisplay->getExternalDisplay();
+ 
+        // vsync for primary OR HDMI ?
+@@ -114,9 +114,14 @@ static void *vsync_loop(void *param)
+ 
+       // reset fd
+       fd_timestamp = -1;
+-
++#else
++      usleep(16000);
++      proc->vsync(proc, 0, systemTime());
++#endif
+       // repeat, whatever, you just did
+     } while (true);
++
++    return NULL;
+ }
+ 
+ void init_vsync_thread(hwc_context_t* ctx)
+-- 
+1.7.9.5
+

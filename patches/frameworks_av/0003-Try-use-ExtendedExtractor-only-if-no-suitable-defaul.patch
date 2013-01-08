@@ -1,0 +1,35 @@
+From afea6fd50f30fefcc8a843e8cbe040822692c68b Mon Sep 17 00:00:00 2001
+From: Ganster41 <ganster0x29@gmail.com>
+Date: Mon, 7 Jan 2013 19:56:32 +0200
+Subject: [PATCH 3/3] Try use ExtendedExtractor only if no suitable default
+ extractors available for the source
+
+Change-Id: I57a9cc39caee7e3fa2b709ab09cca5629bf81f44
+---
+ media/libstagefright/DataSource.cpp |    6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/media/libstagefright/DataSource.cpp b/media/libstagefright/DataSource.cpp
+index 8e61719..c0a2e3f 100644
+--- a/media/libstagefright/DataSource.cpp
++++ b/media/libstagefright/DataSource.cpp
+@@ -96,10 +96,16 @@ bool DataSource::sniff(
+          it != gSniffers.end(); ++it) {
+ 
+ #ifdef QCOM_HARDWARE
++#ifdef QCOM_LEGACY_OMX
++        // Does'n try to use ExtendedExtractor if already found suitable from defaults
++        if(it == extendedSnifferPosition && *confidence > 0.0)
++            return true;
++#else
+         //Dont call the first sniffer from extended extarctor
+         if(it == extendedSnifferPosition)
+             continue;
+ #endif
++#endif
+ 
+         String8 newMimeType;
+         float newConfidence = 0.0;
+-- 
+1.7.9.5
+
