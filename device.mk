@@ -82,9 +82,8 @@ PRODUCT_COPY_FILES += \
          system/extras/bugmailer/send_bug:system/bin/send_bug
 endif
 
+# Dalvik
 DISABLE_DEXPREOPT := false
-
-PRODUCT_TAGS += dalvik.gc.type-precise
 
 # Enable repeatable keys in CWM
 PRODUCT_PROPERTY_OVERRIDES += \
