@@ -32,12 +32,11 @@ persist.service.adb.enable=1
 # Don't set /proc/sys/vm/dirty_ratio to 0 when USB mounting
 ro.vold.umsdirtyratio=20
 
-# Dalviks
-dalvik.vm.dexopt-data-only=1
-dalvik.vm.execution-mode=int:jit
-dalvik.vm.verify_bytecode=false
+# Dalvik
 dalvik.vm.checkjni=0
-ro.kernel.android.checkjni=0
+dalvik.vm.dexopt-data-only=1
+dalvik.vm.dexopt-flags=v=a,o=v,m=y,u=y
+dalvik.vm.execution-mode=int:jit
 
 # Memory
 ro.zram.default=0
