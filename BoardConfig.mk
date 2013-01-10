@@ -58,6 +58,7 @@ BOARD_WPA_SUPPLICANT_PRIVATE_LIB := lib_driver_cmd_wext
 
 # Bluetooth
 BOARD_HAVE_BLUETOOTH := true
+BOARD_BLUETOOTH_BDROID_BUILDCFG_INCLUDE_DIR := device/zte/blade/bluetooth
 
 # Browser
 WITH_JIT := true

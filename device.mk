@@ -104,8 +104,7 @@ PRODUCT_COPY_FILES := \
 
 # Bluetooth configuration files
 PRODUCT_COPY_FILES += \
-        device/zte/blade/prebuilt/system/etc/init.bt.sh:system/etc/init.bt.sh \
-        system/bluetooth/data/main.le.conf:system/etc/bluetooth/main.conf
+        device/zte/blade/prebuilt/system/etc/init.bt.sh:system/etc/init.bt.sh
 
 # WiFi
 PRODUCT_COPY_FILES += \

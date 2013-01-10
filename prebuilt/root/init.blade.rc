@@ -30,6 +30,8 @@ on boot
     chmod 0660 /sys/module/bluetooth_power/parameters/power
     chmod 0660 /sys/class/rfkill/rfkill0/state
     chmod 0660 /proc/bluetooth/sleep/proto
+    chown bluetooth bluetooth /dev/ttyHS0
+    chmod 0666 /dev/ttyHS0
     chown bluetooth bluetooth /sys/devices/platform/msm_serial_hs.0/clock
     chmod 0660 /sys/devices/platform/msm_serial_hs.0/clock
 
@@ -97,6 +99,12 @@ service hciattach /system/bin/sh /system/etc/init.bt.sh
     group qcom_oncrpc bluetooth net_bt_admin system
     disabled
     oneshot
+
+on property:bluetooth.hciattach=true
+    start hciattach
+
+on property:bluetooth.hciattach=false
+    setprop bluetooth.status off
 
 on property:init.svc.wpa_supplicant=stopped
     stop dhcpcd_wlan0
