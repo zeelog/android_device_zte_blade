@@ -68,7 +68,7 @@ int set_bluetooth_power(char *power) {
     }
 
     int fd = open(rfkill_state_path, O_WRONLY);
-    
+
     if(fd < 0) {
         ALOGE("Can't open %s", rfkill_state_path);
         return 0;

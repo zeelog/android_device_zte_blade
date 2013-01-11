@@ -35,4 +35,3 @@ extern int fd;
 extern bt_vendor_callbacks_t *bt_vendor_cbacks;
 
 #endif /* BT_VENDOR_BRCM_H */
-

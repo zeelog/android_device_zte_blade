@@ -16,11 +16,7 @@
 
 intermediates := $(local-intermediates-dir)
 
-SRC := $(call my-dir)/include/$(addprefix vnd_, $(addsuffix .txt,$(basename $(TARGET_DEVICE))))
-ifeq (,$(wildcard $(SRC)))
-# configuration file does not exist. Use default one
-SRC := $(call my-dir)/include/vnd_generic.txt
-endif
+SRC := $(call my-dir)/$(addprefix vnd_, $(addsuffix .txt,$(basename $(TARGET_DEVICE))))
 GEN := $(intermediates)/vnd_buildcfg.h
 TOOL := $(TOP_DIR)external/bluetooth/bluedroid/tools/gen-buildcfg.sh
 

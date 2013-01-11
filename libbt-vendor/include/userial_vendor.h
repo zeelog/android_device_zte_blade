@@ -34,4 +34,3 @@ int bt_hci_init_transport ();
 int bt_hci_deinit_transport(int pFd);
 
 #endif /* USERIAL_VENDOR_H */
-
