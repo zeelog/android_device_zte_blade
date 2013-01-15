@@ -1,0 +1,78 @@
+From 75a26243e123846e524494959bdb38d32c8bf824 Mon Sep 17 00:00:00 2001
+From: Jurijs Oniscuks <jurijs.oniscuks@sonymobile.com>
+Date: Thu, 5 Jul 2012 15:35:05 +0200
+Subject: [PATCH 2/2] Fix race condition in pthread_create()
+
+Do not send "&this->mThread" to pthread_create() as newly
+created thread can "delete this" before pthread_create() saves
+thread id. This would lead to heap corruption.
+
+Change-Id: I9c4cd5e1002b85985514a36ae542778a783db6fb
+---
+ DnsProxyListener.cpp |    7 +++++--
+ DnsProxyListener.h   |    3 ---
+ 2 files changed, 5 insertions(+), 5 deletions(-)
+
+diff --git a/DnsProxyListener.cpp b/DnsProxyListener.cpp
+index 6c09e69..7da6b43 100644
+--- a/DnsProxyListener.cpp
++++ b/DnsProxyListener.cpp
+@@ -24,6 +24,7 @@
+ #include <sys/socket.h>
+ #include <sys/types.h>
+ #include <string.h>
++#include <pthread.h>
+ 
+ #define LOG_TAG "DnsProxyListener"
+ #define DBG 0
+@@ -47,7 +48,8 @@ DnsProxyListener::GetAddrInfoHandler::~GetAddrInfoHandler() {
+ }
+ 
+ void DnsProxyListener::GetAddrInfoHandler::start() {
+-    pthread_create(&mThread, NULL,
++    pthread_t thread;
++    pthread_create(&thread, NULL,
+                    DnsProxyListener::GetAddrInfoHandler::threadStart, this);
+ }
+ 
+@@ -215,7 +217,8 @@ DnsProxyListener::GetHostByAddrHandler::~GetHostByAddrHandler() {
+ }
+ 
+ void DnsProxyListener::GetHostByAddrHandler::start() {
+-    pthread_create(&mThread, NULL,
++    pthread_t thread;
++    pthread_create(&thread, NULL,
+                    DnsProxyListener::GetHostByAddrHandler::threadStart, this);
+ }
+ 
+diff --git a/DnsProxyListener.h b/DnsProxyListener.h
+index 1e24ebd..24c3b6a 100644
+--- a/DnsProxyListener.h
++++ b/DnsProxyListener.h
+@@ -17,7 +17,6 @@
+ #ifndef _DNSPROXYLISTENER_H__
+ #define _DNSPROXYLISTENER_H__
+ 
+-#include <pthread.h>
+ #include <sysutils/FrameworkListener.h>
+ 
+ #include "NetdCommand.h"
+@@ -53,7 +52,6 @@ private:
+ 
+     private:
+         void run();
+-        pthread_t mThread;
+         SocketClient* mClient;  // ref counted
+         char* mHost;    // owned
+         char* mService; // owned
+@@ -85,7 +83,6 @@ private:
+ 
+     private:
+         void run();
+-        pthread_t mThread;
+         SocketClient* mClient;  // ref counted
+         void* mAddress;    // address to lookup; owned
+         int   mAddressLen; // length of address to look up
+-- 
+1.7.9.5
+
