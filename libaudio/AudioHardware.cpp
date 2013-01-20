@@ -1322,7 +1322,7 @@ status_t AudioHardware::doRouting(AudioStreamInMSM72xx *input)
         } else if (outputDevices & AudioSystem::DEVICE_OUT_BLUETOOTH_SCO_CARKIT) {
             ALOGI("Routing audio to Bluetooth PCM\n");
             new_snd_device = SND_DEVICE_CARKIT;
-#ifdef COMBO_DEVICE_SUPPORTED
+#if defined(COMBO_DEVICE_SUPPORTED) && COMBO_DEVICE_SUPPORTED
         } else if ((outputDevices & AudioSystem::DEVICE_OUT_WIRED_HEADSET) &&
                    (outputDevices & AudioSystem::DEVICE_OUT_SPEAKER)) {
             ALOGI("Routing audio to Wired Headset and Speaker\n");
