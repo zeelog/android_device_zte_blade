@@ -1,7 +1,7 @@
 From afea6fd50f30fefcc8a843e8cbe040822692c68b Mon Sep 17 00:00:00 2001
 From: Ganster41 <ganster0x29@gmail.com>
 Date: Mon, 7 Jan 2013 19:56:32 +0200
-Subject: [PATCH 3/3] Try use ExtendedExtractor only if no suitable default
+Subject: [PATCH 3/4] Try use ExtendedExtractor only if no suitable default
  extractors available for the source
 
 Change-Id: I57a9cc39caee7e3fa2b709ab09cca5629bf81f44

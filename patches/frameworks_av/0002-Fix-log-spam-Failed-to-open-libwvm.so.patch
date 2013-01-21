@@ -1,7 +1,7 @@
 From 54a2f18923e5edcef32e9629ffefc221638ece5c Mon Sep 17 00:00:00 2001
 From: Glenn Kasten <gkasten@google.com>
 Date: Fri, 12 Oct 2012 15:59:28 -0700
-Subject: [PATCH 2/3] Fix log spam: Failed to open libwvm.so
+Subject: [PATCH 2/4] Fix log spam: Failed to open libwvm.so
 
 Bug: 7342813
 Change-Id: I98852f036e4679a653723fc2bf1435d6e9d7d34c

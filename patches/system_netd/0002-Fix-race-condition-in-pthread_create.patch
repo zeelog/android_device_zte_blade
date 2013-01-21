@@ -1,7 +1,7 @@
 From 75a26243e123846e524494959bdb38d32c8bf824 Mon Sep 17 00:00:00 2001
 From: Jurijs Oniscuks <jurijs.oniscuks@sonymobile.com>
 Date: Thu, 5 Jul 2012 15:35:05 +0200
-Subject: [PATCH 2/2] Fix race condition in pthread_create()
+Subject: [PATCH 2/3] Fix race condition in pthread_create()
 
 Do not send "&this->mThread" to pthread_create() as newly
 created thread can "delete this" before pthread_create() saves

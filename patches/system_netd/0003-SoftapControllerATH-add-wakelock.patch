@@ -1,0 +1,71 @@
+From fa1db865353c5f1e1a6adacb271513e5137d3aa8 Mon Sep 17 00:00:00 2001
+From: Grigori Goronzy <greg@blackbox>
+Date: Wed, 16 Jan 2013 10:38:29 +0100
+Subject: [PATCH 3/3] SoftapControllerATH: add wakelock
+
+ar6000 + WoW + AP mode = no workie. Disable WoW in AP mode and add
+a wakelock to keep the CPU alive. This consumes more battery, but
+actually makes it work reliably.
+
+Change-Id: Ibd882b0990f58a35ec52407b3af9751a6b367c40
+---
+ SoftapControllerATH.cpp |   15 ++++++++++++++-
+ 1 file changed, 14 insertions(+), 1 deletion(-)
+
+diff --git a/SoftapControllerATH.cpp b/SoftapControllerATH.cpp
+index 8ee7737..d5a8a6f 100644
+--- a/SoftapControllerATH.cpp
++++ b/SoftapControllerATH.cpp
+@@ -46,6 +46,7 @@ extern "C" int ifc_init();
+ extern "C" int ifc_up(const char *name);
+ 
+ #include "private/android_filesystem_config.h"
++#include <hardware_legacy/power.h>
+ #include "cutils/properties.h"
+ #ifdef HAVE_LIBC_SYSTEM_PROPERTIES
+ #define _REALLY_INCLUDE_SYS__SYSTEM_PROPERTIES_H_
+@@ -66,6 +67,8 @@ static const char HOSTAPD_PROP_NAME[]      = "init.svc.hostapd";
+ #define WIFI_DEFAULT_MAX_STA    8
+ #define WIFI_DEFAULT_PREAMBLE   0
+ 
++#define AP_WAKE_LOCK            "hotspot_wake_lock"
++
+ static struct wpa_ctrl *ctrl_conn;
+ static char iface[PROPERTY_VALUE_MAX];
+ int mProfileValid;
+@@ -464,7 +467,7 @@ int SoftapController::startDriver(char *iface) {
+ 
+ #ifdef WIFI_MODULE_PATH
+     rmmod("ar6000");
+-	ret = insmod(WIFI_MODULE_PATH, "ifname=athap0 wowenable=1");
++	ret = insmod(WIFI_MODULE_PATH, "ifname=athap0 wowenable=0");
+ 	sleep(1);
+ #else
+ 	set_wifi_power(0);
+@@ -635,6 +638,15 @@ int SoftapController::startSoftap() {
+            usleep(AP_BSS_START_DELAY);
+         }
+     }
++
++    /*
++     * WoW does not appear to work correctly in AP mode.
++     * Just disable it (see startDriver) and stay awake.
++     */
++    if (!ret) {
++        acquire_wake_lock(PARTIAL_WAKE_LOCK, AP_WAKE_LOCK);
++    }
++
+     return ret;
+ 
+ }
+@@ -687,6 +699,7 @@ int SoftapController::stopSoftap() {
+         close(fd);
+     }
+ #endif
++    release_wake_lock(AP_WAKE_LOCK);
+     usleep(AP_BSS_STOP_DELAY);
+     return ret;
+ }
+-- 
+1.7.9.5
+
