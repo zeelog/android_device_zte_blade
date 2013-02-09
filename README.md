@@ -10,7 +10,7 @@ Initialize CyanogenMod repo:
     repo init -u git://github.com/CyanogenMod/android.git -b jellybean
     repo sync
 
-Add the following to your cm10/.repo/local_manifest.xml and repo sync again:
+Add the following to your cm10/.repo/local_manifests/local_manifest.xml and repo sync again:
 
     <?xml version="1.0" encoding="UTF-8"?>
     <manifest>
