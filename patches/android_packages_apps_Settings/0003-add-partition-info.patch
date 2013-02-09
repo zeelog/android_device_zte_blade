@@ -1,7 +1,7 @@
-From e5f6b73ac4e6c89d822ce8a1647093c2d2c553d0 Mon Sep 17 00:00:00 2001
+From bf1a51ea181858f5370590921f4904cfddcf9300 Mon Sep 17 00:00:00 2001
 From: Konsta <konsta09@gmail.com>
 Date: Tue, 18 Dec 2012 15:27:40 +0200
-Subject: [PATCH 3/6] add partition info
+Subject: [PATCH 3/8] add partition info
 
 Change-Id: I5a01f913f5d0eca04cbe54175e8fa72cb6418f77
 ---
@@ -15,7 +15,7 @@ Change-Id: I5a01f913f5d0eca04cbe54175e8fa72cb6418f77
  create mode 100644 src/com/android/settings/PartitionInfo.java
 
 diff --git a/AndroidManifest.xml b/AndroidManifest.xml
-index 53a838d..3198e88 100644
+index bd78ce7..d1d72b9 100644
 --- a/AndroidManifest.xml
 +++ b/AndroidManifest.xml
 @@ -763,6 +763,15 @@
@@ -35,10 +35,10 @@ index 53a838d..3198e88 100644
                  android:label="@string/location_settings_title"
                  android:configChanges="orientation|keyboardHidden|screenSize"
 diff --git a/res/values/strings.xml b/res/values/strings.xml
-index 8700f54..b6b2f44 100644
+index efb0e31..085ec8c 100644
 --- a/res/values/strings.xml
 +++ b/res/values/strings.xml
-@@ -4428,6 +4428,14 @@
+@@ -4447,6 +4447,14 @@
      <string name="konsta_navbar_dialog_negative">Reboot later</string>
      <string name="konsta_navbar_dialog_positive">Hot reboot now</string>
  
