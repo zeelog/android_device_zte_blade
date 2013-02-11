@@ -41,7 +41,7 @@
 #define DUALMIC_KEY "dualmic_enabled"
 #define TTY_MODE_KEY "tty_mode"
 
-#ifdef HAVE_FM_RADIO
+#ifdef QCOM_FM_ENABLED
 #define Si4708_IOC_MAGIC  'k'
 #define Si4708_IOC_SET_VOL                    _IOW(Si4708_IOC_MAGIC, 8,int)
 #endif
@@ -378,13 +378,13 @@ status_t AudioHardware::setParameters(const String8& keyValuePairs)
         }
     }
 
-#ifdef HAVE_FM_RADIO
-    key = String8(android::AudioParameter::keyFmOn);
+#ifdef QCOM_FM_ENABLED
+    key = String8("fm_on");
     int devices;
     if (param.getInt(key, devices) == NO_ERROR) {
        setFmOnOff(true);
     }
-    key = String8(android::AudioParameter::keyFmOff);
+    key = String8("fm_off");
     if (param.getInt(key, devices) == NO_ERROR) {
        setFmOnOff(false);
     }
@@ -1145,7 +1145,7 @@ status_t AudioHardware::setMasterVolume(float v)
     return -1;
 }
 
-#ifdef HAVE_FM_RADIO
+#ifdef QCOM_FM_ENABLED
 status_t AudioHardware::setFmOnOff(int onoff)
 {
     int ret;
@@ -1239,9 +1239,10 @@ status_t AudioHardware::doAudioRouteOrMute(uint32_t device)
     }
 
     mFmPrev=mFmRadioEnabled;
-#ifdef HAVE_FM_RADIO
-    if(mFmRadioEnabled && (device == SND_DEVICE_HEADSET)) {
+#ifdef QCOM_FM_ENABLED
+    if(mFmRadioEnabled) {
       mute = 0;
+      device = SND_DEVICE_HEADSET;
       ALOGI("unmute for radio");
     }
 #endif
@@ -2154,11 +2155,13 @@ status_t AudioHardware::AudioStreamInMSM72xx::setParameters(const String8& keyVa
     return status;
 }
 
-#ifdef HAVE_FM_RADIO
+#ifdef QCOM_FM_ENABLED
 
 status_t AudioHardware::setFmVolume(float v)
 {
-    mFmVolume = (AudioSystem::logToLinear(v) +5) / 7;
+    ALOGV("setFmVolume %d", v);
+
+    mFmVolume = (android::AudioSystem::logToLinear(v) +5) / 7;
     if(mFmRadioEnabled) {
 	if (ioctl(fmfd, Si4708_IOC_SET_VOL, &mFmVolume) < 0) {
 	    ALOGE("set_volume_fm error.");

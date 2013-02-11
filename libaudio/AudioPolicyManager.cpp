@@ -206,6 +206,7 @@ audio_devices_t AudioPolicyManager::getDeviceForStrategy(routing_strategy strate
             device = 0;
             ALOGV("getDeviceForStrategy() incompatible media and phone devices");
         }
+
         } break;
 
     default:
@@ -216,5 +217,293 @@ audio_devices_t AudioPolicyManager::getDeviceForStrategy(routing_strategy strate
     ALOGV("getDeviceForStrategy() strategy %d, device %x", strategy, device);
     return (audio_devices_t)device;
 }
+
+status_t AudioPolicyManager::checkAndSetVolume(int stream,
+                                               int index,
+                                               audio_io_handle_t output,
+                                               audio_devices_t device,
+                                               int delayMs,
+                                               bool force)
+{
+    // do not change actual stream volume if the stream is muted
+    if (mOutputs.valueFor(output)->mMuteCount[stream] != 0) {
+        ALOGV("checkAndSetVolume() stream %d muted count %d",
+              stream, mOutputs.valueFor(output)->mMuteCount[stream]);
+        return NO_ERROR;
+    }
+
+    // do not change in call volume if bluetooth is connected and vice versa
+    if ((stream == AudioSystem::VOICE_CALL && mForceUse[AudioSystem::FOR_COMMUNICATION] == AudioSystem::FORCE_BT_SCO) ||
+        (stream == AudioSystem::BLUETOOTH_SCO && mForceUse[AudioSystem::FOR_COMMUNICATION] != AudioSystem::FORCE_BT_SCO)) {
+        ALOGV("checkAndSetVolume() cannot set stream %d volume with force use = %d for comm",
+             stream, mForceUse[AudioSystem::FOR_COMMUNICATION]);
+        return INVALID_OPERATION;
+    }
+
+    float volume = computeVolume(stream, index, output, device);
+    // We actually change the volume if:
+    // - the float value returned by computeVolume() changed
+    // - the force flag is set
+    if (volume != mOutputs.valueFor(output)->mCurVolume[stream] ||
+#ifdef QCOM_FM_ENABLED
+            (stream == AudioSystem::FM) ||
+#endif
+            force) {
+        mOutputs.valueFor(output)->mCurVolume[stream] = volume;
+        ALOGV("checkAndSetVolume() for output %d stream %d, volume %f, delay %d", output, stream, volume, delayMs);
+        if (stream == AudioSystem::VOICE_CALL ||
+            stream == AudioSystem::DTMF ||
+            stream == AudioSystem::BLUETOOTH_SCO) {
+            // offset value to reflect actual hardware volume that never reaches 0
+            // 1% corresponds roughly to first step in VOICE_CALL stream volume setting (see AudioService.java)
+            volume = 0.01 + 0.99 * volume;
+            // Force VOICE_CALL to track BLUETOOTH_SCO stream volume when bluetooth audio is
+            // enabled
+            if (stream == AudioSystem::BLUETOOTH_SCO) {
+                mpClientInterface->setStreamVolume(AudioSystem::VOICE_CALL, volume, output, delayMs);
+            }
+#ifdef QCOM_FM_ENABLED
+        } else if (stream == AudioSystem::FM) {
+            float fmVolume = -1.0;
+            fmVolume = computeVolume(stream, index, output, device);
+            if (fmVolume >= 0) {
+                if(output == mPrimaryOutput)
+                    mpClientInterface->setFmVolume(fmVolume, delayMs);
+                else if(mHasA2dp && output == getA2dpOutput())
+                    mpClientInterface->setStreamVolume((AudioSystem::stream_type)stream, volume, output, delayMs);
+            }
+            return NO_ERROR;
+#endif
+        }
+
+        mpClientInterface->setStreamVolume((AudioSystem::stream_type)stream, volume, output, delayMs);
+    }
+
+    if (stream == AudioSystem::VOICE_CALL ||
+        stream == AudioSystem::BLUETOOTH_SCO) {
+        float voiceVolume;
+        // Force voice volume to max for bluetooth SCO as volume is managed by the headset
+        if (stream == AudioSystem::VOICE_CALL) {
+            voiceVolume = (float)index/(float)mStreams[stream].mIndexMax;
+        } else {
+            voiceVolume = 1.0;
+        }
+
+        if (voiceVolume != mLastVoiceVolume && output == mPrimaryOutput) {
+            mpClientInterface->setVoiceVolume(voiceVolume, delayMs);
+            mLastVoiceVolume = voiceVolume;
+        }
+    }
+
+    return NO_ERROR;
+}
+
+status_t AudioPolicyManager::setDeviceConnectionState(AudioSystem::audio_devices device,
+		                                              AudioSystem::device_connection_state state,
+		                                              const char *device_address)
+{
+    SortedVector <audio_io_handle_t> outputs;
+
+    ALOGV("setDeviceConnectionState() device: %x, state %d, address %s", device, state, device_address);
+
+    // connect/disconnect only 1 device at a time
+    if (AudioSystem::popCount(device) != 1) return BAD_VALUE;
+
+    if (strlen(device_address) >= MAX_DEVICE_ADDRESS_LEN) {
+        ALOGE("setDeviceConnectionState() invalid address: %s", device_address);
+        return BAD_VALUE;
+    }
+
+    // handle output devices
+    if (AudioSystem::isOutputDevice(device)) {
+
+        if (!mHasA2dp && AudioSystem::isA2dpDevice(device)) {
+            ALOGE("setDeviceConnectionState() invalid device: %x", device);
+            return BAD_VALUE;
+        }
+        if (!mHasUsb && audio_is_usb_device((audio_devices_t)device)) {
+            ALOGE("setDeviceConnectionState() invalid device: %x", device);
+            return BAD_VALUE;
+        }
+
+        switch (state)
+        {
+        // handle output device connection
+        case AudioSystem::DEVICE_STATE_AVAILABLE:
+            if (mAvailableOutputDevices & device) {
+                ALOGW("setDeviceConnectionState() device already connected: %x", device);
+                return INVALID_OPERATION;
+            }
+            ALOGV("setDeviceConnectionState() connecting device %x", device);
+
+            if (checkOutputsForDevice((audio_devices_t)device, state, outputs) != NO_ERROR) {
+                return INVALID_OPERATION;
+            }
+            ALOGV("setDeviceConnectionState() checkOutputsForDevice() returned %d outputs",
+                  outputs.size());
+            // register new device as available
+            mAvailableOutputDevices = (audio_devices_t)(mAvailableOutputDevices | device);
+
+            if (!outputs.isEmpty()) {
+                String8 paramStr;
+                if (mHasA2dp && AudioSystem::isA2dpDevice(device)) {
+                    // handle A2DP device connection
+                    AudioParameter param;
+                    param.add(String8(AUDIO_PARAMETER_A2DP_SINK_ADDRESS), String8(device_address));
+                    paramStr = param.toString();
+                    mA2dpDeviceAddress = String8(device_address, MAX_DEVICE_ADDRESS_LEN);
+                    mA2dpSuspended = false;
+                } else if (AudioSystem::isBluetoothScoDevice(device)) {
+                    // handle SCO device connection
+                    mScoDeviceAddress = String8(device_address, MAX_DEVICE_ADDRESS_LEN);
+                } else if (mHasUsb && audio_is_usb_device((audio_devices_t)device)) {
+                    // handle USB device connection
+                    mUsbCardAndDevice = String8(device_address, MAX_DEVICE_ADDRESS_LEN);
+                    paramStr = mUsbCardAndDevice;
+                }
+                if (!paramStr.isEmpty()) {
+                    for (size_t i = 0; i < outputs.size(); i++) {
+                        mpClientInterface->setParameters(outputs[i], paramStr);
+                    }
+                }
+            }
+            break;
+        // handle output device disconnection
+        case AudioSystem::DEVICE_STATE_UNAVAILABLE: {
+            if (!(mAvailableOutputDevices & device)) {
+                ALOGW("setDeviceConnectionState() device not connected: %x", device);
+                return INVALID_OPERATION;
+            }
+
+            ALOGV("setDeviceConnectionState() disconnecting device %x", device);
+            // remove device from available output devices
+            mAvailableOutputDevices = (audio_devices_t)(mAvailableOutputDevices & ~device);
+
+            checkOutputsForDevice((audio_devices_t)device, state, outputs);
+            if (mHasA2dp && AudioSystem::isA2dpDevice(device)) {
+                // handle A2DP device disconnection
+                mA2dpDeviceAddress = "";
+                mA2dpSuspended = false;
+            } else if (AudioSystem::isBluetoothScoDevice(device)) {
+                // handle SCO device disconnection
+                mScoDeviceAddress = "";
+            } else if (mHasUsb && audio_is_usb_device((audio_devices_t)device)) {
+                // handle USB device disconnection
+                mUsbCardAndDevice = "";
+            }
+            } break;
+
+        default:
+            ALOGE("setDeviceConnectionState() invalid state: %x", state);
+            return BAD_VALUE;
+        }
+
+#ifdef QCOM_FM_ENABLED
+        if (device == AudioSystem::DEVICE_OUT_FM) {
+            if (state == AudioSystem::DEVICE_STATE_AVAILABLE) {
+                mOutputs.valueFor(mPrimaryOutput)->changeRefCount(AudioSystem::FM, 1);
+            }
+            else {
+                mOutputs.valueFor(mPrimaryOutput)->changeRefCount(AudioSystem::FM, -1);
+            }
+        }
+#endif
+
+        checkA2dpSuspend();
+        checkOutputForAllStrategies();
+        // outputs must be closed after checkOutputForAllStrategies() is executed
+        if (!outputs.isEmpty()) {
+            for (size_t i = 0; i < outputs.size(); i++) {
+                // close unused outputs after device disconnection or direct outputs that have been
+                // opened by checkOutputsForDevice() to query dynamic parameters
+                if ((state == AudioSystem::DEVICE_STATE_UNAVAILABLE))  {
+                    closeOutput(outputs[i]);
+                }
+            }
+        }
+
+        updateDeviceForStrategy();
+        for (size_t i = 0; i < mOutputs.size(); i++) {
+            setOutputDevice(mOutputs.keyAt(i), getNewDevice(mOutputs.keyAt(i), true /*fromCache*/));
+        }
+
+        if (device == AudioSystem::DEVICE_OUT_WIRED_HEADSET) {
+            device = AudioSystem::DEVICE_IN_WIRED_HEADSET;
+        } else if (device == AudioSystem::DEVICE_OUT_BLUETOOTH_SCO ||
+                   device == AudioSystem::DEVICE_OUT_BLUETOOTH_SCO_HEADSET ||
+                   device == AudioSystem::DEVICE_OUT_BLUETOOTH_SCO_CARKIT) {
+            device = AudioSystem::DEVICE_IN_BLUETOOTH_SCO_HEADSET;
+        } else {
+            return NO_ERROR;
+        }
+    }
+    // handle input devices
+    if (AudioSystem::isInputDevice(device)) {
+
+        switch (state)
+        {
+        // handle input device connection
+        case AudioSystem::DEVICE_STATE_AVAILABLE: {
+            if (mAvailableInputDevices & device) {
+                ALOGW("setDeviceConnectionState() device already connected: %d", device);
+                return INVALID_OPERATION;
+            }
+            mAvailableInputDevices = (audio_devices_t)(mAvailableInputDevices | device);
+            }
+            break;
+
+        // handle input device disconnection
+        case AudioSystem::DEVICE_STATE_UNAVAILABLE: {
+            if (!(mAvailableInputDevices & device)) {
+                ALOGW("setDeviceConnectionState() device not connected: %d", device);
+                return INVALID_OPERATION;
+            }
+            mAvailableInputDevices = (audio_devices_t) (mAvailableInputDevices & ~device);
+            } break;
+
+        default:
+            ALOGE("setDeviceConnectionState() invalid state: %x", state);
+            return BAD_VALUE;
+        }
+
+        audio_io_handle_t activeInput = getActiveInput();
+        if (activeInput != 0) {
+            AudioInputDescriptor *inputDesc = mInputs.valueFor(activeInput);
+            audio_devices_t newDevice = getDeviceForInputSource(inputDesc->mInputSource);
+            if ((newDevice != 0) && (newDevice != inputDesc->mDevice)) {
+                ALOGV("setDeviceConnectionState() changing device from %x to %x for input %d",
+                        inputDesc->mDevice, newDevice, activeInput);
+                inputDesc->mDevice = newDevice;
+                AudioParameter param = AudioParameter();
+                param.addInt(String8(AudioParameter::keyRouting), (int)newDevice);
+                mpClientInterface->setParameters(activeInput, param.toString());
+            }
+        }
+
+        return NO_ERROR;
+    }
+
+    ALOGW("setDeviceConnectionState() invalid device: %x", device);
+    return BAD_VALUE;
+}
+
+bool AudioPolicyManager::isStreamActive(int stream, uint32_t inPastMs) const
+{
+    nsecs_t sysTime = systemTime();
+    for (size_t i = 0; i < mOutputs.size(); i++) {
+        if (mOutputs.valueAt(i)->mRefCount[stream] != 0 ||
+            ns2ms(sysTime - mOutputs.valueAt(i)->mStopTime[stream]) < inPastMs) {
+            return true;
+        }
+    }
+
+    if (stream == AudioSystem::MUSIC &&
+            (mAvailableOutputDevices & AudioSystem::DEVICE_OUT_FM)) {
+        return true;
+    }
+
+    return false;
+}
+
 
 }; // namespace android_audio_legacy
