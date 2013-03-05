@@ -43,3 +43,5 @@ dalvik.vm.execution-mode=int:jit
 ro.zram.default=0
 persist.sys.purgeable_assets=1
 
+# Lockscreen
+ro.hwaccel.lockscreen=0
