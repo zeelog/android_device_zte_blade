@@ -400,11 +400,16 @@ status_t AudioPolicyManager::setDeviceConnectionState(AudioSystem::audio_devices
 
 #ifdef QCOM_FM_ENABLED
         if (device == AudioSystem::DEVICE_OUT_FM) {
+            AudioOutputDescriptor *out = mOutputs.valueFor(mPrimaryOutput);
             if (state == AudioSystem::DEVICE_STATE_AVAILABLE) {
-                mOutputs.valueFor(mPrimaryOutput)->changeRefCount(AudioSystem::FM, 1);
+                out->changeRefCount(AudioSystem::FM, 1);
+                if (out->refCount() > 0)
+                    mpClientInterface->setParameters(0, String8("fm_on=1"));
             }
             else {
-                mOutputs.valueFor(mPrimaryOutput)->changeRefCount(AudioSystem::FM, -1);
+                out->changeRefCount(AudioSystem::FM, -1);
+                if (out->refCount() <= 0)
+                    mpClientInterface->setParameters(0, String8("fm_off=1"));
             }
         }
 #endif
