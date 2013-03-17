@@ -71,7 +71,7 @@ PRODUCT_PACKAGES += \
 # FM Radio
 PRODUCT_PACKAGES += \
         libfmradio.si4708 \
-        FmRadioReceiver
+        Effem
 
 # Other
 PRODUCT_PACKAGES += \
