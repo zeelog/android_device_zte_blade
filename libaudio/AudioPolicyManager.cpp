@@ -168,9 +168,6 @@ audio_devices_t AudioPolicyManager::getDeviceForStrategy(routing_strategy strate
 #ifdef WITH_A2DP
         if (mHasA2dp && (mForceUse[AudioSystem::FOR_MEDIA] != AudioSystem::FORCE_NO_BT_A2DP) &&
                 (getA2dpOutput() != 0) && !mA2dpSuspended) {
-            if (strategy == STRATEGY_SONIFICATION && !a2dpUsedForSonification()) {
-                break;
-            }
             if (device2 == 0) {
                 device2 = mAvailableOutputDevices & AudioSystem::DEVICE_OUT_BLUETOOTH_A2DP;
             }
@@ -298,7 +295,7 @@ status_t AudioPolicyManager::checkAndSetVolume(int stream,
     return NO_ERROR;
 }
 
-status_t AudioPolicyManager::setDeviceConnectionState(AudioSystem::audio_devices device,
+status_t AudioPolicyManager::setDeviceConnectionState(audio_devices_t device,
 		                                              AudioSystem::device_connection_state state,
 		                                              const char *device_address)
 {
@@ -315,9 +312,9 @@ status_t AudioPolicyManager::setDeviceConnectionState(AudioSystem::audio_devices
     }
 
     // handle output devices
-    if (AudioSystem::isOutputDevice(device)) {
+    if (audio_is_output_device(device)) {
 
-        if (!mHasA2dp && AudioSystem::isA2dpDevice(device)) {
+        if (!mHasA2dp && audio_is_a2dp_device(device)) {
             ALOGE("setDeviceConnectionState() invalid device: %x", device);
             return BAD_VALUE;
         }
@@ -346,14 +343,14 @@ status_t AudioPolicyManager::setDeviceConnectionState(AudioSystem::audio_devices
 
             if (!outputs.isEmpty()) {
                 String8 paramStr;
-                if (mHasA2dp && AudioSystem::isA2dpDevice(device)) {
+                if (mHasA2dp && audio_is_a2dp_device(device)) {
                     // handle A2DP device connection
                     AudioParameter param;
                     param.add(String8(AUDIO_PARAMETER_A2DP_SINK_ADDRESS), String8(device_address));
                     paramStr = param.toString();
                     mA2dpDeviceAddress = String8(device_address, MAX_DEVICE_ADDRESS_LEN);
                     mA2dpSuspended = false;
-                } else if (AudioSystem::isBluetoothScoDevice(device)) {
+                } else if (audio_is_bluetooth_sco_device(device)) {
                     // handle SCO device connection
                     mScoDeviceAddress = String8(device_address, MAX_DEVICE_ADDRESS_LEN);
                 } else if (mHasUsb && audio_is_usb_device((audio_devices_t)device)) {
@@ -380,11 +377,11 @@ status_t AudioPolicyManager::setDeviceConnectionState(AudioSystem::audio_devices
             mAvailableOutputDevices = (audio_devices_t)(mAvailableOutputDevices & ~device);
 
             checkOutputsForDevice((audio_devices_t)device, state, outputs);
-            if (mHasA2dp && AudioSystem::isA2dpDevice(device)) {
+            if (mHasA2dp && audio_is_a2dp_device(device)) {
                 // handle A2DP device disconnection
                 mA2dpDeviceAddress = "";
                 mA2dpSuspended = false;
-            } else if (AudioSystem::isBluetoothScoDevice(device)) {
+            } else if (audio_is_bluetooth_sco_device(device)) {
                 // handle SCO device disconnection
                 mScoDeviceAddress = "";
             } else if (mHasUsb && audio_is_usb_device((audio_devices_t)device)) {
@@ -399,7 +396,7 @@ status_t AudioPolicyManager::setDeviceConnectionState(AudioSystem::audio_devices
         }
 
 #ifdef QCOM_FM_ENABLED
-        if (device == AudioSystem::DEVICE_OUT_FM) {
+        if (device == AUDIO_DEVICE_OUT_FM) {
             AudioOutputDescriptor *out = mOutputs.valueFor(mPrimaryOutput);
             if (state == AudioSystem::DEVICE_STATE_AVAILABLE) {
                 out->changeRefCount(AudioSystem::FM, 1);
@@ -443,7 +440,7 @@ status_t AudioPolicyManager::setDeviceConnectionState(AudioSystem::audio_devices
         }
     }
     // handle input devices
-    if (AudioSystem::isInputDevice(device)) {
+    if (audio_is_input_device(device)) {
 
         switch (state)
         {

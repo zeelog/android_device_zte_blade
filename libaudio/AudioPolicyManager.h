@@ -29,7 +29,7 @@ class AudioPolicyManager: public AudioPolicyManagerBase
 {
 
 public:
-                AudioPolicyManager(AudioPolicyClientInterface *clientInterface)
+        AudioPolicyManager(AudioPolicyClientInterface *clientInterface)
                 : AudioPolicyManagerBase(clientInterface) {}
 
         virtual ~AudioPolicyManager() {}
@@ -42,17 +42,9 @@ public:
                                            int delayMs,
                                            bool force);
 
-        virtual status_t setDeviceConnectionState(AudioSystem::audio_devices device,
+        virtual status_t setDeviceConnectionState(audio_devices_t device,
                                                   AudioSystem::device_connection_state state,
                                                   const char *device_address);
         virtual bool isStreamActive(int stream, uint32_t inPastMs) const;
-protected:
-        // true is current platform implements a back microphone
-        virtual bool hasBackMicrophone() const { return false; }
-#ifdef WITH_A2DP
-        // true is current platform supports suplication of notifications and ringtones over A2DP output
-        virtual bool a2dpUsedForSonification() const { return true; }
-#endif
-
 };
 };
