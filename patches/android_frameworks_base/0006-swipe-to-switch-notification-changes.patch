@@ -1,7 +1,7 @@
-From f537754bcbd7074bb4723e1faebbebf16c99949a Mon Sep 17 00:00:00 2001
+From 8f353755daefcc504b457aa887ead697e36c2a2c Mon Sep 17 00:00:00 2001
 From: Konsta <konsta09@gmail.com>
 Date: Tue, 8 Jan 2013 16:18:29 +0200
-Subject: [PATCH] swipe to switch notification changes
+Subject: [PATCH 06/14] swipe to switch notification changes
 
 -increase swipe gesture lenght
 -don't limit swipe detection to bottom bar
@@ -12,7 +12,7 @@ Change-Id: I789c855a004716ff1d3199bc8348811fb33f532d
  1 file changed, 2 insertions(+), 4 deletions(-)
 
 diff --git a/packages/SystemUI/src/com/android/systemui/statusbar/phone/NotificationPanelView.java b/packages/SystemUI/src/com/android/systemui/statusbar/phone/NotificationPanelView.java
-index 19e8956..e888284 100644
+index 480dc99..32069ec 100644
 --- a/packages/SystemUI/src/com/android/systemui/statusbar/phone/NotificationPanelView.java
 +++ b/packages/SystemUI/src/com/android/systemui/statusbar/phone/NotificationPanelView.java
 @@ -35,7 +35,7 @@ public class NotificationPanelView extends PanelView {
@@ -23,7 +23,7 @@ index 19e8956..e888284 100644
 +    private static final float STATUS_BAR_SWIPE_MOVE_PERCENTAGE = 0.3f;
  
      private Drawable mHandleBar;
-     private float mHandleBarHeight;
+     private int mHandleBarHeight;
 @@ -114,9 +114,7 @@ public class NotificationPanelView extends PanelView {
                  case MotionEvent.ACTION_DOWN:
                      mGestureStartX = event.getX(0);

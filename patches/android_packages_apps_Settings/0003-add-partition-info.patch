@@ -1,7 +1,7 @@
-From bf1a51ea181858f5370590921f4904cfddcf9300 Mon Sep 17 00:00:00 2001
+From 40c87908abd07dce2ae86447cd3c12d53948d615 Mon Sep 17 00:00:00 2001
 From: Konsta <konsta09@gmail.com>
 Date: Tue, 18 Dec 2012 15:27:40 +0200
-Subject: [PATCH 3/8] add partition info
+Subject: [PATCH 03/10] add partition info
 
 Change-Id: I5a01f913f5d0eca04cbe54175e8fa72cb6418f77
 ---
@@ -15,10 +15,10 @@ Change-Id: I5a01f913f5d0eca04cbe54175e8fa72cb6418f77
  create mode 100644 src/com/android/settings/PartitionInfo.java
 
 diff --git a/AndroidManifest.xml b/AndroidManifest.xml
-index bd78ce7..d1d72b9 100644
+index 976bc6b..f7280ed 100644
 --- a/AndroidManifest.xml
 +++ b/AndroidManifest.xml
-@@ -763,6 +763,15 @@
+@@ -832,6 +832,15 @@
                  android:resource="@id/application_settings" />
          </activity>
  
@@ -33,12 +33,12 @@ index bd78ce7..d1d72b9 100644
 +
          <activity android:name="Settings$LocationSettingsActivity"
                  android:label="@string/location_settings_title"
-                 android:configChanges="orientation|keyboardHidden|screenSize"
+                 android:uiOptions="none"
 diff --git a/res/values/strings.xml b/res/values/strings.xml
-index efb0e31..085ec8c 100644
+index e6463b4..4b1b2cf 100644
 --- a/res/values/strings.xml
 +++ b/res/values/strings.xml
-@@ -4447,6 +4447,14 @@
+@@ -4440,6 +4440,14 @@
      <string name="konsta_navbar_dialog_negative">Reboot later</string>
      <string name="konsta_navbar_dialog_positive">Hot reboot now</string>
  
@@ -99,7 +99,7 @@ index 0000000..9a79c33
 +        android:summary="@string/status_unavailable" />
 +</PreferenceScreen>
 diff --git a/res/xml/settings_headers.xml b/res/xml/settings_headers.xml
-index 156d63f..dda9253 100644
+index bdc394a..52aae1f 100644
 --- a/res/xml/settings_headers.xml
 +++ b/res/xml/settings_headers.xml
 @@ -118,6 +118,16 @@

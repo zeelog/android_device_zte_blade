@@ -1,7 +1,7 @@
-From db0dce22fdaf9ce9da886965108dc9360d82d2e3 Mon Sep 17 00:00:00 2001
+From 164b37c20398b1f28da271b222e8daa540f752a0 Mon Sep 17 00:00:00 2001
 From: Konsta <konsta09@gmail.com>
 Date: Tue, 18 Dec 2012 15:32:15 +0200
-Subject: [PATCH 4/8] add forum link to device info
+Subject: [PATCH 04/10] add forum link to device info
 
 Change-Id: I0f20b34b8f98673d9fc15dd2687b02c0dd296409
 ---
@@ -11,10 +11,10 @@ Change-Id: I0f20b34b8f98673d9fc15dd2687b02c0dd296409
  3 files changed, 22 insertions(+)
 
 diff --git a/res/values/strings.xml b/res/values/strings.xml
-index 085ec8c..c450b7c 100644
+index 4b1b2cf..eddbfb4 100644
 --- a/res/values/strings.xml
 +++ b/res/values/strings.xml
-@@ -4455,6 +4455,11 @@
+@@ -4448,6 +4448,11 @@
      <string name="partition_info_sdcard">/sdcard (FAT)</string>
      <string name="partition_info_sdext">EXT partition</string>
  
@@ -41,7 +41,7 @@ index 955c153..42ba466 100644
 +
  </PreferenceScreen>
 diff --git a/src/com/android/settings/DeviceInfoSettings.java b/src/com/android/settings/DeviceInfoSettings.java
-index 4bf6ce9..c0db2b1 100644
+index c3683f0..d6a96c0 100644
 --- a/src/com/android/settings/DeviceInfoSettings.java
 +++ b/src/com/android/settings/DeviceInfoSettings.java
 @@ -20,6 +20,7 @@ import android.app.Activity;

@@ -1,7 +1,7 @@
-From 88dc730d65d7a73776175bd5a201c75f9b6a7236 Mon Sep 17 00:00:00 2001
+From ea4fae1d5db56498d0298e8515235f67816bb2c1 Mon Sep 17 00:00:00 2001
 From: Konsta <konsta09@gmail.com>
 Date: Sat, 9 Feb 2013 21:46:16 +0200
-Subject: [PATCH] don't hide hardware key settings when navbar enabled
+Subject: [PATCH 08/10] don't hide hardware key settings when navbar enabled
 
 Change-Id: I79f011f6ef5d4ba589e06edfc097501b5409e9d3
 ---
@@ -9,7 +9,7 @@ Change-Id: I79f011f6ef5d4ba589e06edfc097501b5409e9d3
  1 file changed, 2 insertions(+), 9 deletions(-)
 
 diff --git a/src/com/android/settings/cyanogenmod/SystemSettings.java b/src/com/android/settings/cyanogenmod/SystemSettings.java
-index 63fddbc..35edcb4 100644
+index 182eb1a..8e4c49a 100644
 --- a/src/com/android/settings/cyanogenmod/SystemSettings.java
 +++ b/src/com/android/settings/cyanogenmod/SystemSettings.java
 @@ -97,16 +97,12 @@ public class SystemSettings extends SettingsPreferenceFragment implements Prefer
@@ -40,7 +40,7 @@ index 63fddbc..35edcb4 100644
 -            }
              if (removeNavbar) {
                  prefScreen.removePreference(findPreference(KEY_NAVIGATION_BAR));
-             }
+                 prefScreen.removePreference(findPreference(KEY_NAVIGATION_RING));
 -- 
 1.7.9.5
 

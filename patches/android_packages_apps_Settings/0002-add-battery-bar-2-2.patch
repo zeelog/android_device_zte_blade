@@ -1,7 +1,7 @@
-From 46672f15c0c886e33e2fdb69477d540dfe7c12f5 Mon Sep 17 00:00:00 2001
+From 72302a1bc8ca1e7024898533dd75311cd6b7f8d6 Mon Sep 17 00:00:00 2001
 From: Konsta <konsta09@gmail.com>
 Date: Tue, 18 Dec 2012 15:00:55 +0200
-Subject: [PATCH 2/8] add battery bar (2/2)
+Subject: [PATCH 02/10] add battery bar (2/2)
 
 Change-Id: I912449bf44386a19f1f174eb732c7d077805b4de
 ---
@@ -10,7 +10,7 @@ Change-Id: I912449bf44386a19f1f174eb732c7d077805b4de
  2 files changed, 3 insertions(+)
 
 diff --git a/res/values/arrays.xml b/res/values/arrays.xml
-index 1d4f822..4d4e606 100644
+index c70cf13..47c5e6d 100644
 --- a/res/values/arrays.xml
 +++ b/res/values/arrays.xml
 @@ -1146,6 +1146,7 @@
@@ -30,10 +30,10 @@ index 1d4f822..4d4e606 100644
      </string-array>
  
 diff --git a/res/values/strings.xml b/res/values/strings.xml
-index 1ecb4af..efb0e31 100644
+index cc93ee9..e6463b4 100644
 --- a/res/values/strings.xml
 +++ b/res/values/strings.xml
-@@ -5020,6 +5020,7 @@
+@@ -5015,6 +5015,7 @@
      <string name="status_bar_battery_status_percentage">Percentage</string>
      <string name="status_bar_battery_status_circle">Circle</string>
      <string name="status_bar_battery_status_circle_percentage">Circle with percentage</string>

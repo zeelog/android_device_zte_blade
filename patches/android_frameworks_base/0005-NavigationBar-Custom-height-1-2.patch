@@ -1,0 +1,90 @@
+From 058311b50bb98b5a4c2dc43a2e11b6612d1e2213 Mon Sep 17 00:00:00 2001
+From: Nicholas Semendyaev <agent00791@gmail.com>
+Date: Tue, 18 Sep 2012 20:08:36 -0400
+Subject: [PATCH 05/14] NavigationBar: Custom height (1/2)
+
+Ported from http://review.cyanogenmod.org/#/c/23609/
+
+Change-Id: I61aef192ac658f54f86b87d18cce9d7b073004e2
+
+Conflicts:
+	policy/src/com/android/internal/policy/impl/PhoneWindowManager.java
+---
+ core/java/android/provider/Settings.java           |    6 ++++++
+ .../internal/policy/impl/PhoneWindowManager.java   |   14 ++++++++------
+ 2 files changed, 14 insertions(+), 6 deletions(-)
+
+diff --git a/core/java/android/provider/Settings.java b/core/java/android/provider/Settings.java
+index 7376246..f38af23 100644
+--- a/core/java/android/provider/Settings.java
++++ b/core/java/android/provider/Settings.java
+@@ -2619,6 +2619,12 @@ public final class Settings {
+         public static final String NAV_BUTTONS = "nav_buttons";
+ 
+         /**
++         * Height of navigation bar buttons
++         * @hide
++         */
++        public static final String NAV_BUTTONS_HEIGHT = "nav_buttons_height";
++
++        /**
+         * Notification Power Widget - Custom Brightness Mode
+         * @hide
+         */
+diff --git a/policy/src/com/android/internal/policy/impl/PhoneWindowManager.java b/policy/src/com/android/internal/policy/impl/PhoneWindowManager.java
+index 9b0da73..2bf082f 100644
+--- a/policy/src/com/android/internal/policy/impl/PhoneWindowManager.java
++++ b/policy/src/com/android/internal/policy/impl/PhoneWindowManager.java
+@@ -665,6 +665,8 @@ public class PhoneWindowManager implements WindowManagerPolicy {
+                     Settings.System.KEY_APP_SWITCH_LONG_PRESS_ACTION), false, this);
+             resolver.registerContentObserver(Settings.System.getUriFor(
+                     Settings.System.HARDWARE_KEY_REBINDING), false, this);
++            resolver.registerContentObserver(Settings.System.getUriFor(
++                    Settings.System.NAV_BUTTONS_HEIGHT), false, this);
+ 
+             updateSettings();
+         }
+@@ -1358,6 +1360,7 @@ public class PhoneWindowManager implements WindowManagerPolicy {
+             mVolBtnMusicControls = (Settings.System.getIntForUser(resolver,
+                     Settings.System.VOLBTN_MUSIC_CONTROLS, 1, UserHandle.USER_CURRENT) == 1);
+ 
++
+             boolean keyRebindingEnabled = Settings.System.getInt(resolver,
+                     Settings.System.HARDWARE_KEY_REBINDING, 0) == 1;
+ 
+@@ -1466,6 +1469,8 @@ public class PhoneWindowManager implements WindowManagerPolicy {
+             // Update navigation bar dimensions
+             boolean desktopExpanded = Settings.System.getInt(mContext.getContentResolver(),
+                     Settings.System.EXPANDED_DESKTOP_STATE, 0) == 1;
++            int  mNavButtonsHeight = Settings.System.getInt(resolver,
++                    Settings.System.NAV_BUTTONS_HEIGHT, 48);
+             if (desktopExpanded) {
+                 // Set the navigation bar's dimensions to 0 in expanded desktop mode
+                 mNavigationBarWidthForRotation[mPortraitRotation]
+@@ -1480,20 +1485,17 @@ public class PhoneWindowManager implements WindowManagerPolicy {
+                 // Height of the navigation bar when presented horizontally at bottom
+                 mNavigationBarHeightForRotation[mPortraitRotation] =
+                 mNavigationBarHeightForRotation[mUpsideDownRotation] =
+-                        mContext.getResources().getDimensionPixelSize(
+-                                com.android.internal.R.dimen.navigation_bar_height);
++                        mNavButtonsHeight * DisplayMetrics.DENSITY_DEVICE/DisplayMetrics.DENSITY_DEFAULT;
+                 mNavigationBarHeightForRotation[mLandscapeRotation] =
+                 mNavigationBarHeightForRotation[mSeascapeRotation] =
+-                        mContext.getResources().getDimensionPixelSize(
+-                                com.android.internal.R.dimen.navigation_bar_height_landscape);
++                        mNavButtonsHeight * DisplayMetrics.DENSITY_DEVICE/DisplayMetrics.DENSITY_DEFAULT;
+ 
+                 // Width of the navigation bar when presented vertically along one side
+                 mNavigationBarWidthForRotation[mPortraitRotation] =
+                 mNavigationBarWidthForRotation[mUpsideDownRotation] =
+                 mNavigationBarWidthForRotation[mLandscapeRotation] =
+                 mNavigationBarWidthForRotation[mSeascapeRotation] =
+-                        mContext.getResources().getDimensionPixelSize(
+-                                com.android.internal.R.dimen.navigation_bar_width);
++                        (mNavButtonsHeight - 6) * DisplayMetrics.DENSITY_DEVICE/DisplayMetrics.DENSITY_DEFAULT;
+             }
+         }
+ 
+-- 
+1.7.9.5
+
