@@ -1,4 +1,4 @@
-From 40c87908abd07dce2ae86447cd3c12d53948d615 Mon Sep 17 00:00:00 2001
+From 2c92a3836ab32775b1dfe8c260c3e6dc626739df Mon Sep 17 00:00:00 2001
 From: Konsta <konsta09@gmail.com>
 Date: Tue, 18 Dec 2012 15:27:40 +0200
 Subject: [PATCH 03/10] add partition info
@@ -35,10 +35,10 @@ index 976bc6b..f7280ed 100644
                  android:label="@string/location_settings_title"
                  android:uiOptions="none"
 diff --git a/res/values/strings.xml b/res/values/strings.xml
-index e6463b4..4b1b2cf 100644
+index bdc0307..ec186d6 100644
 --- a/res/values/strings.xml
 +++ b/res/values/strings.xml
-@@ -4440,6 +4440,14 @@
+@@ -4443,6 +4443,14 @@
      <string name="konsta_navbar_dialog_negative">Reboot later</string>
      <string name="konsta_navbar_dialog_positive">Hot reboot now</string>
  

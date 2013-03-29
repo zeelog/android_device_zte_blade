@@ -1,4 +1,4 @@
-From 2476229ad606f2c580117e7f3b23a08e850fffdc Mon Sep 17 00:00:00 2001
+From bf1458b35754e82608ea556a7e5a2ee468a3225f Mon Sep 17 00:00:00 2001
 From: Konsta <konsta09@gmail.com>
 Date: Tue, 18 Dec 2012 14:58:36 +0200
 Subject: [PATCH 01/10] add option to display navbar (2/2)
@@ -11,10 +11,10 @@ Change-Id: Idaf20f1a13db8045b5090fa9cf499ef33c5f790d
  3 files changed, 61 insertions(+)
 
 diff --git a/res/values/strings.xml b/res/values/strings.xml
-index ed84c46..cc93ee9 100644
+index 9a23234..25688aa 100644
 --- a/res/values/strings.xml
 +++ b/res/values/strings.xml
-@@ -4432,6 +4432,14 @@
+@@ -4435,6 +4435,14 @@
  
      <!-- **** CYANOGENMOD ADDITIONS START **** -->
  
@@ -30,10 +30,10 @@ index ed84c46..cc93ee9 100644
  
      <!-- Quiet hours -->
 diff --git a/res/xml/system_settings.xml b/res/xml/system_settings.xml
-index 2009767..6e8b87f 100644
+index a95446f..c92d360 100644
 --- a/res/xml/system_settings.xml
 +++ b/res/xml/system_settings.xml
-@@ -79,4 +79,10 @@
+@@ -84,4 +84,10 @@
              android:title="@string/navigation_ring_title" />
      </PreferenceCategory>
  
@@ -45,7 +45,7 @@ index 2009767..6e8b87f 100644
 +
  </PreferenceScreen>
 diff --git a/src/com/android/settings/cyanogenmod/SystemSettings.java b/src/com/android/settings/cyanogenmod/SystemSettings.java
-index 1c07877..03e70f0 100644
+index 9e05b71..360ad3a 100644
 --- a/src/com/android/settings/cyanogenmod/SystemSettings.java
 +++ b/src/com/android/settings/cyanogenmod/SystemSettings.java
 @@ -16,12 +16,20 @@
@@ -69,20 +69,21 @@ index 1c07877..03e70f0 100644
  import android.preference.Preference;
  import android.preference.PreferenceScreen;
  import android.provider.Settings;
-@@ -48,10 +56,12 @@ public class SystemSettings extends SettingsPreferenceFragment {
-     private static final String KEY_QUICK_SETTINGS = "quick_settings_panel";
+@@ -49,11 +57,13 @@ public class SystemSettings extends SettingsPreferenceFragment {
      private static final String KEY_NOTIFICATION_DRAWER = "notification_drawer";
      private static final String KEY_POWER_MENU = "power_menu";
+     private static final String KEY_PIE_CONTROL = "pie_control";
 +    private static final String KONSTA_NAVBAR = "konsta_navbar";
  
      private PreferenceScreen mNotificationPulse;
      private PreferenceScreen mBatteryPulse;
+     private PreferenceScreen mPieControl;
      private boolean mIsPrimary;
 +    private CheckBoxPreference mKonstaNavbar;
  
      @Override
      public void onCreate(Bundle savedInstanceState) {
-@@ -124,6 +134,10 @@ public class SystemSettings extends SettingsPreferenceFragment {
+@@ -125,6 +135,10 @@ public class SystemSettings extends SettingsPreferenceFragment {
              }
          }
  
@@ -90,13 +91,14 @@ index 1c07877..03e70f0 100644
 +        mKonstaNavbar.setChecked(Settings.System.getInt(getActivity().getContentResolver(),
 +                Settings.System.KONSTA_NAVBAR, 0) == 1);
 +
-         // Don't display the lock clock preference if its not installed
-         removePreferenceIfPackageNotInstalled(findPreference(KEY_LOCK_CLOCK));
-     }
-@@ -147,6 +161,39 @@ public class SystemSettings extends SettingsPreferenceFragment {
+         // Pie controls
+         mPieControl = (PreferenceScreen) findPreference(KEY_PIE_CONTROL);
+         if (mPieControl != null && removeNavbar) {
+@@ -178,6 +192,39 @@ public class SystemSettings extends SettingsPreferenceFragment {
+         }
       }
  
-     @Override
++    @Override
 +    public boolean onPreferenceTreeClick(PreferenceScreen preferenceScreen, Preference preference) {
 +        boolean value;
 +
@@ -129,10 +131,9 @@ index 1c07877..03e70f0 100644
 +        return true;
 +    }
 +
-+    @Override
-     public void onResume() {
-         super.onResume();
- 
+     private void updatePieControlDescription() {
+         if (Settings.System.getInt(getActivity().getContentResolver(),
+                 Settings.System.PIE_CONTROLS, 0) == 1) {
 -- 
 1.7.9.5
 

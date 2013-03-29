@@ -1,7 +1,7 @@
-From 0f995a18115c75b307d1b9ceed9feb1c33b97261 Mon Sep 17 00:00:00 2001
+From 20af8cf0bedb77f18b3d4030f9293f1c38cc0409 Mon Sep 17 00:00:00 2001
 From: Grigori Goronzy <greg@blackbox>
 Date: Thu, 21 Feb 2013 00:34:09 +0100
-Subject: [PATCH 10/14] Legacy FM stream support
+Subject: [PATCH 10/15] Legacy FM stream support
 
 Add stream type STREAM_FM for legacy FM radio volume control and
 audio routing.
@@ -14,10 +14,10 @@ Change-Id: I482e6438e94b9f94409bddedc4cf4eb0dfeabb76
  3 files changed, 14 insertions(+), 5 deletions(-)
 
 diff --git a/media/java/android/media/AudioManager.java b/media/java/android/media/AudioManager.java
-index f55a0bb..a6f61d0 100644
+index ac2588d..2f7d2f5 100644
 --- a/media/java/android/media/AudioManager.java
 +++ b/media/java/android/media/AudioManager.java
-@@ -217,6 +217,8 @@ public class AudioManager {
+@@ -220,6 +220,8 @@ public class AudioManager {
      public static final int STREAM_DTMF = AudioSystem.STREAM_DTMF;
      /** @hide The audio stream for text to speech (TTS) */
      public static final int STREAM_TTS = AudioSystem.STREAM_TTS;
@@ -26,7 +26,7 @@ index f55a0bb..a6f61d0 100644
      /** Number of audio streams */
      /**
       * @deprecated Use AudioSystem.getNumStreamTypes() instead
-@@ -235,7 +237,8 @@ public class AudioManager {
+@@ -238,7 +240,8 @@ public class AudioManager {
          7,  // STREAM_BLUETOOTH_SCO
          7,  // STREAM_SYSTEM_ENFORCED
          11, // STREAM_DTMF

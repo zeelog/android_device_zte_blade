@@ -1,0 +1,40 @@
+From 83f2a0d4b08c58c4c85387955c6f86a184bc6768 Mon Sep 17 00:00:00 2001
+From: Konsta <konsta09@gmail.com>
+Date: Wed, 27 Mar 2013 10:23:27 +0200
+Subject: [PATCH 14/15] allow pie controls without enabling expanded desktop
+
+Change-Id: I6b26592bda1958e6e7d0e9af81a9123d087cd309
+---
+ .../android/systemui/statusbar/BaseStatusBar.java  |    6 +-----
+ 1 file changed, 1 insertion(+), 5 deletions(-)
+
+diff --git a/packages/SystemUI/src/com/android/systemui/statusbar/BaseStatusBar.java b/packages/SystemUI/src/com/android/systemui/statusbar/BaseStatusBar.java
+index df22056..76f1c11 100644
+--- a/packages/SystemUI/src/com/android/systemui/statusbar/BaseStatusBar.java
++++ b/packages/SystemUI/src/com/android/systemui/statusbar/BaseStatusBar.java
+@@ -1354,8 +1354,6 @@ public abstract class BaseStatusBar extends SystemUI implements
+                     Settings.System.PIE_CONTROLS), false, this);
+             resolver.registerContentObserver(Settings.System.getUriFor(
+                     Settings.System.PIE_GRAVITY), false, this);
+-            resolver.registerContentObserver(Settings.System.getUriFor(
+-                    Settings.System.EXPANDED_DESKTOP_STATE), false, this);
+         }
+ 
+         @Override
+@@ -1368,12 +1366,10 @@ public abstract class BaseStatusBar extends SystemUI implements
+     }
+ 
+     private boolean isPieEnabled() {
+-        boolean expanded = Settings.System.getInt(mContext.getContentResolver(),
+-                Settings.System.EXPANDED_DESKTOP_STATE, 0) == 1;
+         int pie = Settings.System.getInt(mContext.getContentResolver(),
+                 Settings.System.PIE_CONTROLS, 0);
+ 
+-        return (pie == 1 && expanded) || pie == 2;
++        return pie == 1 || pie == 2;
+     }
+ 
+     private void attachPie() {
+-- 
+1.7.9.5
+

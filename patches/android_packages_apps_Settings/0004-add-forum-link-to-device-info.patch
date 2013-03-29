@@ -1,4 +1,4 @@
-From 164b37c20398b1f28da271b222e8daa540f752a0 Mon Sep 17 00:00:00 2001
+From 5ac7f5c1dae8c1d5027add19b341c217a6bf72bf Mon Sep 17 00:00:00 2001
 From: Konsta <konsta09@gmail.com>
 Date: Tue, 18 Dec 2012 15:32:15 +0200
 Subject: [PATCH 04/10] add forum link to device info
@@ -11,10 +11,10 @@ Change-Id: I0f20b34b8f98673d9fc15dd2687b02c0dd296409
  3 files changed, 22 insertions(+)
 
 diff --git a/res/values/strings.xml b/res/values/strings.xml
-index 4b1b2cf..eddbfb4 100644
+index ec186d6..cf8354b 100644
 --- a/res/values/strings.xml
 +++ b/res/values/strings.xml
-@@ -4448,6 +4448,11 @@
+@@ -4451,6 +4451,11 @@
      <string name="partition_info_sdcard">/sdcard (FAT)</string>
      <string name="partition_info_sdext">EXT partition</string>
  

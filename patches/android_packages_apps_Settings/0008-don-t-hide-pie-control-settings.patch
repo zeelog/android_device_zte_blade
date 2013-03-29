@@ -1,0 +1,43 @@
+From 30d22335d92aca4de825b1a4263edacce569ed34 Mon Sep 17 00:00:00 2001
+From: Konsta <konsta09@gmail.com>
+Date: Wed, 27 Mar 2013 10:01:20 +0200
+Subject: [PATCH 09/10] don't hide pie control settings
+
+Change-Id: Ib0a9b2029174a12fa96a86a9e05b8a867bdf3111
+---
+ res/values/strings.xml                             |    2 +-
+ .../settings/cyanogenmod/SystemSettings.java       |    5 -----
+ 2 files changed, 1 insertion(+), 6 deletions(-)
+
+diff --git a/res/values/strings.xml b/res/values/strings.xml
+index a451a6e..cafc2c7 100644
+--- a/res/values/strings.xml
++++ b/res/values/strings.xml
+@@ -5244,7 +5244,7 @@
+ 
+     <!-- Quick/Pie Control #CM -->
+     <string name="pie_control_title">Pie controls</string>
+-    <string name="pie_control_enabled">Enabled when Expanded desktop is active</string>
++    <string name="pie_control_enabled">Enabled</string>
+     <string name="pie_control_disabled">Disabled</string>
+     <string name="pie_control_search_title">Show search button</string>
+     <string name="pie_control_size">Navigation key size</string>
+diff --git a/src/com/android/settings/cyanogenmod/SystemSettings.java b/src/com/android/settings/cyanogenmod/SystemSettings.java
+index 5e793fc..a78a308 100644
+--- a/src/com/android/settings/cyanogenmod/SystemSettings.java
++++ b/src/com/android/settings/cyanogenmod/SystemSettings.java
+@@ -147,11 +147,6 @@ public class SystemSettings extends SettingsPreferenceFragment implements Prefer
+ 
+         // Pie controls
+         mPieControl = (PreferenceScreen) findPreference(KEY_PIE_CONTROL);
+-        if (mPieControl != null && removeNavbar) {
+-            // Remove on devices without a navbar to start with
+-            prefScreen.removePreference(mPieControl);
+-            mPieControl = null;
+-        }
+ 
+         // Don't display the lock clock preference if its not installed
+         removePreferenceIfPackageNotInstalled(findPreference(KEY_LOCK_CLOCK));
+-- 
+1.7.9.5
+

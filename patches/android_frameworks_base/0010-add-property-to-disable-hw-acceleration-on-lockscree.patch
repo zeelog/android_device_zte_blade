@@ -1,7 +1,7 @@
-From 95f83f5bac15ec7834ff541fdb0f4b983c09a083 Mon Sep 17 00:00:00 2001
+From e3af97beabc06b8fe0d347393b6c011d59b70c69 Mon Sep 17 00:00:00 2001
 From: Konsta <konsta09@gmail.com>
 Date: Tue, 5 Mar 2013 15:15:29 +0200
-Subject: [PATCH 11/14] add property to disable hw acceleration on lockscreen
+Subject: [PATCH 11/15] add property to disable hw acceleration on lockscreen
 
 Change-Id: I8ca5ac249e3211cf01d2528fee0f4a02d02d24d7
 ---
