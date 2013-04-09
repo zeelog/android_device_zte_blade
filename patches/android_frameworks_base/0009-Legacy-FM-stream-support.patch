@@ -1,4 +1,4 @@
-From 20af8cf0bedb77f18b3d4030f9293f1c38cc0409 Mon Sep 17 00:00:00 2001
+From 31f31aa82f41807d10c78608a5873336a1242233 Mon Sep 17 00:00:00 2001
 From: Grigori Goronzy <greg@blackbox>
 Date: Thu, 21 Feb 2013 00:34:09 +0100
 Subject: [PATCH 10/15] Legacy FM stream support

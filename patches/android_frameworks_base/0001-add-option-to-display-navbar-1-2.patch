@@ -1,4 +1,4 @@
-From 68d960daa29742f43d8b1e4eb5a2f50a9f389cb7 Mon Sep 17 00:00:00 2001
+From f0916729d872c48e9cd37bbade63fec82a0f1180 Mon Sep 17 00:00:00 2001
 From: Konsta <konsta09@gmail.com>
 Date: Tue, 18 Dec 2012 14:43:15 +0200
 Subject: [PATCH 01/15] add option to display navbar (1/2)
@@ -10,10 +10,10 @@ Change-Id: Id0b09d22bfec899cd706e65d73feb7d907c0c101
  2 files changed, 13 insertions(+), 2 deletions(-)
 
 diff --git a/core/java/android/provider/Settings.java b/core/java/android/provider/Settings.java
-index f5174fa..133e928 100644
+index 99252e1..1bc2b3b 100644
 --- a/core/java/android/provider/Settings.java
 +++ b/core/java/android/provider/Settings.java
-@@ -3043,6 +3043,12 @@ public final class Settings {
+@@ -3046,6 +3046,12 @@ public final class Settings {
          public static final String UI_FORCE_OVERFLOW_BUTTON = "ui_force_overflow_button";
  
           /**

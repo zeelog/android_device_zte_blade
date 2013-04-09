@@ -1,4 +1,4 @@
-From 11c01fa273d3aa4147144b9840151b00ce413de2 Mon Sep 17 00:00:00 2001
+From e970d527f7b37272aaa2a48956ef5e8c7a97ad54 Mon Sep 17 00:00:00 2001
 From: Konsta <konsta09@gmail.com>
 Date: Sat, 9 Feb 2013 21:46:16 +0200
 Subject: [PATCH 08/10] don't hide hardware key settings when navbar enabled
@@ -9,10 +9,10 @@ Change-Id: I79f011f6ef5d4ba589e06edfc097501b5409e9d3
  1 file changed, 2 insertions(+), 10 deletions(-)
 
 diff --git a/src/com/android/settings/cyanogenmod/SystemSettings.java b/src/com/android/settings/cyanogenmod/SystemSettings.java
-index 4ac51b5..5e793fc 100644
+index d6e517c..4adb0fa 100644
 --- a/src/com/android/settings/cyanogenmod/SystemSettings.java
 +++ b/src/com/android/settings/cyanogenmod/SystemSettings.java
-@@ -75,17 +75,12 @@ public class SystemSettings extends SettingsPreferenceFragment implements Prefer
+@@ -80,17 +80,12 @@ public class SystemSettings extends SettingsPreferenceFragment  implements
          addPreferencesFromResource(R.xml.system_settings);
          PreferenceScreen prefScreen = getPreferenceScreen();
  
@@ -32,7 +32,7 @@ index 4ac51b5..5e793fc 100644
                  removeNavbar = true;
              }
          } catch (RemoteException e) {
-@@ -116,9 +111,6 @@ public class SystemSettings extends SettingsPreferenceFragment implements Prefer
+@@ -121,9 +116,6 @@ public class SystemSettings extends SettingsPreferenceFragment  implements
              mNavButtonsHeight.setSummary(mNavButtonsHeight.getEntry());
  
              // Act on the above

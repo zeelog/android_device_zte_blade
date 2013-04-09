@@ -1,4 +1,4 @@
-From 2c92a3836ab32775b1dfe8c260c3e6dc626739df Mon Sep 17 00:00:00 2001
+From d8ba989d4a246d224947f2e04bd05b2797434f83 Mon Sep 17 00:00:00 2001
 From: Konsta <konsta09@gmail.com>
 Date: Tue, 18 Dec 2012 15:27:40 +0200
 Subject: [PATCH 03/10] add partition info
@@ -15,10 +15,10 @@ Change-Id: I5a01f913f5d0eca04cbe54175e8fa72cb6418f77
  create mode 100644 src/com/android/settings/PartitionInfo.java
 
 diff --git a/AndroidManifest.xml b/AndroidManifest.xml
-index 976bc6b..f7280ed 100644
+index 1d0fdb1..9a7d553 100644
 --- a/AndroidManifest.xml
 +++ b/AndroidManifest.xml
-@@ -832,6 +832,15 @@
+@@ -848,6 +848,15 @@
                  android:resource="@id/application_settings" />
          </activity>
  
@@ -35,12 +35,12 @@ index 976bc6b..f7280ed 100644
                  android:label="@string/location_settings_title"
                  android:uiOptions="none"
 diff --git a/res/values/strings.xml b/res/values/strings.xml
-index bdc0307..ec186d6 100644
+index fc53fae..690370e 100644
 --- a/res/values/strings.xml
 +++ b/res/values/strings.xml
-@@ -4443,6 +4443,14 @@
+@@ -4442,6 +4442,14 @@
      <string name="konsta_navbar_dialog_negative">Reboot later</string>
-     <string name="konsta_navbar_dialog_positive">Hot reboot now</string>
+     <string name="konsta_navbar_dialog_positive">Reboot now</string>
  
 +    <!-- Partition info -->
 +    <string name="partition_info_title">Partition info</string>

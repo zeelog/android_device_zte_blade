@@ -1,4 +1,4 @@
-From 55f476d8684e579d9e3db7e812e0ad8db44dce49 Mon Sep 17 00:00:00 2001
+From a916de83b016895d13dc1f90d7236ec179356e3d Mon Sep 17 00:00:00 2001
 From: Grigori Goronzy <greg@blackbox>
 Date: Mon, 28 Jan 2013 06:44:58 +0100
 Subject: [PATCH 09/15] Prefer 16bpp formats for opaque bitmaps

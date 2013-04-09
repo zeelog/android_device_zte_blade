@@ -1,89 +1,96 @@
-From bf1458b35754e82608ea556a7e5a2ee468a3225f Mon Sep 17 00:00:00 2001
+From 09bf81c167c36577c880f22d75f0a975832f844f Mon Sep 17 00:00:00 2001
 From: Konsta <konsta09@gmail.com>
 Date: Tue, 18 Dec 2012 14:58:36 +0200
 Subject: [PATCH 01/10] add option to display navbar (2/2)
 
 Change-Id: Idaf20f1a13db8045b5090fa9cf499ef33c5f790d
 ---
- res/values/strings.xml                             |    8 ++++
- res/xml/system_settings.xml                        |    6 +++
- .../settings/cyanogenmod/SystemSettings.java       |   47 ++++++++++++++++++++
- 3 files changed, 61 insertions(+)
+ AndroidManifest.xml                                |    1 +
+ res/values/strings.xml                             |    7 ++++
+ res/xml/system_settings.xml                        |    5 +++
+ .../settings/cyanogenmod/SystemSettings.java       |   34 ++++++++++++++++++++
+ 4 files changed, 47 insertions(+)
 
+diff --git a/AndroidManifest.xml b/AndroidManifest.xml
+index f1a1bde..1d0fdb1 100644
+--- a/AndroidManifest.xml
++++ b/AndroidManifest.xml
+@@ -63,6 +63,7 @@
+     <uses-permission android:name="android.permission.CONFIGURE_WIFI_DISPLAY" />
+     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+     <uses-permission android:name="android.permission.SET_TIME" />
++    <uses-permission android:name="android.permission.REBOOT"/>
+ 
+     <permission
+         android:name="android.permission.REQUEST_SUPERUSER"
 diff --git a/res/values/strings.xml b/res/values/strings.xml
-index 9a23234..25688aa 100644
+index 48e38f8..fb1781c 100644
 --- a/res/values/strings.xml
 +++ b/res/values/strings.xml
-@@ -4435,6 +4435,14 @@
+@@ -4435,6 +4435,13 @@
  
      <!-- **** CYANOGENMOD ADDITIONS START **** -->
  
 +    <!-- Navbar -->
-+    <string name="konsta_navbar">Show navigation bar</string>
-+    <string name="konsta_navbar_reboot">Requires a reboot</string>
++    <string name="konsta_navbar">Navigation bar</string>
 +    <string name="konsta_navbar_dialog_title">Reboot required</string>
 +    <string name="konsta_navbar_dialog_msg">Please reboot to enable/disable the navigation bar</string>
 +    <string name="konsta_navbar_dialog_negative">Reboot later</string>
-+    <string name="konsta_navbar_dialog_positive">Hot reboot now</string>
++    <string name="konsta_navbar_dialog_positive">Reboot now</string>
 +
      <string name="ok">OK</string>
  
      <!-- Quiet hours -->
 diff --git a/res/xml/system_settings.xml b/res/xml/system_settings.xml
-index a95446f..c92d360 100644
+index c5ffb5d..9c812b0 100644
 --- a/res/xml/system_settings.xml
 +++ b/res/xml/system_settings.xml
-@@ -84,4 +84,10 @@
-             android:title="@string/navigation_ring_title" />
+@@ -97,4 +97,9 @@
+ 
      </PreferenceCategory>
  
 +    <CheckBoxPreference
 +        android:key="konsta_navbar"
 +        android:title="@string/konsta_navbar"
-+        android:summary="@string/konsta_navbar_reboot"
 +        android:defaultValue="false" />
 +
  </PreferenceScreen>
 diff --git a/src/com/android/settings/cyanogenmod/SystemSettings.java b/src/com/android/settings/cyanogenmod/SystemSettings.java
-index 9e05b71..360ad3a 100644
+index cbf88f1..c827d02 100644
 --- a/src/com/android/settings/cyanogenmod/SystemSettings.java
 +++ b/src/com/android/settings/cyanogenmod/SystemSettings.java
-@@ -16,12 +16,20 @@
+@@ -16,11 +16,14 @@
  
  package com.android.settings.cyanogenmod;
  
 +import android.app.AlertDialog;
+ import android.content.ContentResolver;
  import android.content.Context;
-+import android.os.Bundle;
-+import android.os.RemoteException;
-+import android.os.ServiceManager;
 +import android.content.DialogInterface;
  import android.content.pm.PackageManager.NameNotFoundException;
+ import android.content.res.Resources;
  import android.os.Bundle;
++import android.os.PowerManager;
  import android.os.RemoteException;
  import android.os.ServiceManager;
  import android.os.UserHandle;
-+import android.os.IBinder;
-+import android.os.IPowerManager;
-+import android.preference.CheckBoxPreference;
- import android.preference.Preference;
- import android.preference.PreferenceScreen;
- import android.provider.Settings;
-@@ -49,11 +57,13 @@ public class SystemSettings extends SettingsPreferenceFragment {
-     private static final String KEY_NOTIFICATION_DRAWER = "notification_drawer";
-     private static final String KEY_POWER_MENU = "power_menu";
+@@ -57,6 +60,7 @@ public class SystemSettings extends SettingsPreferenceFragment  implements
      private static final String KEY_PIE_CONTROL = "pie_control";
+     private static final String KEY_EXPANDED_DESKTOP = "expanded_desktop";
+     private static final String KEY_EXPANDED_DESKTOP_NO_NAVBAR = "expanded_desktop_no_navbar";
 +    private static final String KONSTA_NAVBAR = "konsta_navbar";
  
      private PreferenceScreen mNotificationPulse;
      private PreferenceScreen mBatteryPulse;
-     private PreferenceScreen mPieControl;
+@@ -65,6 +69,7 @@ public class SystemSettings extends SettingsPreferenceFragment  implements
+     private CheckBoxPreference mExpandedDesktopNoNavbarPref;
+ 
      private boolean mIsPrimary;
 +    private CheckBoxPreference mKonstaNavbar;
  
      @Override
      public void onCreate(Bundle savedInstanceState) {
-@@ -125,6 +135,10 @@ public class SystemSettings extends SettingsPreferenceFragment {
+@@ -136,6 +141,10 @@ public class SystemSettings extends SettingsPreferenceFragment  implements
              }
          }
  
@@ -94,13 +101,11 @@ index 9e05b71..360ad3a 100644
          // Pie controls
          mPieControl = (PreferenceScreen) findPreference(KEY_PIE_CONTROL);
          if (mPieControl != null && removeNavbar) {
-@@ -178,6 +192,39 @@ public class SystemSettings extends SettingsPreferenceFragment {
+@@ -226,6 +235,31 @@ public class SystemSettings extends SettingsPreferenceFragment  implements
          }
       }
  
-+    @Override
 +    public boolean onPreferenceTreeClick(PreferenceScreen preferenceScreen, Preference preference) {
-+        boolean value;
 +
 +        if (preference == mKonstaNavbar) {
 +            Settings.System.putInt(getContentResolver(), Settings.System.KONSTA_NAVBAR,
@@ -112,15 +117,9 @@ index 9e05b71..360ad3a 100644
 +                    .setNegativeButton(getResources().getString(R.string.konsta_navbar_dialog_negative), null)
 +                    .setCancelable(false)
 +                    .setPositiveButton(getResources().getString(R.string.konsta_navbar_dialog_positive), new DialogInterface.OnClickListener() {
-+                        @Override
 +                        public void onClick(DialogInterface dialog, int which) {
-+                            try {
-+                                IBinder b = ServiceManager.getService(Context.POWER_SERVICE);
-+                                IPowerManager pm = IPowerManager.Stub.asInterface(b);
-+                                pm.crash("Navbar changed");
-+                            } catch (android.os.RemoteException e) {
-+                                //
-+                            }
++                            PowerManager powerManager = (PowerManager) getSystemService(Context.POWER_SERVICE);
++                            powerManager.reboot(null);
 +                        }
 +                    })
 +                    .create()
