@@ -12,38 +12,37 @@ import android.widget.TextView;
 
 public class ProxDisplay extends Activity implements OnClickListener {
 
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
 
-		setContentView(R.layout.prox_display);
+        setContentView(R.layout.prox_display);
 
-		View backButton = findViewById(R.id.back_button);
-		backButton.setOnClickListener(this);
+        View backButton = findViewById(R.id.back_button);
+        backButton.setOnClickListener(this);
 
-		TextView textBox = new TextView(this);
-		textBox = (TextView) findViewById(R.id.textBox);
+        TextView textBox = new TextView(this);
+        textBox = (TextView) findViewById(R.id.textBox);
 
-		try {
-			Process p = Runtime.getRuntime().exec("/system/bin/prox_cal -d");
-			BufferedReader commandResult = new BufferedReader(
-					new InputStreamReader(new BufferedInputStream(
-							p.getInputStream())));
-			p.waitFor();
-			String returned;
-			while ((returned = commandResult.readLine()) != null) {
-				textBox.append(returned + "\n");
-			}
+        try {
+            Process p = Runtime.getRuntime().exec("/system/bin/prox_cal -d");
+            BufferedReader commandResult = new BufferedReader(
+                    new InputStreamReader(new BufferedInputStream(
+                            p.getInputStream())));
+            p.waitFor();
+            String returned;
+            while ((returned = commandResult.readLine()) != null) {
+                textBox.append(returned + "\n");
+            }
+        } catch (Exception ex) {
+            textBox.setText("Error: " + ex.getMessage());
+        }
+    }
 
-		} catch (Exception ex) {
-			textBox.setText("Error: " + ex.getMessage());
-		}
-	}
-
-	public void onClick(View v) {
-		switch (v.getId()) {
-		case R.id.back_button:
-			finish();
-		}
-	}
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.back_button:
+                finish();
+        }
+    }
 }
