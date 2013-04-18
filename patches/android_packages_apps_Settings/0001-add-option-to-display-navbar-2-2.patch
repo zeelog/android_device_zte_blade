@@ -1,12 +1,12 @@
-From 09bf81c167c36577c880f22d75f0a975832f844f Mon Sep 17 00:00:00 2001
+From 2f6f448256b95741d47d84c7578ea8e900ff59e9 Mon Sep 17 00:00:00 2001
 From: Konsta <konsta09@gmail.com>
 Date: Tue, 18 Dec 2012 14:58:36 +0200
-Subject: [PATCH 01/10] add option to display navbar (2/2)
+Subject: [PATCH 1/9] add option to display navbar (2/2)
 
 Change-Id: Idaf20f1a13db8045b5090fa9cf499ef33c5f790d
 ---
  AndroidManifest.xml                                |    1 +
- res/values/strings.xml                             |    7 ++++
+ res/values/cm_strings.xml                          |    7 ++++
  res/xml/system_settings.xml                        |    5 +++
  .../settings/cyanogenmod/SystemSettings.java       |   34 ++++++++++++++++++++
  4 files changed, 47 insertions(+)
@@ -23,14 +23,14 @@ index f1a1bde..1d0fdb1 100644
  
      <permission
          android:name="android.permission.REQUEST_SUPERUSER"
-diff --git a/res/values/strings.xml b/res/values/strings.xml
-index 48e38f8..fb1781c 100644
---- a/res/values/strings.xml
-+++ b/res/values/strings.xml
-@@ -4435,6 +4435,13 @@
- 
-     <!-- **** CYANOGENMOD ADDITIONS START **** -->
- 
+diff --git a/res/values/cm_strings.xml b/res/values/cm_strings.xml
+index 2e0254e..9d3b276 100644
+--- a/res/values/cm_strings.xml
++++ b/res/values/cm_strings.xml
+@@ -14,6 +14,13 @@
+      limitations under the License.
+ -->
+ <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
 +    <!-- Navbar -->
 +    <string name="konsta_navbar">Navigation bar</string>
 +    <string name="konsta_navbar_dialog_title">Reboot required</string>
@@ -38,9 +38,9 @@ index 48e38f8..fb1781c 100644
 +    <string name="konsta_navbar_dialog_negative">Reboot later</string>
 +    <string name="konsta_navbar_dialog_positive">Reboot now</string>
 +
-     <string name="ok">OK</string>
- 
-     <!-- Quiet hours -->
+     <!-- Activity label of BluetoothMasPermissionActivity, also used as Strings in the permission dialog [CHAR LIMIT=none] -->
+     <string name="bluetooth_mas_request">"Message Access request"</string>
+     <!-- Bluetooth MAS permission Alert Activity text [CHAR LIMIT=none] -->
 diff --git a/res/xml/system_settings.xml b/res/xml/system_settings.xml
 index c5ffb5d..9c812b0 100644
 --- a/res/xml/system_settings.xml
@@ -56,10 +56,10 @@ index c5ffb5d..9c812b0 100644
 +
  </PreferenceScreen>
 diff --git a/src/com/android/settings/cyanogenmod/SystemSettings.java b/src/com/android/settings/cyanogenmod/SystemSettings.java
-index cbf88f1..c827d02 100644
+index 0b0d29c..be18df8 100644
 --- a/src/com/android/settings/cyanogenmod/SystemSettings.java
 +++ b/src/com/android/settings/cyanogenmod/SystemSettings.java
-@@ -16,11 +16,14 @@
+@@ -16,10 +16,13 @@
  
  package com.android.settings.cyanogenmod;
  
@@ -67,14 +67,13 @@ index cbf88f1..c827d02 100644
  import android.content.ContentResolver;
  import android.content.Context;
 +import android.content.DialogInterface;
- import android.content.pm.PackageManager.NameNotFoundException;
  import android.content.res.Resources;
  import android.os.Bundle;
 +import android.os.PowerManager;
  import android.os.RemoteException;
  import android.os.ServiceManager;
  import android.os.UserHandle;
-@@ -57,6 +60,7 @@ public class SystemSettings extends SettingsPreferenceFragment  implements
+@@ -53,6 +56,7 @@ public class SystemSettings extends SettingsPreferenceFragment  implements
      private static final String KEY_PIE_CONTROL = "pie_control";
      private static final String KEY_EXPANDED_DESKTOP = "expanded_desktop";
      private static final String KEY_EXPANDED_DESKTOP_NO_NAVBAR = "expanded_desktop_no_navbar";
@@ -82,7 +81,7 @@ index cbf88f1..c827d02 100644
  
      private PreferenceScreen mNotificationPulse;
      private PreferenceScreen mBatteryPulse;
-@@ -65,6 +69,7 @@ public class SystemSettings extends SettingsPreferenceFragment  implements
+@@ -61,6 +65,7 @@ public class SystemSettings extends SettingsPreferenceFragment  implements
      private CheckBoxPreference mExpandedDesktopNoNavbarPref;
  
      private boolean mIsPrimary;
@@ -90,7 +89,7 @@ index cbf88f1..c827d02 100644
  
      @Override
      public void onCreate(Bundle savedInstanceState) {
-@@ -136,6 +141,10 @@ public class SystemSettings extends SettingsPreferenceFragment  implements
+@@ -132,6 +137,10 @@ public class SystemSettings extends SettingsPreferenceFragment  implements
              }
          }
  
@@ -101,7 +100,7 @@ index cbf88f1..c827d02 100644
          // Pie controls
          mPieControl = (PreferenceScreen) findPreference(KEY_PIE_CONTROL);
          if (mPieControl != null && removeNavbar) {
-@@ -226,6 +235,31 @@ public class SystemSettings extends SettingsPreferenceFragment  implements
+@@ -222,6 +231,31 @@ public class SystemSettings extends SettingsPreferenceFragment  implements
          }
       }
  

@@ -1,7 +1,7 @@
-From e970d527f7b37272aaa2a48956ef5e8c7a97ad54 Mon Sep 17 00:00:00 2001
+From 8183a2d8833fee5f1c81e1f168c62647a44a6b64 Mon Sep 17 00:00:00 2001
 From: Konsta <konsta09@gmail.com>
 Date: Sat, 9 Feb 2013 21:46:16 +0200
-Subject: [PATCH 08/10] don't hide hardware key settings when navbar enabled
+Subject: [PATCH 8/9] don't hide hardware key settings when navbar enabled
 
 Change-Id: I79f011f6ef5d4ba589e06edfc097501b5409e9d3
 ---
@@ -9,10 +9,10 @@ Change-Id: I79f011f6ef5d4ba589e06edfc097501b5409e9d3
  1 file changed, 2 insertions(+), 10 deletions(-)
 
 diff --git a/src/com/android/settings/cyanogenmod/SystemSettings.java b/src/com/android/settings/cyanogenmod/SystemSettings.java
-index d6e517c..4adb0fa 100644
+index ff318f4..b32a55a 100644
 --- a/src/com/android/settings/cyanogenmod/SystemSettings.java
 +++ b/src/com/android/settings/cyanogenmod/SystemSettings.java
-@@ -80,17 +80,12 @@ public class SystemSettings extends SettingsPreferenceFragment  implements
+@@ -76,17 +76,12 @@ public class SystemSettings extends SettingsPreferenceFragment  implements
          addPreferencesFromResource(R.xml.system_settings);
          PreferenceScreen prefScreen = getPreferenceScreen();
  
@@ -32,7 +32,7 @@ index d6e517c..4adb0fa 100644
                  removeNavbar = true;
              }
          } catch (RemoteException e) {
-@@ -121,9 +116,6 @@ public class SystemSettings extends SettingsPreferenceFragment  implements
+@@ -117,9 +112,6 @@ public class SystemSettings extends SettingsPreferenceFragment  implements
              mNavButtonsHeight.setSummary(mNavButtonsHeight.getEntry());
  
              // Act on the above

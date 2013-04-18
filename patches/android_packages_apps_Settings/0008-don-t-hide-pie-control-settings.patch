@@ -1,26 +1,26 @@
-From 466c22bc4f89c08fde1af79a0ed77393ee83d0e9 Mon Sep 17 00:00:00 2001
+From caabca9b1fb7da71963be1e4258072f374bf05bf Mon Sep 17 00:00:00 2001
 From: Konsta <konsta09@gmail.com>
 Date: Wed, 27 Mar 2013 10:01:20 +0200
-Subject: [PATCH 09/10] don't hide pie control settings
+Subject: [PATCH 9/9] don't hide pie control settings
 
 Change-Id: Ib0a9b2029174a12fa96a86a9e05b8a867bdf3111
 ---
- res/values/strings.xml                             |    2 +-
+ res/values/cm_strings.xml                          |    2 +-
  res/xml/system_settings.xml                        |   10 +++++-----
  .../settings/cyanogenmod/SystemSettings.java       |    5 -----
  3 files changed, 6 insertions(+), 11 deletions(-)
 
-diff --git a/res/values/strings.xml b/res/values/strings.xml
-index 621b6ce..4d8288e 100644
---- a/res/values/strings.xml
-+++ b/res/values/strings.xml
-@@ -5245,7 +5245,7 @@
+diff --git a/res/values/cm_strings.xml b/res/values/cm_strings.xml
+index a9167c1..86789ae 100644
+--- a/res/values/cm_strings.xml
++++ b/res/values/cm_strings.xml
+@@ -874,7 +874,7 @@
  
-     <!-- Quick/Pie Control #CM -->
+     <!-- Pie controls -->
      <string name="pie_control_title">Pie controls</string>
--    <string name="pie_control_enabled">Enabled when Expanded desktop is active</string>
-+    <string name="pie_control_enabled">Enabled</string>
-     <string name="pie_control_disabled">Disabled</string>
+-    <string name="pie_control_enabled">Floating controls when Expanded desktop is enabled</string>
++    <string name="pie_control_enabled">Floating controls enabled</string>
+     <string name="pie_control_disabled">Floating controls disabled</string>
      <string name="pie_control_size">Navigation key size</string>
      <string name="pie_control_trigger_positions">Trigger positions</string>
 diff --git a/res/xml/system_settings.xml b/res/xml/system_settings.xml
@@ -52,10 +52,10 @@ index 2f7f5ed..9786abe 100644
  
      <CheckBoxPreference
 diff --git a/src/com/android/settings/cyanogenmod/SystemSettings.java b/src/com/android/settings/cyanogenmod/SystemSettings.java
-index 4adb0fa..63204e2 100644
+index b32a55a..060ca87 100644
 --- a/src/com/android/settings/cyanogenmod/SystemSettings.java
 +++ b/src/com/android/settings/cyanogenmod/SystemSettings.java
-@@ -152,11 +152,6 @@ public class SystemSettings extends SettingsPreferenceFragment  implements
+@@ -148,11 +148,6 @@ public class SystemSettings extends SettingsPreferenceFragment  implements
  
          // Pie controls
          mPieControl = (PreferenceScreen) findPreference(KEY_PIE_CONTROL);

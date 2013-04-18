@@ -1,20 +1,20 @@
-From 6d1e5e69f7475a5bca31b7118b1e9c090de180b0 Mon Sep 17 00:00:00 2001
+From 1af496d690566f9c9b0a00192188e122c8161eaf Mon Sep 17 00:00:00 2001
 From: Konsta <konsta09@gmail.com>
 Date: Tue, 1 Jan 2013 19:11:19 +0200
-Subject: [PATCH 05/10] add option to disable bootanimation (2/2)
+Subject: [PATCH 5/9] add option to disable bootanimation (2/2)
 
 Change-Id: Ia1c29e89318ced977c5b1881bfd5b62253128f6b
 ---
- res/values/strings.xml                             |    4 ++++
+ res/values/cm_strings.xml                          |    4 ++++
  res/xml/performance_settings.xml                   |    5 +++++
  .../settings/cyanogenmod/PerformanceSettings.java  |   13 +++++++++++++
  3 files changed, 22 insertions(+)
 
-diff --git a/res/values/strings.xml b/res/values/strings.xml
-index 550fe2c..d0472fa 100644
---- a/res/values/strings.xml
-+++ b/res/values/strings.xml
-@@ -4455,6 +4455,10 @@
+diff --git a/res/values/cm_strings.xml b/res/values/cm_strings.xml
+index 6f1f2ff..977b46e 100644
+--- a/res/values/cm_strings.xml
++++ b/res/values/cm_strings.xml
+@@ -34,6 +34,10 @@
      <string name="konsta_web_summary">Visit MoDaCo thread</string>
      <string name="konsta_web_url">http://www.modaco.com/topic/359832-devrom-cyanogenmod-10.1-android-421/</string>
  
@@ -22,9 +22,9 @@ index 550fe2c..d0472fa 100644
 +    <string name="pref_disable_bootanimation_title">Disable boot animation</string>
 +    <string name="pref_disable_bootanimation_summary">Don\'t show boot animation for faster boot</string>
 +
-     <string name="ok">OK</string>
- 
-     <!-- Quiet hours -->
+     <!-- Activity label of BluetoothMasPermissionActivity, also used as Strings in the permission dialog [CHAR LIMIT=none] -->
+     <string name="bluetooth_mas_request">"Message Access request"</string>
+     <!-- Bluetooth MAS permission Alert Activity text [CHAR LIMIT=none] -->
 diff --git a/res/xml/performance_settings.xml b/res/xml/performance_settings.xml
 index 8644a70..547e41a 100644
 --- a/res/xml/performance_settings.xml

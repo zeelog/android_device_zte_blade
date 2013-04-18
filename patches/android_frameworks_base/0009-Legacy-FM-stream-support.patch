@@ -1,7 +1,7 @@
-From 31f31aa82f41807d10c78608a5873336a1242233 Mon Sep 17 00:00:00 2001
+From 3f0f75fab8c94d83803963e5d06d57ae81132ec0 Mon Sep 17 00:00:00 2001
 From: Grigori Goronzy <greg@blackbox>
 Date: Thu, 21 Feb 2013 00:34:09 +0100
-Subject: [PATCH 10/15] Legacy FM stream support
+Subject: [PATCH 10/14] Legacy FM stream support
 
 Add stream type STREAM_FM for legacy FM radio volume control and
 audio routing.
@@ -37,7 +37,7 @@ index ac2588d..2f7d2f5 100644
  
      /**
 diff --git a/media/java/android/media/AudioService.java b/media/java/android/media/AudioService.java
-index 3343ae8..beffac2 100755
+index 3343ae8..beffac2 100644
 --- a/media/java/android/media/AudioService.java
 +++ b/media/java/android/media/AudioService.java
 @@ -237,7 +237,8 @@ public class AudioService extends IAudioService.Stub implements OnFinished {
@@ -71,7 +71,7 @@ index 3343ae8..beffac2 100755
      private int[] mStreamVolumeAlias;
  
 diff --git a/media/java/android/media/AudioSystem.java b/media/java/android/media/AudioSystem.java
-index 01e79e7..5d31b2a 100755
+index 01e79e7..5d31b2a 100644
 --- a/media/java/android/media/AudioSystem.java
 +++ b/media/java/android/media/AudioSystem.java
 @@ -52,13 +52,15 @@ public class AudioSystem

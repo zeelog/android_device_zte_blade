@@ -1,7 +1,7 @@
-From b3b3228e526e16238d26bfd7b78e4f4b0abddbdb Mon Sep 17 00:00:00 2001
+From 38019326ea83e6c4eb08aac19e8d4fc9d737ceb1 Mon Sep 17 00:00:00 2001
 From: Nicholas Semendyaev <agent00791@gmail.com>
 Date: Tue, 18 Sep 2012 20:08:36 -0400
-Subject: [PATCH 05/15] NavigationBar: Custom height (1/2)
+Subject: [PATCH 05/14] NavigationBar: Custom height (1/2)
 
 Ported from http://review.cyanogenmod.org/#/c/23609/
 
@@ -15,7 +15,7 @@ Conflicts:
  2 files changed, 15 insertions(+), 6 deletions(-)
 
 diff --git a/core/java/android/provider/Settings.java b/core/java/android/provider/Settings.java
-index 74e0128..57170a1 100644
+index 41035a3..2a274ba 100644
 --- a/core/java/android/provider/Settings.java
 +++ b/core/java/android/provider/Settings.java
 @@ -2655,6 +2655,12 @@ public final class Settings {
@@ -32,10 +32,10 @@ index 74e0128..57170a1 100644
          * @hide
          */
 diff --git a/policy/src/com/android/internal/policy/impl/PhoneWindowManager.java b/policy/src/com/android/internal/policy/impl/PhoneWindowManager.java
-index e0e5a01..6bd45e0 100644
+index e46a39d..0eb104c 100644
 --- a/policy/src/com/android/internal/policy/impl/PhoneWindowManager.java
 +++ b/policy/src/com/android/internal/policy/impl/PhoneWindowManager.java
-@@ -667,6 +667,8 @@ public class PhoneWindowManager implements WindowManagerPolicy {
+@@ -670,6 +670,8 @@ public class PhoneWindowManager implements WindowManagerPolicy {
                      Settings.System.KEY_APP_SWITCH_LONG_PRESS_ACTION), false, this);
              resolver.registerContentObserver(Settings.System.getUriFor(
                      Settings.System.HARDWARE_KEY_REBINDING), false, this);
@@ -44,7 +44,7 @@ index e0e5a01..6bd45e0 100644
  
              updateSettings();
          }
-@@ -1360,6 +1362,7 @@ public class PhoneWindowManager implements WindowManagerPolicy {
+@@ -1336,6 +1338,7 @@ public class PhoneWindowManager implements WindowManagerPolicy {
              mVolBtnMusicControls = (Settings.System.getIntForUser(resolver,
                      Settings.System.VOLBTN_MUSIC_CONTROLS, 1, UserHandle.USER_CURRENT) == 1);
  
@@ -52,7 +52,7 @@ index e0e5a01..6bd45e0 100644
              boolean keyRebindingEnabled = Settings.System.getInt(resolver,
                      Settings.System.HARDWARE_KEY_REBINDING, 0) == 1;
  
-@@ -1478,6 +1481,9 @@ public class PhoneWindowManager implements WindowManagerPolicy {
+@@ -1454,6 +1457,9 @@ public class PhoneWindowManager implements WindowManagerPolicy {
              }
  
              // Update navigation bar dimensions
@@ -62,7 +62,7 @@ index e0e5a01..6bd45e0 100644
              if (expandedDesktopHidesNavigationBar()) {
                  // Set the navigation bar's dimensions to 0 in expanded desktop mode
                  mNavigationBarWidthForRotation[mPortraitRotation]
-@@ -1492,20 +1498,17 @@ public class PhoneWindowManager implements WindowManagerPolicy {
+@@ -1468,20 +1474,17 @@ public class PhoneWindowManager implements WindowManagerPolicy {
                  // Height of the navigation bar when presented horizontally at bottom
                  mNavigationBarHeightForRotation[mPortraitRotation] =
                  mNavigationBarHeightForRotation[mUpsideDownRotation] =

@@ -1,26 +1,26 @@
-From 48f354516b5d35b0fac46e56d0219807b44a8663 Mon Sep 17 00:00:00 2001
+From 184b21ed6912015e8d5efed0fb56714126b2a8ef Mon Sep 17 00:00:00 2001
 From: Rick C <rickfitsnugly@gmail.com>
 Date: Tue, 18 Sep 2012 20:09:13 -0400
-Subject: [PATCH 07/10] NavigationBar: Custom height (2/2)
+Subject: [PATCH 7/9] NavigationBar: Custom height (2/2)
 
 Ported from http://review.cyanogenmod.org/#/c/23610/
 
 Change-Id: I751ae54de1adf96367948735558363ce0dbb9f89
 ---
- res/values/arrays.xml                              |   21 ++++++++++++++++++++
- res/values/strings.xml                             |   10 ++++++++++
+ res/values/cm_arrays.xml                           |   21 ++++++++++++++++++++
+ res/values/cm_strings.xml                          |   10 ++++++++++
  res/xml/system_settings.xml                        |   10 +++++++++-
  .../settings/cyanogenmod/SystemSettings.java       |   20 +++++++++++++++++++
  4 files changed, 60 insertions(+), 1 deletion(-)
 
-diff --git a/res/values/arrays.xml b/res/values/arrays.xml
-index 47c5e6d..2c23f23 100644
---- a/res/values/arrays.xml
-+++ b/res/values/arrays.xml
-@@ -1284,5 +1284,26 @@
-         <item>2</item>
-     </string-array>
- 
+diff --git a/res/values/cm_arrays.xml b/res/values/cm_arrays.xml
+index 3a6a615..ac652b8 100644
+--- a/res/values/cm_arrays.xml
++++ b/res/values/cm_arrays.xml
+@@ -14,6 +14,27 @@
+      limitations under the License.
+ -->
+ <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
 +    <!--- Nav buttons height -->
 +    <string-array name="nav_buttons_height_entries" translatable="false">
 +        <item>@string/navigation_bar_height_48</item>
@@ -42,15 +42,16 @@ index 47c5e6d..2c23f23 100644
 +        <item>24</item>
 +    </string-array>
 +
-     <!-- **** CYANOGENMOD ADDITIONS END **** -->
- </resources>
-diff --git a/res/values/strings.xml b/res/values/strings.xml
-index 3db08ca..621b6ce 100644
---- a/res/values/strings.xml
-+++ b/res/values/strings.xml
-@@ -4937,6 +4937,16 @@
-     <string name="navigation_bar_menu_editable">Editable</string>
-     <string name="navigation_bar_menu_locked">Locked</string>
+     <!-- Wi-Fi settings. Presented as a list dialog to the user to choose the Wi-Fi region code. -->
+     <string-array name="wifi_countrycode_entries">
+         <item>United States</item>
+diff --git a/res/values/cm_strings.xml b/res/values/cm_strings.xml
+index cf51e0f..a9167c1 100644
+--- a/res/values/cm_strings.xml
++++ b/res/values/cm_strings.xml
+@@ -21,6 +21,16 @@
+     <string name="konsta_navbar_dialog_negative">Reboot later</string>
+     <string name="konsta_navbar_dialog_positive">Reboot now</string>
  
 +    <!-- Navigation Bar Height -->
 +    <string name="navigation_bar_height">Button height</string>
@@ -62,9 +63,9 @@ index 3db08ca..621b6ce 100644
 +    <string name="navigation_bar_height_28">28dp</string>
 +    <string name="navigation_bar_height_24">24dp</string>
 +
-     <!-- Power Widget  -->
-     <string name="power_widget_title">Power widget</string>
-     <string name="title_expanded_widget">Power widget</string>
+     <!-- Partition info -->
+     <string name="partition_info_title">Partition info</string>
+     <string name="partition_info_system">/system</string>
 diff --git a/res/xml/system_settings.xml b/res/xml/system_settings.xml
 index 9c812b0..2f7f5ed 100644
 --- a/res/xml/system_settings.xml
@@ -91,10 +92,10 @@ index 9c812b0..2f7f5ed 100644
  
      <CheckBoxPreference
 diff --git a/src/com/android/settings/cyanogenmod/SystemSettings.java b/src/com/android/settings/cyanogenmod/SystemSettings.java
-index c827d02..d6e517c 100644
+index be18df8..ff318f4 100644
 --- a/src/com/android/settings/cyanogenmod/SystemSettings.java
 +++ b/src/com/android/settings/cyanogenmod/SystemSettings.java
-@@ -52,6 +52,7 @@ public class SystemSettings extends SettingsPreferenceFragment  implements
+@@ -48,6 +48,7 @@ public class SystemSettings extends SettingsPreferenceFragment  implements
      private static final String KEY_NAVIGATION_BAR = "navigation_bar";
      private static final String KEY_NAVIGATION_RING = "navigation_ring";
      private static final String KEY_NAVIGATION_BAR_CATEGORY = "navigation_bar_category";
@@ -102,7 +103,7 @@ index c827d02..d6e517c 100644
      private static final String KEY_LOCK_CLOCK = "lock_clock";
      private static final String KEY_STATUS_BAR = "status_bar";
      private static final String KEY_QUICK_SETTINGS = "quick_settings_panel";
-@@ -69,6 +70,7 @@ public class SystemSettings extends SettingsPreferenceFragment  implements
+@@ -65,6 +66,7 @@ public class SystemSettings extends SettingsPreferenceFragment  implements
      private CheckBoxPreference mExpandedDesktopNoNavbarPref;
  
      private boolean mIsPrimary;
@@ -110,7 +111,7 @@ index c827d02..d6e517c 100644
      private CheckBoxPreference mKonstaNavbar;
  
      @Override
-@@ -109,6 +111,15 @@ public class SystemSettings extends SettingsPreferenceFragment  implements
+@@ -105,6 +107,15 @@ public class SystemSettings extends SettingsPreferenceFragment  implements
                  }
              }
  
@@ -126,7 +127,7 @@ index c827d02..d6e517c 100644
              // Act on the above
              if (removeKeys) {
                  prefScreen.removePreference(findPreference(KEY_HARDWARE_KEYS));
-@@ -116,6 +127,7 @@ public class SystemSettings extends SettingsPreferenceFragment  implements
+@@ -112,6 +123,7 @@ public class SystemSettings extends SettingsPreferenceFragment  implements
              if (removeNavbar) {
                  prefScreen.removePreference(findPreference(KEY_NAVIGATION_BAR));
                  prefScreen.removePreference(findPreference(KEY_NAVIGATION_RING));
@@ -134,7 +135,7 @@ index c827d02..d6e517c 100644
                  prefScreen.removePreference(findPreference(KEY_NAVIGATION_BAR_CATEGORY));
              }
          } else {
-@@ -124,6 +136,7 @@ public class SystemSettings extends SettingsPreferenceFragment  implements
+@@ -120,6 +132,7 @@ public class SystemSettings extends SettingsPreferenceFragment  implements
              prefScreen.removePreference(findPreference(KEY_HARDWARE_KEYS));
              prefScreen.removePreference(findPreference(KEY_NAVIGATION_BAR));
              prefScreen.removePreference(findPreference(KEY_NAVIGATION_RING));
@@ -142,7 +143,7 @@ index c827d02..d6e517c 100644
              prefScreen.removePreference(findPreference(KEY_NAVIGATION_BAR_CATEGORY));
              prefScreen.removePreference(findPreference(KEY_STATUS_BAR));
              prefScreen.removePreference(findPreference(KEY_QUICK_SETTINGS));
-@@ -212,6 +225,13 @@ public class SystemSettings extends SettingsPreferenceFragment  implements
+@@ -208,6 +221,13 @@ public class SystemSettings extends SettingsPreferenceFragment  implements
              boolean value = (Boolean) objValue;
              updateExpandedDesktop(value ? 2 : 0);
              return true;

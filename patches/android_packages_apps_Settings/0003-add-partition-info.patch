@@ -1,12 +1,12 @@
-From d8ba989d4a246d224947f2e04bd05b2797434f83 Mon Sep 17 00:00:00 2001
+From db9f63323a2a5a39bea3ad7223f6d4bc144f98ee Mon Sep 17 00:00:00 2001
 From: Konsta <konsta09@gmail.com>
 Date: Tue, 18 Dec 2012 15:27:40 +0200
-Subject: [PATCH 03/10] add partition info
+Subject: [PATCH 3/9] add partition info
 
 Change-Id: I5a01f913f5d0eca04cbe54175e8fa72cb6418f77
 ---
  AndroidManifest.xml                         |    9 ++
- res/values/strings.xml                      |    8 ++
+ res/values/cm_strings.xml                   |    8 ++
  res/xml/partition_info.xml                  |   39 ++++++++
  res/xml/settings_headers.xml                |   10 +++
  src/com/android/settings/PartitionInfo.java |  127 +++++++++++++++++++++++++++
@@ -34,11 +34,11 @@ index 1d0fdb1..9a7d553 100644
          <activity android:name="Settings$LocationSettingsActivity"
                  android:label="@string/location_settings_title"
                  android:uiOptions="none"
-diff --git a/res/values/strings.xml b/res/values/strings.xml
-index fc53fae..690370e 100644
---- a/res/values/strings.xml
-+++ b/res/values/strings.xml
-@@ -4442,6 +4442,14 @@
+diff --git a/res/values/cm_strings.xml b/res/values/cm_strings.xml
+index f76ee96..b732a89 100644
+--- a/res/values/cm_strings.xml
++++ b/res/values/cm_strings.xml
+@@ -21,6 +21,14 @@
      <string name="konsta_navbar_dialog_negative">Reboot later</string>
      <string name="konsta_navbar_dialog_positive">Reboot now</string>
  
@@ -50,9 +50,9 @@ index fc53fae..690370e 100644
 +    <string name="partition_info_sdcard">/sdcard (FAT)</string>
 +    <string name="partition_info_sdext">EXT partition</string>
 +
-     <string name="ok">OK</string>
- 
-     <!-- Quiet hours -->
+     <!-- Activity label of BluetoothMasPermissionActivity, also used as Strings in the permission dialog [CHAR LIMIT=none] -->
+     <string name="bluetooth_mas_request">"Message Access request"</string>
+     <!-- Bluetooth MAS permission Alert Activity text [CHAR LIMIT=none] -->
 diff --git a/res/xml/partition_info.xml b/res/xml/partition_info.xml
 new file mode 100644
 index 0000000..9a79c33
