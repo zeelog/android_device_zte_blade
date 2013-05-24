@@ -61,7 +61,7 @@ BOARD_HAVE_BLUETOOTH := true
 BOARD_BLUETOOTH_BDROID_BUILDCFG_INCLUDE_DIR := device/zte/blade/bluetooth
 
 # Webkit
-ENABLE_WEBGL := true
+ENABLE_WEBGL := false
 TARGET_FORCE_CPU_UPLOAD := true
 
 # QCOM
