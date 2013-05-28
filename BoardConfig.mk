@@ -60,6 +60,10 @@ BOARD_WPA_SUPPLICANT_PRIVATE_LIB := lib_driver_cmd_ath6kl
 BOARD_HAVE_BLUETOOTH := true
 BOARD_BLUETOOTH_BDROID_BUILDCFG_INCLUDE_DIR := device/zte/blade/bluetooth
 
+# Browser
+WITH_JIT := true
+HTTP := chrome
+
 # Webkit
 ENABLE_WEBGL := false
 TARGET_FORCE_CPU_UPLOAD := true
