@@ -1,18 +1,18 @@
-From 695752b359a3119136dc862a7d805d6b63479541 Mon Sep 17 00:00:00 2001
+From 46d3cd5168f68499feb4fe11012b6593e05824eb Mon Sep 17 00:00:00 2001
 From: Konsta <konsta09@gmail.com>
 Date: Wed, 27 Mar 2013 10:23:27 +0200
-Subject: [PATCH 14/14] allow pie controls without enabling expanded desktop
+Subject: [PATCH 14/20] allow pie controls without enabling expanded desktop
 
 Change-Id: I6b26592bda1958e6e7d0e9af81a9123d087cd309
 ---
- .../android/systemui/statusbar/BaseStatusBar.java  |    2 +-
+ .../systemui/statusbar/policy/PieController.java   |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/packages/SystemUI/src/com/android/systemui/statusbar/BaseStatusBar.java b/packages/SystemUI/src/com/android/systemui/statusbar/BaseStatusBar.java
-index 8865842..3e44858 100644
---- a/packages/SystemUI/src/com/android/systemui/statusbar/BaseStatusBar.java
-+++ b/packages/SystemUI/src/com/android/systemui/statusbar/BaseStatusBar.java
-@@ -1385,7 +1385,7 @@ public abstract class BaseStatusBar extends SystemUI implements
+diff --git a/packages/SystemUI/src/com/android/systemui/statusbar/policy/PieController.java b/packages/SystemUI/src/com/android/systemui/statusbar/policy/PieController.java
+index 9e48128..dc4e883 100644
+--- a/packages/SystemUI/src/com/android/systemui/statusbar/policy/PieController.java
++++ b/packages/SystemUI/src/com/android/systemui/statusbar/policy/PieController.java
+@@ -679,7 +679,7 @@ public class PieController implements BaseStatusBar.NavigationBarCallback, PieVi
          int pie = Settings.System.getInt(mContext.getContentResolver(),
                  Settings.System.PIE_CONTROLS, 0);
  
@@ -20,7 +20,7 @@ index 8865842..3e44858 100644
 +        return pie == 1 || pie == 2;
      }
  
-     private void attachPie() {
+     public String getOperatorState() {
 -- 
 1.7.9.5
 
