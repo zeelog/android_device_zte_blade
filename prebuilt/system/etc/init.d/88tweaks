@@ -1,0 +1,9 @@
+#!/system/bin/sh
+
+# Enable KSM
+echo "1" >/sys/kernel/mm/ksm/run
+echo "128" > /sys/kernel/mm/ksm/pages_to_scan
+echo "4000" > /sys/kernel/mm/ksm/sleep_millisecs
+
+# MinFree Tweaks
+echo "0,1536,2560,3840,6400,6400" > /sys/module/lowmemorykiller/parameters/minfree

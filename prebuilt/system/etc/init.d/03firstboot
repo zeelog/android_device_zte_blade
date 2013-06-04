@@ -1,0 +1,8 @@
+#!/system/bin/sh
+# execute any postinstall script then kill it
+if [ -e /system/etc/firstboot.sh ];
+then
+   log -p i -t boot "Executing firstboot.sh..";
+   logwrapper /system/bin/sh /system/etc/firstboot.sh;
+   rm -f /system/etc/firstboot.sh;
+fi;
