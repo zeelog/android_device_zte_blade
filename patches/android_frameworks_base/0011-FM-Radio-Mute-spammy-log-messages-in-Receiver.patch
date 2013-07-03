@@ -1,0 +1,26 @@
+From 296453c6334997a8412e423d63ba4a52bd3a32ba Mon Sep 17 00:00:00 2001
+From: Peter Gregus <pete.gregus@gmail.com>
+Date: Mon, 18 Mar 2013 23:16:05 +0100
+Subject: [PATCH 13/14] FM Radio: Mute spammy log messages in Receiver
+
+Change-Id: I2aed530cc9967470176958f2ffc68929487d2d03
+---
+ fmradio/jni/android_fmradio_Receiver.cpp |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/fmradio/jni/android_fmradio_Receiver.cpp b/fmradio/jni/android_fmradio_Receiver.cpp
+index 10a0466..147aef0 100644
+--- a/fmradio/jni/android_fmradio_Receiver.cpp
++++ b/fmradio/jni/android_fmradio_Receiver.cpp
+@@ -621,7 +621,7 @@ static jint androidFmRadioRxGetState(JNIEnv * env, jobject obj)
+ {
+     FmRadioState_t state;
+ 
+-    ALOGI("androidFmRadioRxGetState, state\n");
++    //ALOGI("androidFmRadioRxGetState, state\n");
+ 
+     pthread_mutex_lock(fmReceiverSession.dataMutex_p);
+     state = fmReceiverSession.state;
+-- 
+1.7.9.5
+

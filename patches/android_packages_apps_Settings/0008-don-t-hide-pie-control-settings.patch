@@ -1,7 +1,7 @@
-From 6ee574239203020c20a8920a1ae919f38511b0dc Mon Sep 17 00:00:00 2001
+From 306f1e8f4d716339e0f968b5b94c427546ca5a0e Mon Sep 17 00:00:00 2001
 From: Konsta <konsta09@gmail.com>
 Date: Wed, 27 Mar 2013 10:01:20 +0200
-Subject: [PATCH 09/10] don't hide pie control settings
+Subject: [PATCH 9/9] don't hide pie control settings
 
 Change-Id: Ib0a9b2029174a12fa96a86a9e05b8a867bdf3111
 ---
@@ -11,10 +11,10 @@ Change-Id: Ib0a9b2029174a12fa96a86a9e05b8a867bdf3111
  3 files changed, 6 insertions(+), 11 deletions(-)
 
 diff --git a/res/values/cm_strings.xml b/res/values/cm_strings.xml
-index 10b1a0d..8a77268 100644
+index c5b4684..007e655 100644
 --- a/res/values/cm_strings.xml
 +++ b/res/values/cm_strings.xml
-@@ -912,7 +912,7 @@ two in order to insert additional control points. \'Remove\' deletes the selecte
+@@ -945,7 +945,7 @@ two in order to insert additional control points. \'Remove\' deletes the selecte
  
      <!-- Pie controls -->
      <string name="pie_control_title">Pie controls</string>
@@ -52,10 +52,10 @@ index 2f7f5ed..9786abe 100644
  
      <CheckBoxPreference
 diff --git a/src/com/android/settings/cyanogenmod/SystemSettings.java b/src/com/android/settings/cyanogenmod/SystemSettings.java
-index b32a55a..060ca87 100644
+index e7b8c64..5c1d588 100644
 --- a/src/com/android/settings/cyanogenmod/SystemSettings.java
 +++ b/src/com/android/settings/cyanogenmod/SystemSettings.java
-@@ -148,11 +148,6 @@ public class SystemSettings extends SettingsPreferenceFragment  implements
+@@ -136,11 +136,6 @@ public class SystemSettings extends SettingsPreferenceFragment  implements
  
          // Pie controls
          mPieControl = (PreferenceScreen) findPreference(KEY_PIE_CONTROL);

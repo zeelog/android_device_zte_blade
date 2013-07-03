@@ -1,7 +1,7 @@
-From bc67dfb324ea9321555be0b1bb1ae348b47bc4eb Mon Sep 17 00:00:00 2001
+From d4d28fcc614f470a564c471cdd4d3ba034607fe2 Mon Sep 17 00:00:00 2001
 From: Rick C <rickfitsnugly@gmail.com>
 Date: Tue, 18 Sep 2012 20:09:13 -0400
-Subject: [PATCH 07/10] NavigationBar: Custom height (2/2)
+Subject: [PATCH 7/9] NavigationBar: Custom height (2/2)
 
 Ported from http://review.cyanogenmod.org/#/c/23610/
 
@@ -14,7 +14,7 @@ Change-Id: I751ae54de1adf96367948735558363ce0dbb9f89
  4 files changed, 60 insertions(+), 1 deletion(-)
 
 diff --git a/res/values/cm_arrays.xml b/res/values/cm_arrays.xml
-index 8d712d9..6d7d143 100644
+index f36c827..d84f35c 100644
 --- a/res/values/cm_arrays.xml
 +++ b/res/values/cm_arrays.xml
 @@ -14,6 +14,27 @@
@@ -46,7 +46,7 @@ index 8d712d9..6d7d143 100644
      <string-array name="wifi_countrycode_entries">
          <item>United States</item>
 diff --git a/res/values/cm_strings.xml b/res/values/cm_strings.xml
-index 03fa1c5..10b1a0d 100644
+index 006f551..c5b4684 100644
 --- a/res/values/cm_strings.xml
 +++ b/res/values/cm_strings.xml
 @@ -21,6 +21,16 @@
@@ -92,10 +92,10 @@ index 9c812b0..2f7f5ed 100644
  
      <CheckBoxPreference
 diff --git a/src/com/android/settings/cyanogenmod/SystemSettings.java b/src/com/android/settings/cyanogenmod/SystemSettings.java
-index be18df8..ff318f4 100644
+index cd72fb8..aad1ca9 100644
 --- a/src/com/android/settings/cyanogenmod/SystemSettings.java
 +++ b/src/com/android/settings/cyanogenmod/SystemSettings.java
-@@ -48,6 +48,7 @@ public class SystemSettings extends SettingsPreferenceFragment  implements
+@@ -49,6 +49,7 @@ public class SystemSettings extends SettingsPreferenceFragment  implements
      private static final String KEY_NAVIGATION_BAR = "navigation_bar";
      private static final String KEY_NAVIGATION_RING = "navigation_ring";
      private static final String KEY_NAVIGATION_BAR_CATEGORY = "navigation_bar_category";
@@ -103,7 +103,7 @@ index be18df8..ff318f4 100644
      private static final String KEY_LOCK_CLOCK = "lock_clock";
      private static final String KEY_STATUS_BAR = "status_bar";
      private static final String KEY_QUICK_SETTINGS = "quick_settings_panel";
-@@ -65,6 +66,7 @@ public class SystemSettings extends SettingsPreferenceFragment  implements
+@@ -66,6 +67,7 @@ public class SystemSettings extends SettingsPreferenceFragment  implements
      private CheckBoxPreference mExpandedDesktopNoNavbarPref;
  
      private boolean mIsPrimary;
@@ -111,39 +111,25 @@ index be18df8..ff318f4 100644
      private CheckBoxPreference mKonstaNavbar;
  
      @Override
-@@ -105,6 +107,15 @@ public class SystemSettings extends SettingsPreferenceFragment  implements
-                 }
-             }
+@@ -134,6 +136,17 @@ public class SystemSettings extends SettingsPreferenceFragment  implements
+         mKonstaNavbar.setChecked(Settings.System.getInt(getActivity().getContentResolver(),
+                 Settings.System.KONSTA_NAVBAR, 0) == 1);
  
-+            // Navbar height
-+            mNavButtonsHeight = (ListPreference) findPreference(KEY_NAVIGATION_HEIGHT);
++        // Navbar height
++        mNavButtonsHeight = (ListPreference) findPreference(KEY_NAVIGATION_HEIGHT);
++        if (mNavButtonsHeight != null) {
 +            mNavButtonsHeight.setOnPreferenceChangeListener(this);
 +
 +            int statusNavButtonsHeight = Settings.System.getInt(getActivity().getApplicationContext().getContentResolver(),
 +                    Settings.System.NAV_BUTTONS_HEIGHT, 48);
 +            mNavButtonsHeight.setValue(String.valueOf(statusNavButtonsHeight));
 +            mNavButtonsHeight.setSummary(mNavButtonsHeight.getEntry());
++        }
 +
-             // Act on the above
-             if (removeKeys) {
-                 prefScreen.removePreference(findPreference(KEY_HARDWARE_KEYS));
-@@ -112,6 +123,7 @@ public class SystemSettings extends SettingsPreferenceFragment  implements
-             if (removeNavbar) {
-                 prefScreen.removePreference(findPreference(KEY_NAVIGATION_BAR));
-                 prefScreen.removePreference(findPreference(KEY_NAVIGATION_RING));
-+                prefScreen.removePreference(findPreference(KEY_NAVIGATION_HEIGHT));
-                 prefScreen.removePreference(findPreference(KEY_NAVIGATION_BAR_CATEGORY));
-             }
-         } else {
-@@ -120,6 +132,7 @@ public class SystemSettings extends SettingsPreferenceFragment  implements
-             prefScreen.removePreference(findPreference(KEY_HARDWARE_KEYS));
-             prefScreen.removePreference(findPreference(KEY_NAVIGATION_BAR));
-             prefScreen.removePreference(findPreference(KEY_NAVIGATION_RING));
-+            prefScreen.removePreference(findPreference(KEY_NAVIGATION_HEIGHT));
-             prefScreen.removePreference(findPreference(KEY_NAVIGATION_BAR_CATEGORY));
-             prefScreen.removePreference(findPreference(KEY_STATUS_BAR));
-             prefScreen.removePreference(findPreference(KEY_QUICK_SETTINGS));
-@@ -208,6 +221,13 @@ public class SystemSettings extends SettingsPreferenceFragment  implements
+         // Pie controls
+         mPieControl = (PreferenceScreen) findPreference(KEY_PIE_CONTROL);
+         if (mPieControl != null && removeNavbar) {
+@@ -201,6 +214,13 @@ public class SystemSettings extends SettingsPreferenceFragment  implements
              boolean value = (Boolean) objValue;
              updateExpandedDesktop(value ? 2 : 0);
              return true;
