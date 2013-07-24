@@ -37,7 +37,7 @@ ro.vold.umsdirtyratio=20
 dalvik.vm.checkjni=0
 dalvik.vm.dexopt-data-only=1
 dalvik.vm.dexopt-flags=v=a,o=v,m=y,u=y
-dalvik.vm.execution-mode=int:jit
+dalvik.vm.execution-mode=int:fast
 
 # Memory
 ro.zram.default=0
@@ -46,3 +46,23 @@ sys.mem.max_hidden_apps=10
 
 # Lockscreen
 ro.hwaccel.lockscreen=0
+
+# Dalviks Tweaks
+dalvik.vm.dexopt-data-only=1
+dalvik.vm.verify_bytecode=false
+ro.kernel.android.checkjni=0
+ro.kernel.checkjni=0
+ro.compcache.default=1
+ro.HOME_APP_ADJ=1
+
+#Power Saving
+ro.ril.disable.power.collapse=1
+# sleep modes
+pm.sleep_mode=1
+#usage:
+#pm.sleep_mode=0 -> collapse suspend
+#pm.sleep_mode=1 -> collapse (will totally power off the cpu)
+#pm.sleep_mode=2 -> sleep (cpu is still on, but put into low power mode (registers are still saved)
+#pm.sleep_mode=3 -> slow Clock and Wait for Interrupt (lowered frequency and voltage)
+#pm.sleep_mode=4 -> wait for interrupt (no change in cpu clock or voltage)
+
