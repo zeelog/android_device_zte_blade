@@ -41,7 +41,7 @@ BOARD_CUSTOM_GRAPHICS := ../../../device/zte/blade/recovery/graphics.c
 BOARD_CUSTOM_RECOVERY_KEYMAPPING := ../../device/zte/blade/recovery/recovery_ui.c
 TARGET_PREBUILT_RECOVERY_KERNEL := device/zte/blade/recovery/recovery_kernel
 TARGET_RECOVERY_INITRC := device/zte/blade/recovery/recovery.rc
-TARGET_RECOVERY_FSTAB := device/zte/blade/recovery/recovery.fstab
+TARGET_RECOVERY_FSTAB := device/zte/blade/ramdisk/fstab.blade
 
 # Kernel
 TARGET_KERNEL_SOURCE := kernel/zte/zte-kernel-msm7x27
