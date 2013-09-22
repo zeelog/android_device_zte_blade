@@ -384,7 +384,7 @@ void ril_event_loop()
         if (n < 0) {
             if (errno == EINTR) continue;
 
-            ALOGE("ril_event: select error (%d)", errno);
+            RLOGE("ril_event: select error (%d)", errno);
             // bail?
             return;
         }
