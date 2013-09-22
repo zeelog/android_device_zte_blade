@@ -23,6 +23,7 @@ debug.enabletr=false
 debug.hwui.render_dirty_regions=false
 debug.gr.numframebuffers=3
 ro.bq.gpu_to_cpu_unsupported=1
+persist.sys.prefer_16bpp=1
 
 # Camcorder
 debug.camcorder.disablemeta=1
