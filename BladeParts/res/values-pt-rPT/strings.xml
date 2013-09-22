@@ -12,5 +12,4 @@
     <string name="delete_success">Dados originais restaurados. Por favor reinicie.</string>
     <string name="delete_error">Falha ao restaurar dados originais.</string>
     <string name="delete_no_file">Usando dados originais.</string>
-    <string name="usb_charging_title_head">Carregamento via USB</string>
 </resources>

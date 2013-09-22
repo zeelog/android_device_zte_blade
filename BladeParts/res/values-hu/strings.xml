@@ -12,5 +12,4 @@
     <string name="delete_success">Alapértelmezett adatok sikeresen visszaállítva. Indítsa újra a telefont.</string>
     <string name="delete_error">Nem sikerült visszaállítani az alapértelmezett adatokat.</string>
     <string name="delete_no_file">Eddig is az alapértelmezett adatok voltak érvényben.</string>
-    <string name="usb_charging_title_head">USB töltés</string>
 </resources>

@@ -12,5 +12,4 @@
     <string name="delete_success">成功的恢复为默认值.请重启机器.</string>
     <string name="delete_error">重置为默认值时失败.</string>
     <string name="delete_no_file">已经使用默认值.</string>
-    <string name="usb_charging_title_head">USB 充电</string>
 </resources>

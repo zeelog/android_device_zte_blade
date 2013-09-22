@@ -12,5 +12,4 @@
     <string name="delete_success">Padrão foi restaurado com sucesso. Por favor, reinicie o aparelho.</string>
     <string name="delete_error">Falhou ao restaurar os padrões.</string>
     <string name="delete_no_file">Já está usando os padrões</string>
-    <string name="usb_charging_title_head">Carregando via USB</string>
 </resources>

@@ -28,16 +28,4 @@
             android:targetClass="com.cyanogenmod.settings.device.ProxCalRestore" />
     </PreferenceScreen>
 
-    <!-- USB Charging -->
-    <CheckBoxPreference
-        android:key="usb_charging"
-        android:title="@string/usb_charging_title_head"
-        android:defaultValue="true" />
-
-    <!-- Button backlight -->
-    <CheckBoxPreference
-        android:key="button_backlight"
-        android:title="@string/button_backlight_title_head"
-        android:defaultValue="true" />
-
 </PreferenceScreen>

@@ -12,6 +12,4 @@
     <string name="delete_success">Oletusarvojen palauttamienen onnistui. Käynnistä uudelleen.</string>
     <string name="delete_error">Oletusarvojen palauttaminen epäonnistui.</string>
     <string name="delete_no_file">Oletusarvot jo käytössä.</string>
-    <string name="usb_charging_title_head">USB lataus</string>
-    <string name="button_backlight_title_head">Näppäinten taustavalo</string>
 </resources>

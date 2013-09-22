@@ -12,5 +12,4 @@
     <string name="delete_success">成功回復至預設值。請重新啟動手機。</string>
     <string name="delete_error">無法回復至預設值。</string>
     <string name="delete_no_file">現正使用的已經是預設值。</string>
-    <string name="usb_charging_title_head">USB 充電</string>
 </resources>
