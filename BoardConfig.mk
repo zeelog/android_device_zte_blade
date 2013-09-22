@@ -98,6 +98,9 @@ BOARD_USES_STE_FMRADIO := true
 BOARD_HAVE_QCOM_FM := true
 COMMON_GLOBAL_CFLAGS += -DSTE_FM -DQCOM_FM_ENABLED
 
+# Hardware tunables framework
+BOARD_HARDWARE_CLASS := device/zte/blade/cmhw/
+
 # dev:    size   erasesize  name
 # mtd0: 00500000 00020000 "recovery"
 # mtd1: 00500000 00020000 "boot"
