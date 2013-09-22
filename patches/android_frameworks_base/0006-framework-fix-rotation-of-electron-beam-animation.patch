@@ -1,0 +1,79 @@
+From cbcce3f5d8c5166652ed144a70d0eca56c35f2cd Mon Sep 17 00:00:00 2001
+From: Lalit Maganti <lalitmaganti@gmail.com>
+Date: Mon, 9 Sep 2013 15:10:55 +1000
+Subject: [PATCH 11/14] framework: fix rotation of electron beam animation
+
+* For devices which have displays mounted at an angle this is required for electron beam to display properly
+
+Change-Id: Ibaef6c47ae4fcf2f661fa06b6594481b741eab61
+---
+ .../com/android/server/power/ElectronBeam.java     |   22 +++++++++++++++-----
+ 1 file changed, 17 insertions(+), 5 deletions(-)
+
+diff --git a/services/java/com/android/server/power/ElectronBeam.java b/services/java/com/android/server/power/ElectronBeam.java
+index 379e704..3d82904 100644
+--- a/services/java/com/android/server/power/ElectronBeam.java
++++ b/services/java/com/android/server/power/ElectronBeam.java
+@@ -80,6 +80,7 @@ final class ElectronBeam {
+     private int mDisplayLayerStack; // layer stack associated with primary display
+     private int mDisplayWidth;      // real width, not rotated
+     private int mDisplayHeight;     // real height, not rotated
++    private int mHwRotation;        // hardware screen rotation
+     private SurfaceSession mSurfaceSession;
+     private SurfaceControl mSurfaceControl;
+     private Surface mSurface;
+@@ -139,8 +140,16 @@ final class ElectronBeam {
+         // This is not expected to change while the electron beam surface is showing.
+         DisplayInfo displayInfo = mDisplayManager.getDisplayInfo(Display.DEFAULT_DISPLAY);
+         mDisplayLayerStack = displayInfo.layerStack;
+-        mDisplayWidth = displayInfo.getNaturalWidth();
+-        mDisplayHeight = displayInfo.getNaturalHeight();
++
++        // hw rotation can flip screen dimensions and cause the screengrab to fail
++        mHwRotation = android.os.SystemProperties.getInt("ro.sf.hwrotation", 0);
++        if ( mHwRotation == 90 || mHwRotation == 270 ) {
++            mDisplayWidth = displayInfo.getNaturalHeight();
++            mDisplayHeight = displayInfo.getNaturalWidth();
++        } else {
++            mDisplayWidth = displayInfo.getNaturalWidth();
++            mDisplayHeight = displayInfo.getNaturalHeight();
++        }
+ 
+         // Prepare the surface for drawing.
+         if (!tryPrepare()) {
+@@ -526,7 +535,7 @@ final class ElectronBeam {
+             mSurface = new Surface();
+             mSurface.copyFrom(mSurfaceControl);
+             
+-            mSurfaceLayout = new NaturalSurfaceLayout(mDisplayManager, mSurfaceControl);
++            mSurfaceLayout = new NaturalSurfaceLayout(mDisplayManager, mSurfaceControl, mHwRotation);
+             mSurfaceLayout.onDisplayTransaction();
+         } finally {
+             SurfaceControl.closeTransaction();
+@@ -686,10 +695,12 @@ final class ElectronBeam {
+     private static final class NaturalSurfaceLayout implements DisplayTransactionListener {
+         private final DisplayManagerService mDisplayManager;
+         private SurfaceControl mSurfaceControl;
++        private int mHwRotation;
+ 
+-        public NaturalSurfaceLayout(DisplayManagerService displayManager, SurfaceControl surfaceControl) {
++        public NaturalSurfaceLayout(DisplayManagerService displayManager, SurfaceControl surfaceControl,  int hwRotation) {
+             mDisplayManager = displayManager;
+             mSurfaceControl = surfaceControl;
++            mHwRotation = hwRotation;
+             mDisplayManager.registerDisplayTransactionListener(this);
+         }
+ 
+@@ -708,7 +719,8 @@ final class ElectronBeam {
+                 }
+ 
+                 DisplayInfo displayInfo = mDisplayManager.getDisplayInfo(Display.DEFAULT_DISPLAY);
+-                switch (displayInfo.rotation) {
++                int rotation = (displayInfo.rotation + (mHwRotation / 90)) % 4;
++                switch (rotation) {
+                     case Surface.ROTATION_0:
+                         mSurfaceControl.setPosition(0, 0);
+                         mSurfaceControl.setMatrix(1, 0, 0, 1);
+-- 
+1.7.9.5
+
