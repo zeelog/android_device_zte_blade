@@ -28,11 +28,6 @@
 
 #define SCALING_GOVERNOR_PATH "/sys/devices/system/cpu/cpu0/cpufreq/scaling_governor"
 #define BOOSTPULSE_ONDEMAND "/sys/devices/system/cpu/cpufreq/ondemand/boostpulse"
-#define BOOSTPULSE_INTERACTIVE "/sys/devices/system/cpu/cpufreq/interactive/boostpulse"
-#define SAMPLING_RATE_SCREEN_ON "50000"
-#define SAMPLING_RATE_SCREEN_OFF "500000"
-#define TIMER_RATE_SCREEN_ON "30000"
-#define TIMER_RATE_SCREEN_OFF "500000"
 
 struct cm_power_module {
     struct power_module base;
@@ -111,29 +106,18 @@ static int get_scaling_governor() {
 
 static void cm_power_set_interactive(struct power_module *module, int on)
 {
-    if (strncmp(governor, "ondemand", 8) == 0)
-        sysfs_write("/sys/devices/system/cpu/cpufreq/ondemand/sampling_rate",
-                on ? SAMPLING_RATE_SCREEN_ON : SAMPLING_RATE_SCREEN_OFF);
-    else if (strncmp(governor, "interactive", 11) == 0)
-        sysfs_write("/sys/devices/system/cpu/cpufreq/interactive/timer_rate",
-                on ? TIMER_RATE_SCREEN_ON : TIMER_RATE_SCREEN_OFF);
+    return;
 }
 
 
 static void configure_governor()
 {
-    cm_power_set_interactive(NULL, 1);
-
     if (strncmp(governor, "ondemand", 8) == 0) {
+        sysfs_write("/sys/devices/system/cpu/cpufreq/ondemand/sampling_rate", "50000");
         sysfs_write("/sys/devices/system/cpu/cpufreq/ondemand/up_threshold", "90");
         sysfs_write("/sys/devices/system/cpu/cpufreq/ondemand/io_is_busy", "1");
         sysfs_write("/sys/devices/system/cpu/cpufreq/ondemand/sampling_down_factor", "4");
         sysfs_write("/sys/devices/system/cpu/cpufreq/ondemand/down_differential", "10");
-
-    } else if (strncmp(governor, "interactive", 11) == 0) {
-        sysfs_write("/sys/devices/system/cpu/cpufreq/interactive/min_sample_time", "90000");
-        sysfs_write("/sys/devices/system/cpu/cpufreq/interactive/hispeed_freq", "1134000");
-        sysfs_write("/sys/devices/system/cpu/cpufreq/interactive/above_hispeed_delay", "30000");
     }
 }
 
@@ -150,8 +134,6 @@ static int boostpulse_open(struct cm_power_module *cm)
         } else {
             if (strncmp(governor, "ondemand", 8) == 0)
                 cm->boostpulse_fd = open(BOOSTPULSE_ONDEMAND, O_WRONLY);
-            else if (strncmp(governor, "interactive", 11) == 0)
-                cm->boostpulse_fd = open(BOOSTPULSE_INTERACTIVE, O_WRONLY);
 
             if (cm->boostpulse_fd < 0 && !cm->boostpulse_warned) {
                 strerror_r(errno, buf, sizeof(buf));
