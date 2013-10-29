@@ -14,6 +14,4 @@
 # limitations under the License.
 #
 
-add_lunch_combo blade-userdebug
-add_lunch_combo blade-eng
 add_lunch_combo cm_blade-userdebug

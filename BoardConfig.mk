@@ -74,7 +74,6 @@ BOARD_EGL_CFG := device/zte/blade/prebuilt/system/lib/egl/egl.cfg
 USE_OPENGL_RENDERER := true
 TARGET_QCOM_DISPLAY_VARIANT := legacy
 BOARD_ADRENO_DECIDE_TEXTURE_TARGET := true
-COMMON_GLOBAL_CFLAGS += -DQCOM_ICS_COMPAT
 
 # Video
 TARGET_QCOM_LEGACY_OMX := true
