@@ -25,9 +25,9 @@ PRODUCT_PACKAGES += \
     camera.msm7x27
 
 # FM Radio
-PRODUCT_PACKAGES += \
-    Effem \
-    libfmradio.si4708
+#PRODUCT_PACKAGES += \
+#    Effem \
+#    libfmradio.si4708
 
 # GPS
 PRODUCT_PACKAGES += \
@@ -71,6 +71,14 @@ PRODUCT_COPY_FILES += \
 PRODUCT_COPY_FILES += \
     $(call find-copy-subdir-files,*,device/zte/blade/prebuilt/system,system)
 
+# WebKit
+PRODUCT_PACKAGES += \
+    libwebcore
+
+# Webkit (classic webview provider)
+PRODUCT_PROPERTY_OVERRIDES += \
+    persist.webview.provider=classic
+
 # Hardware features available on this device
 PRODUCT_COPY_FILES += \
     frameworks/native/data/etc/android.hardware.camera.flash-autofocus.xml:system/etc/permissions/android.hardware.camera.flash-autofocus.xml \
@@ -81,8 +89,9 @@ PRODUCT_COPY_FILES += \
     frameworks/native/data/etc/android.hardware.touchscreen.multitouch.distinct.xml:system/etc/permissions/android.hardware.touchscreen.multitouch.distinct.xml \
     frameworks/native/data/etc/android.hardware.wifi.xml:system/etc/permissions/android.hardware.wifi.xml \
     frameworks/native/data/etc/android.software.sip.voip.xml:system/etc/permissions/android.software.sip.voip.xml \
-    frameworks/native/data/etc/com.stericsson.hardware.fm.receiver.xml:system/etc/permissions/com.stericsson.hardware.fm.receiver.xml \
-    frameworks/native/data/etc/handheld_core_hardware.xml:system/etc/permissions/handheld_core_hardware.xml \
+    frameworks/native/data/etc/handheld_core_hardware.xml:system/etc/permissions/handheld_core_hardware.xml
+
+#frameworks/native/data/etc/com.stericsson.hardware.fm.receiver.xml:system/etc/permissions/com.stericsson.hardware.fm.receiver.xml \
 
 # Enable repeatable keys in CWM
 PRODUCT_PROPERTY_OVERRIDES += \
