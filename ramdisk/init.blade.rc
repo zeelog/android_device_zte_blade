@@ -4,11 +4,25 @@ on early-init
     mount debugfs debugfs /sys/kernel/debug
 
 on init
-    mkdir /storage/sdcard0 0000 root root
+    mkdir /mnt/media_rw/sdcard0 0700 media_rw media_rw
+    mkdir /storage/sdcard0 0700 root root
     export EXTERNAL_STORAGE /storage/sdcard0
     # for backwards compatibility
     symlink /storage/sdcard0 /mnt/sdcard
     symlink /storage/sdcard0 /sdcard
+
+on fs
+    # mount mtd partitions
+    # Mount /system rw first to give the filesystem a chance to save a checkpoint
+    mount yaffs2 mtd@system /system
+    mount yaffs2 mtd@system /system ro remount
+    mount yaffs2 mtd@userdata /data nosuid nodev
+    mount yaffs2 mtd@cache /cache nosuid nodev
+
+# Kernel Samepage Merging (KSM)
+    write /sys/kernel/mm/ksm/sleep_millisecs 4000
+    write /sys/kernel/mm/ksm/pages_to_scan 256
+    write /sys/kernel/mm/ksm/run 1
 
 on boot
 # Set default governor
@@ -39,17 +53,27 @@ on boot
     chown bluetooth bluetooth /sys/devices/platform/msm_serial_hs.0/clock
     chmod 0660 /sys/devices/platform/msm_serial_hs.0/clock
 
+on post-fs-data
+    # cutils/installd wants a media dir
+    mkdir /data/media 0770 system system
+
+    mkdir /data/misc/bluetooth 0770 bluetooth bluetooth
+
 # Create wifi filesystem structure
     mkdir /data/misc/wifi 0770 wifi wifi
     mkdir /data/misc/wifi/sockets 0770 wifi wifi
+    chmod 0770 /data/misc/wifi/sockets
     mkdir /data/misc/wifi/wpa_supplicant 0770 wifi wifi
+    mkdir /data/misc/wifi/hostapd 0770 wifi wifi
+
     mkdir /data/misc/dhcp 0770 dhcp dhcp
-    chown dhcp system /data/misc/dhcp
-    mkdir /data/system 0775 system system
+    chown dhcp dhcp /data/misc/dhcp
 
 # For qmuxd socket
     mkdir /data/radio 0770 radio radio
-    chown radio radio 0770 /data/radio
+    chmod 2770 /data/radio
+    mkdir /dev/radio 0770 radio radio
+    chown radio system /dev/pm_monitor
 
     chown system system /sys/class/leds/green/blink
     chown system system /sys/class/leds/green/brightness
@@ -65,19 +89,17 @@ on boot
     chown system system /sys/class/leds/amber/grppwm
 
 # Sdcard polling
+    chmod 0664 /sys/devices/platform/msm_sdcc.1/polling
+    chmod 0664 /sys/devices/platform/msm_sdcc.2/polling
+    chmod 0664 /sys/devices/platform/msm_sdcc.3/polling
+    chmod 0664 /sys/devices/platform/msm_sdcc.4/polling
     chown system system /sys/devices/platform/msm_sdcc.1/polling
     chown system system /sys/devices/platform/msm_sdcc.2/polling
     chown system system /sys/devices/platform/msm_sdcc.3/polling
     chown system system /sys/devices/platform/msm_sdcc.4/polling
     write /sys/bus/platform/drivers/msm_sdcc/msm_sdcc.1/polling 1
 
-service dhcp-service /system/bin/netcfg wlan0 dhcp
-    class main
-    oneshot
-
-on property:dev.bootcomplete=1
-    stop dhcp-service
-    start dhcp-service
+setprop vold.post_fs_data_done 1
 
 service qmuxd /system/bin/qmuxd
     class main
@@ -113,13 +135,16 @@ on property:bluetooth.hciattach=false
 on property:init.svc.wpa_supplicant=stopped
     stop dhcpcd_wlan0
 
-service wpa_supplicant /system/bin/logwrapper /system/bin/wpa_supplicant -Dwext -iwlan0 -W -c/data/misc/wifi/wpa_supplicant.conf
+service wpa_supplicant /system/bin/wpa_supplicant \
+    -Dwext -iwlan0 -c/data/misc/wifi/wpa_supplicant.conf \
+    -e/data/misc/wifi/entropy.bin \
+    -O/data/misc/wifi/sockets -g@android:wpa_wlan0
     class main
     socket wpa_wlan0 dgram 660 wifi wifi
     disabled
     oneshot
 
-service dhcpcd_wlan0 /system/bin/dhcpcd -ABDKL
+service dhcpcd_wlan0 /system/bin/dhcpcd -ABKL
     class main
     disabled
     oneshot
@@ -153,3 +178,7 @@ service abtfilt /system/bin/abtfilt -c -d -z -n
 service akmd /system/bin/akmd2
     class main
     oneshot
+
+service fuse_sdcard0 /system/bin/sdcard -u 1023 -g 1023 -d /mnt/media_rw/sdcard0 /storage/sdcard0
+    class late_start
+    disabled
