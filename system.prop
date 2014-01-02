@@ -44,6 +44,8 @@ dalvik.vm.jit.codecachesize=0
 ro.config.low_ram=true
 
 # Memory
-ro.zram.default=0
+ro.compache.default=1
+persist.service.zram=1
+ro.zram.default=18
 persist.sys.purgeable_assets=1
 sys.mem.max_hidden_apps=10
