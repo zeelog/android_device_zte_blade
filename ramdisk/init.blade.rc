@@ -18,6 +18,8 @@ on fs
     mount yaffs2 mtd@system /system ro remount
     mount yaffs2 mtd@userdata /data nosuid nodev
     mount yaffs2 mtd@cache /cache nosuid nodev
+    # zRAM
+    swapon_all /fstab.blade
 
 # Kernel Samepage Merging (KSM)
     write /sys/kernel/mm/ksm/sleep_millisecs 4000
@@ -58,6 +60,9 @@ on post-fs-data
     mkdir /data/media 0770 system system
 
     mkdir /data/misc/bluetooth 0770 bluetooth bluetooth
+
+    # zRAM
+    write /proc/sys/vm/page-cluster 0
 
 # Create wifi filesystem structure
     mkdir /data/misc/wifi 0770 wifi wifi
