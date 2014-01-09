@@ -76,8 +76,8 @@
         <EncoderProfile quality="480p" fileFormat="mp4" duration="60">
             <Video codec="h263"
                    bitRate="2000000"
-                   width="640"
-                   height="480"
+                   width="176"
+                   height="144"
                    frameRate="15" />
             <Audio codec="aac"
                    bitRate="96000"
