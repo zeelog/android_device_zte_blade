@@ -98,10 +98,10 @@
         </EncoderProfile>
 
         <EncoderProfile quality="timelapse480p" fileFormat="mp4" duration="60">
-            <Video codec="h263"
+            <Video codec="h264"
                    bitRate="2000000"
-                   width="640"
-                   height="480"
+                   width="176"
+                   height="144"
                    frameRate="15" />
             <Audio codec="aac"
                    bitRate="156000"
@@ -121,9 +121,9 @@
                    channels="1" />
         </EncoderProfile>
 
+        <ImageEncoding quality="100" />
         <ImageEncoding quality="90" />
         <ImageEncoding quality="80" />
-        <ImageEncoding quality="70" />
         <ImageDecoding memCap="20000000" />
 
     </CamcorderProfiles>
