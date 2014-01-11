@@ -1,4 +1,3 @@
-
 # RIL
 rild.libpath=/system/lib/libril-qc-1.so
 rild.libargs=-d /dev/smd0
@@ -11,7 +10,7 @@ wifi.interface=wlan0
 wifi.supplicant_scan_interval=60
 
 # Graphics
-persist.sys.ui.hw=true
+persist.sys.force_highendgfx=1
 debug.sf.hw=1
 com.qc.hardware=true
 ro.max.fling_velocity=4000
