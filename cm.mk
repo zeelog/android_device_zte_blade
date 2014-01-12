@@ -5,8 +5,8 @@ $(call inherit-product, vendor/cm/config/common_mini_phone.mk)
 $(call inherit-product, device/zte/blade/blade.mk)
 
 # Correct bootanimation size for the screen
-TARGET_SCREEN_HEIGHT := 800
-TARGET_SCREEN_WIDTH := 480
+TARGET_SCREEN_HEIGHT := 320
+TARGET_SCREEN_WIDTH := 240
 
 # Device identifier. This must come after all inclusions
 PRODUCT_DEVICE := blade
