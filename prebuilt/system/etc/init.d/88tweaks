@@ -1,4 +1,0 @@
-#!/system/bin/sh
-
-# MinFree Tweaks
-echo "0,1536,2560,3840,6400,6400" > /sys/module/lowmemorykiller/parameters/minfree
