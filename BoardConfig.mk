@@ -114,6 +114,9 @@ TARGET_ARCH_LOWMEM := true
 #BOARD_HAVE_QCOM_FM := true
 #COMMON_GLOBAL_CFLAGS += -DSTE_FM -DQCOM_FM_ENABLED
 
+## OTA script extras file (build/tools/releasetools)
+TARGET_OTA_EXTRAS_FILE := device/zte/blade/releasetools-extras.txt
+
 # Hardware tunables framework
 BOARD_HARDWARE_CLASS := device/zte/blade/cmhw/
 
