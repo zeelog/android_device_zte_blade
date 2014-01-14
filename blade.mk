@@ -40,6 +40,10 @@ PRODUCT_PACKAGES += \
     hwcomposer.msm7x27 \
     copybit.msm7x27
 
+# KSM
+PRODUCT_PROPERTY_OVERRIDES += \
+  ro.ksm.default=1
+
 # Lights
 PRODUCT_PACKAGES += \
     lights.blade
