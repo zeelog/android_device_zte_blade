@@ -440,6 +440,28 @@ CameraHAL_FixupParams(android::CameraParameters &settings)
       settings.set(android::CameraParameters::KEY_VERTICAL_VIEW_ANGLE,
                    preferred_vertical_viewing_angle);
    }
+
+   if (settings.get(android::CameraParameters::KEY_MAX_CONTRAST)) {
+      settings.set("max-contrast",
+         settings.get(android::CameraParameters::KEY_MAX_CONTRAST));
+   } else {
+      settings.set("max-contrast", -1);
+   }
+
+   if (settings.get(android::CameraParameters::KEY_MAX_SATURATION)) {
+      settings.set("max-saturation",
+         settings.get(android::CameraParameters::KEY_MAX_SATURATION));
+   } else {
+      settings.set("max-saturation", -1);
+   }
+
+   if (settings.get(android::CameraParameters::KEY_MAX_SHARPNESS)) {
+      settings.set("max-sharpness",
+         settings.get(android::CameraParameters::KEY_MAX_SHARPNESS));
+   } else {
+      settings.set("max-sharpness", -1);
+   }
+
 }
 
 /* Hardware Camera interface handlers. */
