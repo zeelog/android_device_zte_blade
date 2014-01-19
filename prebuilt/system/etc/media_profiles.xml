@@ -73,11 +73,11 @@
     <!-- Each camcorder profile defines a set of predefined configuration parameters -->
     <CamcorderProfiles cameraId="0">
 
-        <EncoderProfile quality="480p" fileFormat="mp4" duration="60">
-            <Video codec="h264"
+        <EncoderProfile quality="high" fileFormat="mp4" duration="60">
+            <Video codec="h263"
                    bitRate="2000000"
-                   width="176"
-                   height="144"
+                   width="640"
+                   height="480"
                    frameRate="15" />
             <Audio codec="aac"
                    bitRate="96000"
@@ -97,11 +97,11 @@
                    channels="1" />
         </EncoderProfile>
 
-        <EncoderProfile quality="timelapse480p" fileFormat="mp4" duration="60">
-            <Video codec="h264"
+        <EncoderProfile quality="timelapsehigh" fileFormat="mp4" duration="60">
+            <Video codec="h263"
                    bitRate="2000000"
-                   width="176"
-                   height="144"
+                   width="640"
+                   height="480"
                    frameRate="15" />
             <Audio codec="aac"
                    bitRate="156000"
@@ -121,9 +121,9 @@
                    channels="1" />
         </EncoderProfile>
 
-        <ImageEncoding quality="100" />
         <ImageEncoding quality="90" />
         <ImageEncoding quality="80" />
+        <ImageEncoding quality="70" />
         <ImageDecoding memCap="20000000" />
 
     </CamcorderProfiles>
