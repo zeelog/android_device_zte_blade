@@ -10,7 +10,6 @@ wifi.interface=wlan0
 wifi.supplicant_scan_interval=60
 
 # Graphics
-persist.sys.force_highendgfx=1
 debug.sf.hw=1
 com.qc.hardware=true
 ro.max.fling_velocity=4000
