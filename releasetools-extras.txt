@@ -6,6 +6,7 @@ lib/hw/gps.goldfish.so
 lib/hw/lights.goldfish.so
 lib/hw/power.goldfish.so
 lib/hw/sensors.goldfish.so
+lib/hw/audio.primary.goldfish.so
 
 # Junk (build artifacts)
 extras/ext4_utils/make_ext4fs_main.o
@@ -19,6 +20,8 @@ lib/libOpenVG.so
 
 # Extra apps
 app/Term.apk
+lib/libjackpal-androidterm4.so
+app/Calendar.apk
 
 # Video editor
 lib/libvideoeditor_core.so
@@ -26,6 +29,7 @@ lib/libvideoeditor_osal.so
 lib/libvideoeditor_videofilters
 lib/libvideoeditor_jni.so
 lib/libvideoeditorplayer.so
+lib/libvideoeditor_videofilters.so
 
 # Live Wallpapers
 etc/permissions/android.software.live_wallpaper.xml
