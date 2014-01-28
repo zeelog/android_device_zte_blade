@@ -52,6 +52,7 @@ TARGET_KERNEL_SOURCE := kernel/zte/zte-kernel-msm7x27
 TARGET_KERNEL_CONFIG := cyanogen_blade_defconfig
 BOARD_KERNEL_BASE := 0x02600000
 BOARD_KERNEL_CMDLINE := androidboot.hardware=blade console=null
+TARGET_KERNEL_CUSTOM_TOOLCHAIN := arm-eabi-4.8
 
 # WiFi
 BOARD_WPA_SUPPLICANT_DRIVER := WEXT
