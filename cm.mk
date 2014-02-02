@@ -7,6 +7,7 @@ $(call inherit-product, device/zte/blade/blade.mk)
 # Correct bootanimation size for the screen
 TARGET_SCREEN_HEIGHT := 320
 TARGET_SCREEN_WIDTH := 240
+TARGET_BOOTANIMATION_HALF_RES := true
 
 # Device identifier. This must come after all inclusions
 PRODUCT_DEVICE := blade
