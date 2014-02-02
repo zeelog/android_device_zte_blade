@@ -21,11 +21,6 @@ on fs
     # zRAM
     swapon_all /fstab.blade
 
-# Kernel Samepage Merging (KSM)
-    write /sys/kernel/mm/ksm/sleep_millisecs 4000
-    write /sys/kernel/mm/ksm/pages_to_scan 256
-    write /sys/kernel/mm/ksm/run 1
-
 on boot
 # Set default governor
     write /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor ondemand
@@ -187,3 +182,8 @@ service akmd /system/bin/akmd2
 service fuse_sdcard0 /system/bin/sdcard -u 1023 -g 1023 -d /mnt/media_rw/sdcard0 /storage/sdcard0
     class late_start
     disabled
+
+on property:sys.boot_completed=1
+    # Override Kernel Samepage Merging (KSM) values
+    write /sys/kernel/mm/ksm/sleep_millisecs 3000
+    write /sys/kernel/mm/ksm/pages_to_scan 128
