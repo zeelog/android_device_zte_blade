@@ -18,7 +18,11 @@ on fs
     mount yaffs2 mtd@system /system ro remount
     mount yaffs2 mtd@userdata /data nosuid nodev
     mount yaffs2 mtd@cache /cache nosuid nodev
+
     # zRAM
+    insmod /system/lib/modules/lzo_compress.ko
+    insmod /system/lib/modules/lzo_decompress.ko
+    insmod /system/lib/modules/zram.ko
     swapon_all /fstab.blade
 
 on boot
