@@ -1,104 +1,70 @@
 #!/system/bin/sh
-######################################
-##  CronMod INT2EXTV2+ - 02/28/2013 ##
-##    Written by CronicCorey @xda   ##
-##             40int2ext            ##
-######################################
+#####################################
+##  CronMod INT2EXT+ - 02/21/2013  ##
+##   Written by CronicCorey @xda   ##
+##            40int2ext            ##
+#####################################
+## Thanks to Mastermind1024 @xda for helping to solve the IMEI and Baseband issues on some devices
 ## Thanks to vvFICKvv, DK75, and Dark Passenger @xda for help to fix compatibility issues with Android 4.2.x
 ## Thanks to Mortaromarcello @github for code to check if mmcblk0p2 exists
-
-VER=INT2EXTV2+
-LOG=/data/$VER.log
 
 ## Only continue if mmcblk0p2 exists
 if [ ! -e /dev/block/mmcblk0p2 ]
 then
-busybox echo "mmcblk0p2 does not exist, $VER cannot start" > $LOG;
 exit
-else
-busybox echo "Starting $VER" > $LOG;
 fi;
 
 ## Set SD cache size
 SD_CACHE=/sys/devices/virtual/bdi/179:0/read_ahead_kb
 if [ -e $SD_CACHE ]
 then
-busybox echo "Setting SD_CACHE to 2MB" >> $LOG;
 busybox echo "2048" > $SD_CACHE;
-else
-busybox echo "Setting SD_CACHE failed " >> $LOG;
 fi;
 
 ## Make /sd-ext directory if needed and unmount /sd-ext if it already mounted
 if [ ! -e /sd-ext ]
 then
-busybox echo "/sd-ext directory does not exist, making it now" >> $LOG;
 busybox mount -o remount,rw /;
 busybox mkdir /sd-ext;
 busybox mount -o remount,ro /;
 else
-busybox echo "Unmounting /sd-ext in case it mounted already" >> $LOG;
 busybox umount /sd-ext;
 fi;
 
 ## Move /data mount point to /sd-ext
-busybox echo "Moving /data mount point to /sd-ext" >> $LOG;
 INT_DATA=$(busybox mountpoint -n /data | cut -d ' ' -f1)
 busybox umount /data;
 busybox mount $INT_DATA /sd-ext;
 
 ## Mount mmcblk0p2 to /data
-busybox echo "Mounting sd-ext to /data" >> /sd-ext/$VER.log;
 busybox mount -o noatime,nodiratime,nosuid,nodev /dev/block/mmcblk0p2 /data;
 busybox chown 1000:1000 /data;
 busybox chmod 771 /data;
 
-## Move log file back to /data
-busybox mv /sd-ext/$VER.log /data;
-
 ## Move existing files
-for i in app app-private dalvik-cache;
-do
-if [ ! -e /data/$i ]
+if [ ! -e /data/app ]
 then
-busybox echo "Moving /sd-ext/$i to /data" >> $LOG;
-busybox mv /sd-ext/$i /data;
+busybox mv /sd-ext/* /data;
 fi;
 
-## Setup directorys for binds
-if [ -e /sd-ext/$i ]
-then
-busybox echo "Removing /sd-ext/$i so it wont get binded" >> $LOG;
-busybox rm -rf /sd-ext/$i;
-fi;
-done;
-
-for i in `ls /sd-ext`;
+## Move /data, /misc, /nvram, /property, and /radio back to /sd-ext
+for i in data misc nvram property radio;
 do
-if [ ! -e /data/$i ]
+if [ ! -e /sd-ext/$i ] && [ -e /data/$i ]
 then
-busybox echo "Making /data/$i directory for bind" >> $LOG;
+busybox mv /data/$i /sd-ext;
 busybox mkdir /data/$i;
 fi;
 
-## Make binds
+## Make Binds
 if [ -e /data/$i ]
 then
-busybox echo "Binding /sd-ext/$i to /data/$i" >> $LOG;
 busybox mount -o bind /sd-ext/$i /data/$i;
 fi;
 done;
 
-## Unmount /sd-ext, if swap2int is installed leave it mounted until it activates
-if [ ! -e /system/bin/swap2int ] && [ ! -e /system/etc/init.d/45swap2int ]
-then
-busybox echo "Unmounting /sd-ext" >> $LOG;
+## Unmount /sd-ext
 busybox umount /sd-ext;
-else
-busybox echo "Leaving /sd-ext mounted so SWAP2INT can activate" >> $LOG;
-fi;
-
-busybox echo "Started $VER successfully" >> $LOG;
 
 sync;
 
