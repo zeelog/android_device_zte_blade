@@ -76,9 +76,9 @@
         <EncoderProfile quality="high" fileFormat="mp4" duration="60">
             <Video codec="h263"
                    bitRate="2000000"
-                   width="640"
-                   height="480"
-                   frameRate="15" />
+                   width="480"
+                   height="320"
+                   frameRate="25" />
             <Audio codec="aac"
                    bitRate="96000"
                    sampleRate="16000"
@@ -100,9 +100,9 @@
         <EncoderProfile quality="timelapsehigh" fileFormat="mp4" duration="60">
             <Video codec="h263"
                    bitRate="2000000"
-                   width="640"
-                   height="480"
-                   frameRate="15" />
+                   width="480"
+                   height="320"
+                   frameRate="25" />
             <Audio codec="aac"
                    bitRate="156000"
                    sampleRate="48000"
