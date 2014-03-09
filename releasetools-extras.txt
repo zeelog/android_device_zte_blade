@@ -8,6 +8,12 @@ lib/hw/power.goldfish.so
 lib/hw/sensors.goldfish.so
 lib/hw/audio.primary.goldfish.so
 
+# defaults superceded by msm7x27 or v9
+lib/hw/power.default.so
+lib/hw/audio.primary.default.so
+lib/hw/audio_policy.default.so
+lib/hw/gralloc.default.so
+
 # Junk (build artifacts)
 extras/ext4_utils/make_ext4fs_main.o
 extras/ext4_utils/make_ext4fs_main.P
