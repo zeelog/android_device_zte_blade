@@ -45,14 +45,17 @@ TARGET_PREBUILT_RECOVERY_KERNEL := device/zte/blade/recovery/recovery_kernel
 TARGET_RECOVERY_INITRC := device/zte/blade/recovery/recovery.rc
 TARGET_RECOVERY_FSTAB := device/zte/blade/ramdisk/fstab.blade
 COMMON_GLOBAL_CFLAGS += -DRECOVERY_CANT_USE_CONFIG_EXT4_FS_XATTR
+
+# Build
 SKIP_SET_METADATA := true
+USE_SET_METADATA := false
+MINIMAL_NEWWAVELABS := true
 
 # Kernel
 TARGET_KERNEL_SOURCE := kernel/zte/zte-kernel-msm7x27
 TARGET_KERNEL_CONFIG := cyanogen_blade_defconfig
 BOARD_KERNEL_BASE := 0x02600000
 BOARD_KERNEL_CMDLINE := androidboot.hardware=blade console=null
-TARGET_KERNEL_CUSTOM_TOOLCHAIN := arm-eabi-4.8
 
 # WiFi
 BOARD_WPA_SUPPLICANT_DRIVER := WEXT
