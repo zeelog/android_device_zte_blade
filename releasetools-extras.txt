@@ -29,6 +29,22 @@ app/Term.apk
 lib/libjackpal-androidterm4.so
 app/Calendar.apk
 app/BasicDreams.apk
+app/Email.apk
+app/Exchange2.apk
+app/Galaxy4.apk
+app/HoloSpiralWallpaper.apk
+app/LiveWallpapers.apk
+app/MagicSmokeWallpapers.apk
+app/NoiseField.apk
+app/OpenWnn.apk
+app/PhaseBeam.apk
+app/PhotoTable.apk
+app/PrintSpooler.apk
+app/QuickSearchBox.apk
+app/VideoEditor.apk
+app/VisualizationWallpapers.apk
+app/Provision.apk
+
 
 # Pico TTS Language Files (5MB)
 tts/lang_pico/en-GB_kh0_sg.bin
@@ -51,6 +67,11 @@ lib/libvideoeditor_videofilters
 lib/libvideoeditor_jni.so
 lib/libvideoeditorplayer.so
 lib/libvideoeditor_videofilters.so
+
+# OpenWnn
+lib/libwnndict.so
+lib/libWnnEngDic.so
+lib/libWnnJpnDic.so
 
 # Extra bins
 xbin/htop
@@ -101,6 +122,7 @@ media/audio/alarms/CyanAlarm.ogg
 media/audio/alarms/NuclearLaunch.ogg
 # Notifications
 media/audio/notifications/Beat_Box_Android.ogg
+media/audio/notifications/Bellatrix.ogg
 media/audio/notifications/CyanDoink.ogg
 media/audio/notifications/CyanMail.ogg
 media/audio/notifications/CyanMessage.ogg
