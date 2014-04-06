@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Advanced settings</string>
+    <string name="app_name">Device Settings</string>
     <string name="prox_calibration_title_head">Calibrate proximity sensor</string>
     <string name="prox_calibration_summary_head">Do not put anything near the top of the screen while running</string>
     <string name="prox_display_title_head">Display proximity sensor data</string>
@@ -12,4 +12,6 @@
     <string name="delete_success">Successfully restored default. Please reboot.</string>
     <string name="delete_error">Failed to restore defaults.</string>
     <string name="delete_no_file">Already using defaults.</string>
+    <string name="usb_charging_title_head">USB Charging</string>
+    <string name="button_backlight_title_head">Button backlight</string>
 </resources>

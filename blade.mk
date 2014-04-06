@@ -18,7 +18,7 @@ PRODUCT_PACKAGES += \
 
 # Blade
 PRODUCT_PACKAGES += \
-    BladeParts
+    DeviceSettings
 
 # Camera
 PRODUCT_PACKAGES += \

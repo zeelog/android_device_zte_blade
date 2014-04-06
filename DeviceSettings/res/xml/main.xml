@@ -6,8 +6,8 @@
         android:title="@string/prox_display_title_head"
         android:summary="@string/prox_display_summary_head">
         <intent android:action="android.intent.action.MAIN"
-            android:targetPackage="com.cyanogenmod.settings.device"
-            android:targetClass="com.cyanogenmod.settings.device.ProxDisplay" />
+            android:targetPackage="org.omnirom.device"
+            android:targetClass="org.omnirom.device.ProxDisplay" />
     </PreferenceScreen>
 
     <!-- Proximity sensor calibration -->
@@ -15,8 +15,8 @@
         android:title="@string/prox_calibration_title_head"
         android:summary="@string/prox_calibration_summary_head">
         <intent android:action="android.intent.action.MAIN"
-            android:targetPackage="com.cyanogenmod.settings.device"
-            android:targetClass="com.cyanogenmod.settings.device.ProxCalibration" />
+            android:targetPackage="org.omnirom.device"
+            android:targetClass="org.omnirom.device.ProxCalibration" />
     </PreferenceScreen>
 
     <!-- Proximity sensor restore defaults -->
@@ -24,8 +24,20 @@
         android:title="@string/prox_restore_title_head"
         android:summary="@string/prox_restore_summary_head">
         <intent android:action="android.intent.action.MAIN"
-            android:targetPackage="com.cyanogenmod.settings.device"
-            android:targetClass="com.cyanogenmod.settings.device.ProxCalRestore" />
+            android:targetPackage="org.omnirom.device"
+            android:targetClass="org.omnirom.device.ProxCalRestore" />
     </PreferenceScreen>
+
+    <!-- USB Charging -->
+    <CheckBoxPreference
+        android:key="usb_charging"
+        android:title="@string/usb_charging_title_head"
+        android:defaultValue="true" />
+
+    <!-- Button backlight -->
+    <CheckBoxPreference
+        android:key="button_backlight"
+        android:title="@string/button_backlight_title_head"
+        android:defaultValue="true" />
 
 </PreferenceScreen>

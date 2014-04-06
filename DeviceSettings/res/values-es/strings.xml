@@ -12,4 +12,5 @@
     <string name="delete_success">Datos de calibración borrados. Por favor, reinicia.</string>
     <string name="delete_error">Fallo al restaurar predeterminados.</string>
     <string name="delete_no_file">Ya se están usando valores predeterminados.</string>
+    <string name="usb_charging_title_head">Carga en USB</string>
 </resources>

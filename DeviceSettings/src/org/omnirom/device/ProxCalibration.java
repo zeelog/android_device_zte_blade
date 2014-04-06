@@ -1,4 +1,4 @@
-package com.cyanogenmod.settings.device;
+package org.omnirom.device;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
