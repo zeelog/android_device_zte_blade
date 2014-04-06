@@ -68,6 +68,10 @@ BOARD_WPA_SUPPLICANT_PRIVATE_LIB := lib_driver_cmd_wext
 BOARD_WEXT_NO_COMBO_SCAN := false
 WIFI_DRIVER_LOADER_DELAY := 2000000
 
+# build WiFi driver from Atheros SDK src
+BOARD_WLAN_CHIP_AR6002 := true
+BOARD_WLAN_ATHEROS_SDK := hardware/atheros/ar6000_sdk2
+
 # Audio
 TARGET_PROVIDES_LIBAUDIO := true
 BOARD_QCOM_VOIP_ENABLED := true
