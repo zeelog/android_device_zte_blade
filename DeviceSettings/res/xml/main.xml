@@ -38,7 +38,7 @@
     <CheckBoxPreference
         android:key="button_backlight"
         android:title="@string/button_backlight_title_head"
-        android:defaultValue="true" />
+        android:defaultValue="false" />
 
     <!-- Vibrator tuning -->
     <org.omnirom.device.VibratorTuningPreference
