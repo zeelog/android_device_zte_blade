@@ -259,6 +259,7 @@ media/audio/ringtones/Savannah.ogg
 media/audio/ringtones/Scarabaeus.ogg
 media/audio/ringtones/Sceptrum.ogg
 media/audio/ringtones/Seville.ogg
+media/audio/ringtones/Sheep.mp3
 media/audio/ringtones/Shes_All_That.ogg
 media/audio/ringtones/SilkyWay.ogg
 media/audio/ringtones/SitarVsSitar.ogg
