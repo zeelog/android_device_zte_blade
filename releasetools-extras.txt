@@ -74,6 +74,10 @@ framework/core-libart.jar
 etc/recovery-resource.dat
 bin/recovery
 
+# Extra fonts
+fonts/LBhashitaComplexSans-Bold.ttf
+fonts/LBhashitaComplexSans-Regular.ttf
+
 # Trim audio files
 
 # UI effects
