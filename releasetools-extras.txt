@@ -30,6 +30,7 @@ lib/libjackpal-androidterm4.so
 app/Calendar.apk
 app/BasicDreams.apk
 app/WhisperPush.apk
+app/LockClock.apk
 
 # Pico TTS Language Files (5MB)
 tts/lang_pico/en-GB_kh0_sg.bin
