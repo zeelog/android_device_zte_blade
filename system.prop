@@ -33,7 +33,6 @@ ro.vold.umsdirtyratio=20
 dalvik.vm.checkjni=0
 dalvik.vm.debug.alloc=0
 dalvik.vm.dexopt-data-only=1
-dalvik.vm.jit.codecachesize=0
 ro.config.low_ram=true
 
 # Memory
