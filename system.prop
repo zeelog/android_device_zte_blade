@@ -37,3 +37,4 @@ ro.config.low_ram=true
 
 # Memory
 persist.sys.purgeable_assets=1
+persist.sys.strictmode.disable=1
