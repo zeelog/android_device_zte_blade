@@ -40,26 +40,34 @@ checkswap
 # enable
 if [ "$isswapenabled" = "1" ] && [ "$isswapon" = "0" ]; then
     echo "Enabling swap..."
-    swapon -p $swappriority /dev/block/mmcblk0p3
+    /system/bin/swapon -p $swappriority /dev/block/mmcblk0p3
 fi
 
 # disable
 if [ "$isswapenabled" != "1" ] && [ "$isswapon" = "1" ]; then
     echo "Disabling swap..."
-    swapoff /dev/block/mmcblk0p3
+    /system/bin/swapoff /dev/block/mmcblk0p3
 fi
 
 # adjust priority (if needed)
 if [ "$isswapon" = "1" ] && [ "$swappriority" != "$swappriority_now" ]; then
     echo "Re-initializing swap with new priority..."
-    swapoff /dev/block/mmcblk0p3
-    swapon -p $swappriority /dev/block/mmcblk0p3
+    /system/bin/swapoff /dev/block/mmcblk0p3
+    /system/bin/swapon -p $swappriority /dev/block/mmcblk0p3
+fi
+}
+
+disablezram() {
+iszramdisabled=$(getprop persist.sys.disable_zram)
+if [ "$iszramdisabled" = "1" ]; then
+    /system/bin/swapoff /dev/block/zram0
 fi
 }
 
 bootcheck() {
 # ensure customizations are applied after Android boot completes
 swap
+disablezram
 }
 
 # run command

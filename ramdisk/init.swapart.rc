@@ -15,6 +15,11 @@ on property:persist.sys.swap_pri=*
     setprop persist.sys.swapart swap
     start swapart
 
+# disable zram
+on property:persist.sys.disable_zram=*
+    setprop persist.sys.swapart disablezram
+    start swapart
+
 # ensure that customization are enabled upon boot
 on property:sys.boot_completed=1
     setprop persist.sys.swapart bootcheck
