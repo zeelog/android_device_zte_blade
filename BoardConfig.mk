@@ -26,9 +26,8 @@ TARGET_ARCH := arm
 TARGET_CPU_ABI := armeabi
 TARGET_CPU_ABI2 := armeabi-v6l
 TARGET_ARCH_VARIANT := armv6-vfp
-TARGET_CPU_SMP := false
 TARGET_CPU_VARIANT := arm11
-ARCH_ARM_HAVE_TLS_REGISTER := false
+ARCH_ARM_HAVE_TLS_REGISTER := true
 
 # Target and board properties
 TARGET_NO_BOOTLOADER := true
