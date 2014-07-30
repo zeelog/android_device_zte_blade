@@ -40,12 +40,18 @@ TARGET_SPECIFIC_HEADER_PATH := device/zte/blade/include
 
 # Recovery
 TARGET_NO_SEPARATE_RECOVERY := true
-BOARD_CUSTOM_GRAPHICS := ../../../device/zte/blade/recovery/graphics.c
 BOARD_CUSTOM_RECOVERY_KEYMAPPING := ../../device/zte/blade/recovery/recovery_ui.c
-TARGET_PREBUILT_RECOVERY_KERNEL := device/zte/blade/recovery/recovery_kernel
-TARGET_RECOVERY_INITRC := device/zte/blade/recovery/recovery.rc
-TARGET_RECOVERY_FSTAB := device/zte/blade/ramdisk/fstab.blade
+
+TARGET_RECOVERY_FSTAB := device/zte/blade/recovery/recovery.fstab
 COMMON_GLOBAL_CFLAGS += -DRECOVERY_CANT_USE_CONFIG_EXT4_FS_XATTR
+TARGET_RECOVERY_PIXEL_FORMAT := "RGB_565"
+TARGET_RECOVERY_LCD_BACKLIGHT_PATH := \"sys/class/leds/lcd-backlight/brightness\"
+ifneq (eng,$(TARGET_BUILD_VARIANT))
+TARGET_KERNEL_CONFIG := cyanogen_blade_defconfig
+else
+TARGET_KERNEL_CONFIG := cyanogen_blade_recovery_defconfig
+MINIGZIP := $(shell which lzma)
+endif
 
 # Build
 SKIP_SET_METADATA := true
@@ -54,7 +60,6 @@ MINIMAL_NEWWAVELABS := true
 
 # Kernel
 TARGET_KERNEL_SOURCE := kernel/zte/zte-kernel-msm7x27
-TARGET_KERNEL_CONFIG := cyanogen_blade_defconfig
 BOARD_KERNEL_BASE := 0x02600000
 BOARD_KERNEL_CMDLINE := androidboot.hardware=blade console=null
 
