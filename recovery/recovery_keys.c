@@ -31,13 +31,10 @@ int device_handle_key(int key_code, int visible) {
             case KEY_VOLUMEDOWN:
                 return HIGHLIGHT_DOWN;
 
-            case 62:
-		return SELECT_ITEM;
-
             case KEY_POWER:
-	    case KEY_HOME:
+	     case KEY_HOME:
                 return SELECT_ITEM;
-            
+
             case KEY_BACK:
                 if (!ui_root_menu) {
                     return GO_BACK;
