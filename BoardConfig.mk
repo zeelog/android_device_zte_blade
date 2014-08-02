@@ -51,7 +51,6 @@ MINIGZIP := $(shell which lzma)
 endif
 
 # Build
-SKIP_SET_METADATA := true
 USE_SET_METADATA := false
 MINIMAL_NEWWAVELABS := true
 
@@ -76,7 +75,6 @@ BOARD_WLAN_ATHEROS_SDK := hardware/atheros/ar6000_sdk2
 
 # Audio
 TARGET_PROVIDES_LIBAUDIO := true
-BOARD_QCOM_VOIP_ENABLED := true
 
 # Bluetooth
 BOARD_HAVE_BLUETOOTH := true
