@@ -35,14 +35,6 @@ on boot
     write /sys/devices/system/cpu/cpufreq/ondemand/sampling_down_factor 4
     write /sys/devices/system/cpu/cpufreq/ondemand/down_differential 10
 
-# I/O scheduler
-    chown system system /sys/block/mtdblock0/queue/scheduler
-    chmod 0664 /sys/block/mtdblock0/queue/scheduler
-    chown system system /sys/block/mtdblock1/queue/scheduler
-    chmod 0664 /sys/block/mtdblock1/queue/scheduler
-    chown system system /sys/block/mtdblock2/queue/scheduler
-    chmod 0664 /sys/block/mtdblock2/queue/scheduler
-
 # Setup charging
     chown system system /sys/module/msm_battery/parameters/usb_chg_enable
 
