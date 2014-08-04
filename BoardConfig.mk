@@ -95,7 +95,6 @@ TARGET_ENABLE_QC_AV_ENHANCEMENTS := true
 
 # Graphics
 BOARD_EGL_CFG := device/zte/blade/prebuilt/system/lib/egl/egl.cfg
-BOARD_EGL_SYSTEMUI_PBSIZE_HACK := true
 USE_OPENGL_RENDERER := true
 TARGET_QCOM_DISPLAY_VARIANT := legacy
 BOARD_ADRENO_DECIDE_TEXTURE_TARGET := true
