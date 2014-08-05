@@ -31,6 +31,8 @@ app/Calendar.apk
 app/BasicDreams.apk
 app/WhisperPush.apk
 app/LockClock.apk
+app/PrintSpooler.apk
+priv-app/VoiceDialer.apk
 
 # Pico TTS Language Files (5MB)
 tts/lang_pico/en-GB_kh0_sg.bin
