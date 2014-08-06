@@ -39,7 +39,8 @@ TARGET_SPECIFIC_HEADER_PATH := device/zte/blade/include
 
 # Recovery
 TARGET_NO_SEPARATE_RECOVERY := true
-BOARD_CUSTOM_RECOVERY_KEYMAPPING := ../../device/zte/blade/recovery/recovery_keys.c
+BOARD_HAS_NO_SELECT_BUTTON := true
+BOARD_RECOVERY_SWIPE = true
 TARGET_RECOVERY_FSTAB := device/zte/blade/recovery/recovery.fstab
 TARGET_RECOVERY_PIXEL_FORMAT := "RGB_565"
 TARGET_RECOVERY_LCD_BACKLIGHT_PATH := \"sys/class/leds/lcd-backlight/brightness\"
