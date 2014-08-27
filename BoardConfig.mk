@@ -38,11 +38,11 @@ TARGET_BOOTLOADER_BOARD_NAME := blade
 TARGET_SPECIFIC_HEADER_PATH := device/zte/blade/include
 
 # Recovery
+BOARD_CUSTOM_GRAPHICS := ../../../device/zte/blade/recovery/graphics.c
+BOARD_CUSTOM_RECOVERY_KEYMAPPING := ../../device/zte/blade/recovery/recovery_keys.c
 TARGET_NO_SEPARATE_RECOVERY := true
-BOARD_HAS_NO_SELECT_BUTTON := true
 BOARD_RECOVERY_SWIPE = true
 TARGET_RECOVERY_FSTAB := device/zte/blade/recovery/recovery.fstab
-TARGET_RECOVERY_PIXEL_FORMAT := "RGB_565"
 TARGET_RECOVERY_LCD_BACKLIGHT_PATH := \"sys/class/leds/lcd-backlight/brightness\"
 ifneq (eng,$(TARGET_BUILD_VARIANT))
 TARGET_KERNEL_CONFIG := cyanogen_blade_defconfig
@@ -147,7 +147,8 @@ BOARD_HAL_STATIC_LIBRARIES := libhealthd.msm7x27
 # mtd7: 00020000 00020000 "oem"
 # mtd8: 00180000 00020000 "persist"
 BOARD_BOOTIMAGE_PARTITION_SIZE     := 0x00500000
-BOARD_RECOVERYIMAGE_PARTITION_SIZE := 0x00500000
+# Real recovery partition size is 0x00500000 (use lzma compression for recovery builds)
+BOARD_RECOVERYIMAGE_PARTITION_SIZE := 0x00550000
 BOARD_SYSTEMIMAGE_PARTITION_SIZE   := 0x11e4b400
 BOARD_USERDATAIMAGE_PARTITION_SIZE := 0x13ba0000
 BOARD_FLASH_BLOCK_SIZE := 131072
