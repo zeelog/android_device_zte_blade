@@ -52,7 +52,6 @@ MINIGZIP := $(shell which lzma)
 endif
 
 # Build
-USE_SET_METADATA := false
 MINIMAL_NEWWAVELABS := true
 
 # Kernel
