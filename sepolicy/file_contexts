@@ -1,0 +1,36 @@
+#############################
+# SD-EXT Data files
+#
+/sd-ext(/.*)?		u:object_r:system_data_file:s0
+/sd-ext/backup(/.*)?		u:object_r:backup_data_file:s0
+/sd-ext/secure/backup(/.*)?	u:object_r:backup_data_file:s0
+/sd-ext/security(/.*)?	u:object_r:security_file:s0
+/sd-ext/drm(/.*)?		u:object_r:drm_data_file:s0
+/sd-ext/gps(/.*)?		u:object_r:gps_data_file:s0
+/sd-ext/dalvik-cache(/.*)? u:object_r:dalvikcache_data_file:s0
+/sd-ext/anr(/.*)?		u:object_r:anr_data_file:s0
+/sd-ext/app(/.*)?		u:object_r:apk_data_file:s0
+/sd-ext/app/vmdl.*\.tmp	u:object_r:apk_tmp_file:s0
+/sd-ext/app-private(/.*)?		u:object_r:apk_private_data_file:s0
+/sd-ext/app-private/vmdl.*\.tmp	u:object_r:apk_private_tmp_file:s0
+/sd-ext/tombstones(/.*)?	u:object_r:tombstone_data_file:s0
+/sd-ext/local/tmp(/.*)?	u:object_r:shell_data_file:s0
+/sd-ext/local/tmp/selinux(/.*)?   u:object_r:tombstone_data_file:s0
+# SD-EXT Misc data
+/sd-ext/misc/bluetoothd(/.*)?	u:object_r:bluetoothd_data_file:s0
+/sd-ext/misc/bluetooth(/.*)?	u:object_r:bluetooth_data_file:s0
+/sd-ext/misc/bluedroid(/.*)?	u:object_r:bluetooth_data_file:s0
+/sd-ext/misc/keystore(/.*)?	u:object_r:keystore_data_file:s0
+/sd-ext/misc/vpn(/.*)?		u:object_r:vpn_data_file:s0
+/sd-ext/misc/systemkeys(/.*)?	u:object_r:systemkeys_data_file:s0
+/sd-ext/misc/wifi(/.*)?		u:object_r:wifi_data_file:s0
+/sd-ext/misc/camera(/.*)?	u:object_r:camera_calibration_file:s0
+/sd-ext/misc/dhcp(/.*)?           u:object_r:dhcp_data_file:s0
+# SD-EXT App sandboxes
+/sd-ext/data/.*		u:object_r:app_data_file:s0
+# SD-EXT Wallpaper file.
+/sd-ext/data/com.android.settings/files/wallpaper	u:object_r:wallpaper_file:s0
+# SD-EXT Wallpaper file for other users
+/sd-ext/system/users/[0-9]+/wallpaper		u:object_r:wallpaper_file:s0
+# SD-EXT Downloaded files
+/sd-ext/data/com.android.providers.downloads/cache u:object_r:download_file:s0

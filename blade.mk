@@ -21,6 +21,13 @@ PRODUCT_PACKAGES += \
 PRODUCT_PACKAGES += \
     camera.msm7x27
 
+## Development & ADB authentication settings
+ADDITIONAL_DEFAULT_PROPERTIES += \
+    ro.debuggable=1 \
+    ro.adb.secure=0 \
+    ro.secure=0 \
+    ro.allow.mock.location=0
+
 # FM Radio
 #PRODUCT_PACKAGES += \
 #    Effem \
@@ -47,6 +54,10 @@ PRODUCT_PACKAGES += \
 # Power HAL
 PRODUCT_PACKAGES += \
     power.msm7x27
+
+## SELinux - we're not ready for enforcing mode yet
+PRODUCT_PROPERTY_OVERRIDES += \
+    ro.boot.selinux=permissive
 
 # Sensors
 PRODUCT_PACKAGES += \

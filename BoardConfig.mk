@@ -59,6 +59,13 @@ TARGET_KERNEL_SOURCE := kernel/zte/zte-kernel-msm7x27
 BOARD_KERNEL_BASE := 0x02600000
 BOARD_KERNEL_CMDLINE := androidboot.hardware=blade console=null
 
+# SELinux
+BOARD_SEPOLICY_DIRS += \
+    device/zte/blade/sepolicy
+
+BOARD_SEPOLICY_UNION += \
+    file_contexts
+
 # WiFi
 BOARD_WPA_SUPPLICANT_DRIVER := WEXT
 WPA_SUPPLICANT_VERSION := VER_0_8_X

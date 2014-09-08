@@ -61,7 +61,6 @@ xbin/htop
 xbin/latencytop
 xbin/lsof
 xbin/nano
-bin/auditd
 bin/ssh
 bin/sshd
 bin/ssh-keygen
