@@ -35,6 +35,9 @@ on boot
     write /sys/devices/system/cpu/cpufreq/ondemand/sampling_down_factor 4
     write /sys/devices/system/cpu/cpufreq/ondemand/down_differential 10
 
+##fix "add_tid_to_cgroup failed to write" errors
+    chmod 0660 /dev/cpuctl
+
 # Setup charging
     chown system system /sys/module/msm_battery/parameters/usb_chg_enable
 
