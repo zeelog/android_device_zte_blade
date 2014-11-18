@@ -144,6 +144,9 @@ BOARD_HARDWARE_CLASS := device/zte/blade/cmhw/
 # Override healthd HAL
 BOARD_HAL_STATIC_LIBRARIES := libhealthd.msm7x27
 
+# Power
+TARGET_POWERHAL_VARIANT := cm
+
 # dev:    size   erasesize  name
 # mtd0: 00500000 00020000 "recovery"
 # mtd1: 00500000 00020000 "boot"
