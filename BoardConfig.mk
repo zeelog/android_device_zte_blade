@@ -60,6 +60,8 @@ BOARD_KERNEL_BASE := 0x02600000
 BOARD_KERNEL_CMDLINE := androidboot.hardware=blade console=null
 
 # SELinux
+POLICYVERS := 24
+
 BOARD_SEPOLICY_DIRS += \
     device/zte/blade/sepolicy
 

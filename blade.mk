@@ -63,10 +63,6 @@ PRODUCT_PROPERTY_OVERRIDES += \
 PRODUCT_PROPERTY_OVERRIDES += \
     ro.config.max_starting_bg=6
 
-## SELinux - we're not ready for enforcing mode yet
-PRODUCT_PROPERTY_OVERRIDES += \
-    ro.boot.selinux=permissive
-
 # Sensors
 PRODUCT_PACKAGES += \
     sensors.blade
